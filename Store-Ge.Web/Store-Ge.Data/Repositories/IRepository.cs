@@ -1,4 +1,4 @@
-﻿namespace Store_Ge.Data.Respositories
+﻿namespace Store_Ge.Data.Repositories
 {
     public interface IRepository<TEntity> : IDisposable
         where TEntity : class
