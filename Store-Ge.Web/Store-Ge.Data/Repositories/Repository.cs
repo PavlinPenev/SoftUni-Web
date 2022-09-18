@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Store_Ge.Data.Respositories
+namespace Store_Ge.Data.Repositories
 {
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class

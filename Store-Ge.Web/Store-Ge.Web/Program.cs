@@ -1,7 +1,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Store_Ge.Data;
-using Store_Ge.Data.Respositories;
+using Store_Ge.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
