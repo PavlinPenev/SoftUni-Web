@@ -9,6 +9,7 @@ namespace Store_Ge.Data.Models
         {
             Orders = new HashSet<Order>();
             StoresSuppliers = new HashSet<StoreSupplier>();
+            Products = new HashSet<Product>();
         }
 
         [Key]
@@ -25,6 +26,8 @@ namespace Store_Ge.Data.Models
         public DateTime? ModifiedOn { get; set; }
 
         public DateTime? DeletedOn { get; set; }
+
+        public virtual ICollection<Product> Products { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
 

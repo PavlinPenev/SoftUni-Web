@@ -6,13 +6,6 @@ namespace Store_Ge.Data.Models
 {
     public class Product
     {
-        public Product()
-        {
-            StoresProducts = new HashSet<StoreProduct>();
-            OrdersProducts = new HashSet<OrderProduct>();
-            SuppliersProducts = new HashSet<SupplierProduct>();
-        }
-
         [Key]
         public int Id { get; set; }
 
@@ -37,10 +30,8 @@ namespace Store_Ge.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public virtual ICollection<StoreProduct> StoresProducts { get; set; }
+        public virtual Order Order { get; set; }
 
-        public virtual ICollection<OrderProduct> OrdersProducts { get; set; }
-
-        public virtual ICollection<SupplierProduct> SuppliersProducts { get; set; }
+        public virtual Supplier Supplier { get; set; }
     }
 }
