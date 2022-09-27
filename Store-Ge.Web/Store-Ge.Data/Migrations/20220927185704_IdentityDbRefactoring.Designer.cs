@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store_Ge.Data;
 
@@ -11,9 +12,10 @@ using Store_Ge.Data;
 namespace Store_Ge.Data.Migrations
 {
     [DbContext(typeof(StoreGeDbContext))]
-    partial class StoreGeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220927185704_IdentityDbRefactoring")]
+    partial class IdentityDbRefactoring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -288,6 +290,21 @@ namespace Store_Ge.Data.Migrations
                     b.ToTable("Order");
                 });
 
+            modelBuilder.Entity("Store_Ge.Data.Models.OrderProduct", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("OrderProduct");
+                });
+
             modelBuilder.Entity("Store_Ge.Data.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -316,28 +333,13 @@ namespace Store_Ge.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("StoreId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SupplierId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.HasIndex("StoreId");
-
-                    b.HasIndex("SupplierId");
 
                     b.ToTable("Product");
                 });
@@ -373,6 +375,21 @@ namespace Store_Ge.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Store");
+                });
+
+            modelBuilder.Entity("Store_Ge.Data.Models.StoreProduct", b =>
+                {
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("StoreId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("StoreProduct");
                 });
 
             modelBuilder.Entity("Store_Ge.Data.Models.StoreSupplier", b =>
@@ -418,6 +435,21 @@ namespace Store_Ge.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Supplier");
+                });
+
+            modelBuilder.Entity("Store_Ge.Data.Models.SupplierProduct", b =>
+                {
+                    b.Property<int>("SupplierId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SupplierId", "ProductId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("SupplierProduct");
                 });
 
             modelBuilder.Entity("Store_Ge.Data.Models.UserStore", b =>
@@ -517,27 +549,42 @@ namespace Store_Ge.Data.Migrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("Store_Ge.Data.Models.Product", b =>
+            modelBuilder.Entity("Store_Ge.Data.Models.OrderProduct", b =>
                 {
                     b.HasOne("Store_Ge.Data.Models.Order", "Order")
-                        .WithMany("Products")
+                        .WithMany("OrdersProducts")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Store_Ge.Data.Models.Store", null)
-                        .WithMany("Products")
-                        .HasForeignKey("StoreId");
-
-                    b.HasOne("Store_Ge.Data.Models.Supplier", "Supplier")
-                        .WithMany("Products")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                    b.HasOne("Store_Ge.Data.Models.Product", "Product")
+                        .WithMany("OrdersProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");
 
-                    b.Navigation("Supplier");
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Store_Ge.Data.Models.StoreProduct", b =>
+                {
+                    b.HasOne("Store_Ge.Data.Models.Product", "Product")
+                        .WithMany("StoresProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Store_Ge.Data.Models.Store", "Store")
+                        .WithMany("StoresProducts")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Store");
                 });
 
             modelBuilder.Entity("Store_Ge.Data.Models.StoreSupplier", b =>
@@ -555,6 +602,25 @@ namespace Store_Ge.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Store");
+
+                    b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("Store_Ge.Data.Models.SupplierProduct", b =>
+                {
+                    b.HasOne("Store_Ge.Data.Models.Product", "Product")
+                        .WithMany("SuppliersProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Store_Ge.Data.Models.Supplier", "Supplier")
+                        .WithMany()
+                        .HasForeignKey("SupplierId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
 
                     b.Navigation("Supplier");
                 });
@@ -591,14 +657,23 @@ namespace Store_Ge.Data.Migrations
 
             modelBuilder.Entity("Store_Ge.Data.Models.Order", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("OrdersProducts");
+                });
+
+            modelBuilder.Entity("Store_Ge.Data.Models.Product", b =>
+                {
+                    b.Navigation("OrdersProducts");
+
+                    b.Navigation("StoresProducts");
+
+                    b.Navigation("SuppliersProducts");
                 });
 
             modelBuilder.Entity("Store_Ge.Data.Models.Store", b =>
                 {
                     b.Navigation("Orders");
 
-                    b.Navigation("Products");
+                    b.Navigation("StoresProducts");
 
                     b.Navigation("UsersStores");
                 });
@@ -606,8 +681,6 @@ namespace Store_Ge.Data.Migrations
             modelBuilder.Entity("Store_Ge.Data.Models.Supplier", b =>
                 {
                     b.Navigation("Orders");
-
-                    b.Navigation("Products");
 
                     b.Navigation("StoresSuppliers");
                 });

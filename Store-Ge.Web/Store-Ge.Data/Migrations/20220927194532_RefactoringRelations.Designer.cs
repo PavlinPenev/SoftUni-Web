@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store_Ge.Data;
 
@@ -11,9 +12,10 @@ using Store_Ge.Data;
 namespace Store_Ge.Data.Migrations
 {
     [DbContext(typeof(StoreGeDbContext))]
-    partial class StoreGeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220927194532_RefactoringRelations")]
+    partial class RefactoringRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -325,17 +327,12 @@ namespace Store_Ge.Data.Migrations
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("StoreId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
-
-                    b.HasIndex("StoreId");
 
                     b.HasIndex("SupplierId");
 
@@ -525,10 +522,6 @@ namespace Store_Ge.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Store_Ge.Data.Models.Store", null)
-                        .WithMany("Products")
-                        .HasForeignKey("StoreId");
-
                     b.HasOne("Store_Ge.Data.Models.Supplier", "Supplier")
                         .WithMany("Products")
                         .HasForeignKey("SupplierId")
@@ -597,8 +590,6 @@ namespace Store_Ge.Data.Migrations
             modelBuilder.Entity("Store_Ge.Data.Models.Store", b =>
                 {
                     b.Navigation("Orders");
-
-                    b.Navigation("Products");
 
                     b.Navigation("UsersStores");
                 });

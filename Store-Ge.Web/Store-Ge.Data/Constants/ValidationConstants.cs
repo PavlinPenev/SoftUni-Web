@@ -2,7 +2,7 @@
 {
     public static class ValidationConstants
     {
-        public const string PASSWORD_VALIDATION_PATTERN = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$";
+        public const int PASSWORD_MIN_LENGTH = 8;
         public const int EMAIL_MAX_LENGTH = 50;
         public const int STORE_NAME_MAX_LENGTH = 20;
         public const int PRODUCT_NAME_MAX_LENGTH = 50;
