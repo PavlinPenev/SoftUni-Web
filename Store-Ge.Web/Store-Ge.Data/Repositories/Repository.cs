@@ -42,10 +42,10 @@ namespace Store_Ge.Data.Repositories
 
         protected virtual void Dispose(bool disposing)
         {
-                if (disposing)
-                {
-                    this.Context?.Dispose();
-                }
+            if (disposing)
+            {
+                this.Context?.Dispose();
+            }
         }
     }
 }
