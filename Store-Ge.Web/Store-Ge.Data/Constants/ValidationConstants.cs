@@ -7,5 +7,7 @@
         public const int STORE_NAME_MAX_LENGTH = 20;
         public const int PRODUCT_NAME_MAX_LENGTH = 50;
         public const int SUPPLIER_NAME_MAX_LENGTH = 20;
+        public const int MAX_FAILED_LOGIN_ATTEMPTS = 3;
+        public const int LOCKOUT_TIMESPAN_IN_MINUTES = 10;
     }
 }

@@ -11,4 +11,10 @@
     <ProjectReference Include="..\Store-Ge.Data\Store-Ge.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="Constants\" />
+    <Folder Include="AutoMapper\" />
+  </ItemGroup>
+
 </Project>
