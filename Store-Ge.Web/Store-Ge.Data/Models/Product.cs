@@ -1,6 +1,8 @@
 ﻿using Store_Ge.Data.Enums;
+
 using System.ComponentModel.DataAnnotations;
-using static Store_Ge.Data.Constants.ValidationConstants;
+
+using static Store_Ge.Common.Constants.ValidationConstants;
 
 namespace Store_Ge.Data.Models
 {

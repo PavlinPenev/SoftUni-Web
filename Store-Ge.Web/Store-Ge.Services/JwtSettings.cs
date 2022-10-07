@@ -1,4 +1,4 @@
-﻿namespace Store_Ge.Web.Configurations
+﻿namespace Store_Ge.Services
 {
     public class JwtSettings
     {
