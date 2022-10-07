@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+
 using Store_Ge.Data.Models;
-using static Store_Ge.Data.Constants.CommonConstants;
+
+using static Store_Ge.Common.Constants.CommonConstants;
 
 namespace Store_Ge.Data
 {

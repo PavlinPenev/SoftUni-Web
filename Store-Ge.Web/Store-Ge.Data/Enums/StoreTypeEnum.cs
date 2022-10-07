@@ -1,6 +1,6 @@
 ﻿namespace Store_Ge.Data.Enums
 {
-    public enum StoreTypeEnum
+    public enum StoreTypeEnum : byte
     {
         Supermarket = 0,
         ClothesShop = 1,

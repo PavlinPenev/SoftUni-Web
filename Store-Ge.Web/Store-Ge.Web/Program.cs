@@ -1,15 +1,19 @@
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using System.Text;
+
 using Store_Ge.Data;
-using static Store_Ge.Data.Constants.ValidationConstants;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
-using Store_Ge.Services.Services.AccountsService;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
+using Store_Ge.Services;
 using Store_Ge.Web.Configurations;
-using System.Text;
+
+using Microsoft.Data.SqlClient;
+using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
+using static Store_Ge.Common.Constants.ValidationConstants;
+using Store_Ge.Services.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,8 +42,6 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.SignIn.RequireConfirmedEmail = true;
 }).AddEntityFrameworkStores<StoreGeDbContext>();
 
-builder.Services.AddDataProtection();
-
 var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
 var jwtKey = Encoding.ASCII.GetBytes(jwtSettings.Secret);
 builder.Services.AddAuthentication(options =>
@@ -62,18 +64,44 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddDataProtection();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-builder.Services.AddScoped<IAccountsService, AccountsService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddServiceLayer();
 
 builder.Services.AddSwaggerGen(sg =>
 {
     sg.SwaggerDoc("v1", new OpenApiInfo 
+    {
+        Version = "v1",
+        Title = "Store-Ge.Api",
+        Description = "The API for the Store-Ge App. Shop storage and product selling manager."
+    });
+
+    var jwtSecurityScheme = new OpenApiSecurityScheme
+    {
+        Scheme = "Bearer",
+        BearerFormat = "Jwt",
+        Name = "Jwt Authentication",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Description = "Type your Jwt access token without the 'Bearer' keyword.",
+        Reference = new OpenApiReference
         {
-            Version = "v1",
-            Title = "Store-Ge.Api",
-            Description = "The API for the Store-Ge App. Shop storage and product selling manager."
-        });
+            Id = JwtBearerDefaults.AuthenticationScheme,
+            Type = ReferenceType.SecurityScheme,
+        },
+    };
+
+    sg.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+
+    sg.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            jwtSecurityScheme, Array.Empty<string>()
+        },
+    });
 });
 
 builder.Services.AddControllers();
@@ -91,10 +119,6 @@ if (app.Environment.IsDevelopment())
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
         options.RoutePrefix = string.Empty;
     });
-    app.UseCors(x => x
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader());
 }
 else
 {
@@ -107,6 +131,11 @@ app.UseStaticFiles();
 app.UseCookiePolicy();
 
 app.UseRouting();
+
+app.UseCors(x => x
+    .AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader());
 
 app.UseAuthentication();
 app.UseAuthorization();
