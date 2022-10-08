@@ -18,7 +18,7 @@ namespace Store_Ge.Data.Models
 
         public DateTime? RefreshTokenExpirationDate { get; set; }
 
-        public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
 
         public DateTime CreatedOn { get; set; }
 

@@ -10,7 +10,7 @@ namespace Store_Ge.Web.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(Routes.ACCOUNTS_CONTROLLER_ROUTE)]
+    [Route(Routes.ACCOUNTS_CONTROLLER)]
     public class AccountsController : Controller
     {
         private readonly IAccountsService accountsService;
@@ -26,7 +26,7 @@ namespace Store_Ge.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Route(Routes.ACCOUNTS_LOGIN_ENDPOINT_ROUTE)]
+        [Route(Routes.ACCOUNTS_LOGIN_ENDPOINT)]
         public async Task<IActionResult> Login([FromBody] ApplicationUserLoginDto userLoginModel)
         {
             if (!ModelState.IsValid)
@@ -46,7 +46,7 @@ namespace Store_Ge.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Route(Routes.ACCOUNTS_REGISTER_ENDPOINT_ROUTE)]
+        [Route(Routes.ACCOUNTS_REGISTER_ENDPOINT)]
         public async Task<IActionResult> Register([FromBody] ApplicationUserRegisterDto userRegisterModel)
         {
             if (!ModelState.IsValid)
@@ -68,9 +68,55 @@ namespace Store_Ge.Web.Controllers
                 return BadRequest(result.Errors.FirstOrDefault());
             }
 
-            await emailService.SendConfirmationMail(userRegisterModel.Email);
+            var user = await accountsService.GetUserByEmail(userRegisterModel.Email);
+
+            var emailConfirmationToken = await accountsService.GenerateConfirmationEmailToken(user);
+
+            await emailService.SendConfirmationMail(emailConfirmationToken, user.Id);
 
             return StatusCode(201);
+        }
+
+
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route(Routes.REFRESH_ACCESS_TOKEN_ENDPOINT)]
+        public async Task<IActionResult> RefreshAccessToken([FromQuery] string refreshToken, [FromQuery] int userId)
+        {
+            var result = await accountsService.RefreshAccessTokenAsync(refreshToken, userId);
+
+            if (result == null)
+            {
+                return Unauthorized(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route(Routes.CONFIRM_EMAIL_ENDPOINT)]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] int userId, [FromQuery] string emailToken)
+        {
+            var result = await accountsService.ConfirmEmail(userId, emailToken);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route(Routes.RESEND_EMAIL_ENDPOINT)]
+        public async Task<IActionResult> ResendConfirmationEmail([FromQuery] string email)
+        {
+            await emailService.ResendConfirmationMail(email);
+
+            return Ok();
         }
     }
 }
