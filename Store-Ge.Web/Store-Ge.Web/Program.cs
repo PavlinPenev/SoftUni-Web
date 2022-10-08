@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using static Store_Ge.Common.Constants.ValidationConstants;
 using Store_Ge.Services.Configurations;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +41,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
     options.Lockout.MaxFailedAccessAttempts = MAX_FAILED_LOGIN_ATTEMPTS;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(LOCKOUT_TIMESPAN_IN_MINUTES);
     options.SignIn.RequireConfirmedEmail = true;
-}).AddEntityFrameworkStores<StoreGeDbContext>();
+})
+    .AddEntityFrameworkStores<StoreGeDbContext>()
+    .AddDefaultTokenProviders();
 
 var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
 var jwtKey = Encoding.ASCII.GetBytes(jwtSettings.Secret);

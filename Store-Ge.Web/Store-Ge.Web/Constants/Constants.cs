@@ -6,9 +6,12 @@
         {
             public static class Routes
             {
-                public const string ACCOUNTS_CONTROLLER_ROUTE = "api/accounts";
-                public const string ACCOUNTS_LOGIN_ENDPOINT_ROUTE = "login";
-                public const string ACCOUNTS_REGISTER_ENDPOINT_ROUTE = "register";
+                public const string ACCOUNTS_CONTROLLER = "api/accounts";
+                public const string ACCOUNTS_LOGIN_ENDPOINT = "login";
+                public const string ACCOUNTS_REGISTER_ENDPOINT = "register";
+                public const string REFRESH_ACCESS_TOKEN_ENDPOINT = "refresh-token";
+                public const string CONFIRM_EMAIL_ENDPOINT = "confirm-email";
+                public const string RESEND_EMAIL_ENDPOINT = "resend-confirmation-email";
             }
 
             public static class Shared

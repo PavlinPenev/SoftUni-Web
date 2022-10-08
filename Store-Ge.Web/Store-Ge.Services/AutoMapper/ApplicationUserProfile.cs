@@ -16,6 +16,7 @@ namespace Store_Ge.Services.AutoMapper
                 .ReverseMap();
             CreateMap<ApplicationUserLoginResponseDto, ApplicationUser>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
+            CreateMap<ApplicationUser, ApplicationUserTokensDto>();
         }
     }
 }

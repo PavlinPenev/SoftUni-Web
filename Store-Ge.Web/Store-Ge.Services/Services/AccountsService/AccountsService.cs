@@ -20,6 +20,7 @@ namespace Store_Ge.Services.Services.AccountsService
     {
         private readonly IRepository<ApplicationUser> usersRepository;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<ApplicationRole> roleManager;
         private readonly IDataProtector dataProtector;
         private readonly JwtSettings jwtSettings;
         private readonly IMapper mapper;
@@ -27,12 +28,14 @@ namespace Store_Ge.Services.Services.AccountsService
         public AccountsService(
             IRepository<ApplicationUser> usersRepository,
             UserManager<ApplicationUser> userManager,
+            RoleManager<ApplicationRole> roleManager,
             IDataProtectionProvider dataProtectionProvider,
             IOptions<JwtSettings> jwtSettings,
             IMapper mapper)
         {
             this.usersRepository = usersRepository;
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.dataProtector = dataProtectionProvider.CreateProtector(ACCOUNTS_SERVICE_ACCESS_TOKEN_PURPOSE);
             this.jwtSettings = jwtSettings.Value;
             this.mapper = mapper;
@@ -42,7 +45,9 @@ namespace Store_Ge.Services.Services.AccountsService
         {
             var findUser = await userManager.FindByEmailAsync(user.Email);
 
-            if (findUser == null || !findUser.EmailConfirmed)
+            var isEmailConfirmed = await userManager.IsEmailConfirmedAsync(findUser);
+
+            if (findUser == null || !isEmailConfirmed)
             {
                 return null;
             }
@@ -53,13 +58,86 @@ namespace Store_Ge.Services.Services.AccountsService
                 return null;
             }
 
+            await GenerateTokens(findUser);
+
+            var mappedUser = mapper.Map<ApplicationUserLoginResponseDto>(findUser);
+
+            return mappedUser;
+        }
+
+        public async Task<IdentityResult> RegisterUser(ApplicationUserRegisterDto userModel)
+        {
+            var user = mapper.Map<ApplicationUser>(userModel);
+            var rolesInDb = roleManager.Roles.Select(x => x.Name).ToList();
+            
+
+            var result = await userManager.CreateAsync(user, userModel.Password);
+
+            await userManager.AddToRolesAsync(user, rolesInDb);
+
+            await usersRepository.SaveChangesAsync();
+
+            return result; 
+        }
+
+        public async Task<string> GenerateConfirmationEmailToken(ApplicationUser user)
+        {
+            var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
+
+            usersRepository.Update(user);
+            await usersRepository.SaveChangesAsync();
+
+            return token;
+        }
+
+        public async Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, int userId)
+        {
+            var user = await userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                return null;
+            }
+
+            var userOldRefreshToken = dataProtector.Unprotect(user.RefreshToken);
+
+            if (refreshToken != userOldRefreshToken)
+            {
+                return null;
+            }
+
+            await GenerateTokens(user);
+
+            var tokensResponse = mapper.Map<ApplicationUserTokensDto>(user);
+
+            return tokensResponse;
+
+        }
+
+        public async Task<ApplicationUser> GetUserByEmail(string email)
+        {
+            var user = await userManager.FindByEmailAsync(email);
+
+            return user;
+        }
+
+        public async Task<IdentityResult> ConfirmEmail(int userId, string emailToken)
+        {
+            var user = await userManager.FindByIdAsync(userId.ToString());
+
+            var result = await userManager.ConfirmEmailAsync(user, emailToken);
+        
+            return result;
+        }
+
+        private async Task GenerateTokens(ApplicationUser user)
+        {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, findUser.UserName),
-                new Claim(ClaimTypes.Email, findUser.Email)
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
-            var userRoles = await userManager.GetRolesAsync(findUser);
+            var userRoles = await userManager.GetRolesAsync(user);
 
             foreach (var role in userRoles)
             {
@@ -74,29 +152,17 @@ namespace Store_Ge.Services.Services.AccountsService
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(
                     new SymmetricSecurityKey(key),
-                    SecurityAlgorithms.HmacSha256Signature)
+                    SecurityAlgorithms.HmacSha256Signature),
+                IssuedAt = DateTime.UtcNow
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            findUser.AccessToken = dataProtector.Protect(tokenHandler.WriteToken(token));
-            findUser.RefreshToken = dataProtector.Protect(GenerateRefreshToken());
-            findUser.RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1.5);
+            user.AccessToken = dataProtector.Protect(tokenHandler.WriteToken(token));
+            user.RefreshToken = dataProtector.Protect(GenerateRefreshToken());
+            user.RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1.5);
 
-            usersRepository.Update(findUser);
+            usersRepository.Update(user);
             await usersRepository.SaveChangesAsync();
-
-            var mappedUser = mapper.Map<ApplicationUserLoginResponseDto>(findUser);
-
-            return mappedUser;
-        }
-
-        public async Task<IdentityResult> RegisterUser(ApplicationUserRegisterDto userModel)
-        {
-            var user = mapper.Map<ApplicationUser>(userModel);
-
-            var result = await userManager.CreateAsync(user, userModel.Password);
-            
-            return result; 
         }
 
         private static string GenerateRefreshToken()

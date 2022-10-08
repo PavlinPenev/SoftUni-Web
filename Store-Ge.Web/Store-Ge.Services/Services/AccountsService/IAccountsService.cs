@@ -1,11 +1,54 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Store_Ge.Data.Models;
 using Store_Ge.Services.Models;
 
 namespace Store_Ge.Services.Services.AccountsService
 {
     public interface IAccountsService
     {
+        /// <summary>
+        ///  Authenticates the user. Login method is with password.
+        /// </summary>
+        /// <param name="user"> Contains the user's password and email address </param>
+        /// <returns> A model of the user metadata(Id, UserName, Email, Password, AccessToken, RefreshToken) </returns>
         Task<ApplicationUserLoginResponseDto> AuthenticateUser(ApplicationUserLoginDto user);
+
+        /// <summary>
+        ///  Registers the user.
+        /// </summary>
+        /// <param name="user"> Contains the user's required register parameters(UserName, Email, Password, ConfirmPassword) </param>
+        /// <returns> Metadata about the register process. It determines if the registration was successful </returns>
         Task<IdentityResult> RegisterUser(ApplicationUserRegisterDto user);
+
+        /// <summary>
+        ///  Generate Confirmation Email token
+        /// </summary>
+        /// <param name="user"> A user record taken from the database on which an email token generation is needed </param>
+        /// <returns> The token itself </returns>
+        Task<string> GenerateConfirmationEmailToken(ApplicationUser user);
+
+        /// <summary>
+        ///  Refresh the JWT access token with the use of the user's refresh token
+        /// </summary>
+        /// <param name="refreshToken"> The user's refresh token </param>
+        /// <param name="userId"> The user's Id </param>
+        /// <returns> A model containing both Refresh and Access tokens </returns>
+        Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, int userId);
+
+
+        /// <summary>
+        ///  Get a user from the database using his email address 
+        /// </summary>
+        /// <param name="email"> The user's email address </param>
+        /// <returns> The user </returns>
+        Task<ApplicationUser> GetUserByEmail(string email);
+
+        /// <summary>
+        ///  Confirm a user's email address
+        /// </summary>
+        /// <param name="userId"> The user's Id </param>
+        /// <param name="emailToken"> An email confirmation token generated in the register process. It's passed into the link in the verification email </param>
+        /// <returns> Metadata about the confirmation process. It determines if the confirmation was successful </returns>
+        Task<IdentityResult> ConfirmEmail(int userId, string emailToken);
     }
 }
