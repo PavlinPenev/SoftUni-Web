@@ -45,7 +45,9 @@ namespace Store_Ge.Services.Services.AccountsService
         {
             var findUser = await userManager.FindByEmailAsync(user.Email);
 
-            if (findUser == null || await userManager.IsEmailConfirmedAsync(findUser))
+            var isEmailConfirmed = await userManager.IsEmailConfirmedAsync(findUser);
+
+            if (findUser == null || !isEmailConfirmed)
             {
                 return null;
             }
