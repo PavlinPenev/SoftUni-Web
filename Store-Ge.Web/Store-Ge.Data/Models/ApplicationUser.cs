@@ -12,9 +12,9 @@ namespace Store_Ge.Data.Models
             Logins = new HashSet<IdentityUserLogin<int>>();
         }
 
-        public string AccessToken { get; set; }
+        public string? AccessToken { get; set; }
 
-        public string RefreshToken { get; set; }
+        public string? RefreshToken { get; set; }
 
         public DateTime? RefreshTokenExpirationDate { get; set; }
 

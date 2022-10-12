@@ -9,13 +9,11 @@ namespace Store_Ge.Services.AutoMapper
     {
         public ApplicationUserProfile() 
         {
-            CreateMap<ApplicationUserRegisterDto, ApplicationUser>()
-                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
+            CreateMap<ApplicationUserRegisterDto, ApplicationUser>();
             CreateMap<ApplicationUserLoginDto, ApplicationUser>()
                 .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password))
                 .ReverseMap();
-            CreateMap<ApplicationUserLoginResponseDto, ApplicationUser>()
-                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
+            CreateMap<ApplicationUserLoginResponseDto, ApplicationUser>();
             CreateMap<ApplicationUser, ApplicationUserTokensDto>();
         }
     }

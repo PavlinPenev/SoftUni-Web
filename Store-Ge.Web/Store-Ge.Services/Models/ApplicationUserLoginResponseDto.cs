@@ -14,10 +14,6 @@ namespace Store_Ge.Services.Models
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
-        [RegularExpression(PASSWORD_VALIDATION_PATTERN)]
-        public string Password { get; set; }
-
         public string AccessToken { get; set; }
 
         public string RefreshToken { get; set; }

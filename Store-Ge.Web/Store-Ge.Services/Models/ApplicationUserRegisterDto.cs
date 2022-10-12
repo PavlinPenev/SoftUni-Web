@@ -14,6 +14,7 @@ namespace Store_Ge.Services.Models
         public string Password { get; set; }
 
         [Required]
+        [Compare(nameof(Password), ErrorMessage = "anasunamu")]
         public string ConfirmPassword { get; set; }
 
         [Required]

@@ -23,6 +23,9 @@
         public static class AccountsConstants
         {
             public const string ACCOUNTS_SERVICE_ACCESS_TOKEN_PURPOSE = "AccountsService: AccessToken - Data Protection";
+            public const string USER_NOT_FOUND = "User not found";
+            public const string EMAIL_NOT_CONFIRMED = "The provided email address is not confirmed.";
+            public const string WRONG_CREDENTIALS = "The provided credentials are not correct.";
         } 
     }
 }

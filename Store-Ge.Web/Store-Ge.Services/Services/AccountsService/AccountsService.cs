@@ -13,6 +13,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
+using Store_Ge.Configurations.Services;
 
 namespace Store_Ge.Services.Services.AccountsService
 {
@@ -45,17 +47,22 @@ namespace Store_Ge.Services.Services.AccountsService
         {
             var findUser = await userManager.FindByEmailAsync(user.Email);
 
+            if (findUser == null)
+            {
+                throw new NullReferenceException(USER_NOT_FOUND);
+            }
+
             var isEmailConfirmed = await userManager.IsEmailConfirmedAsync(findUser);
 
-            if (findUser == null || !isEmailConfirmed)
+            if (!isEmailConfirmed)
             {
-                return null;
+                throw new InvalidOperationException(EMAIL_NOT_CONFIRMED);
             }
 
             var isAuthenticated = await userManager.CheckPasswordAsync(findUser, user.Password);
             if (!isAuthenticated)
             {
-                return null;
+                throw new MemberAccessException(WRONG_CREDENTIALS);
             }
 
             await GenerateTokens(findUser);
@@ -68,14 +75,12 @@ namespace Store_Ge.Services.Services.AccountsService
         public async Task<IdentityResult> RegisterUser(ApplicationUserRegisterDto userModel)
         {
             var user = mapper.Map<ApplicationUser>(userModel);
-            var rolesInDb = roleManager.Roles.Select(x => x.Name).ToList();
-            
 
+            var rolesInDb = roleManager.Roles.Select(x => x.Name).ToList();
+       
             var result = await userManager.CreateAsync(user, userModel.Password);
 
             await userManager.AddToRolesAsync(user, rolesInDb);
-
-            await usersRepository.SaveChangesAsync();
 
             return result; 
         }
@@ -83,9 +88,6 @@ namespace Store_Ge.Services.Services.AccountsService
         public async Task<string> GenerateConfirmationEmailToken(ApplicationUser user)
         {
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-
-            usersRepository.Update(user);
-            await usersRepository.SaveChangesAsync();
 
             return token;
         }
@@ -95,14 +97,14 @@ namespace Store_Ge.Services.Services.AccountsService
             var user = await userManager.FindByIdAsync(userId.ToString());
             if (user == null)
             {
-                return null;
+                throw new NullReferenceException(USER_NOT_FOUND);
             }
 
             var userOldRefreshToken = dataProtector.Unprotect(user.RefreshToken);
 
             if (refreshToken != userOldRefreshToken)
             {
-                return null;
+                throw new MemberAccessException(WRONG_CREDENTIALS);
             }
 
             await GenerateTokens(user);
@@ -124,7 +126,10 @@ namespace Store_Ge.Services.Services.AccountsService
         {
             var user = await userManager.FindByIdAsync(userId.ToString());
 
-            var result = await userManager.ConfirmEmailAsync(user, emailToken);
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(emailToken);
+            var decodedToken = Encoding.Default.GetString(decodedTokenBytes);
+
+            var result = await userManager.ConfirmEmailAsync(user, decodedToken);
         
             return result;
         }
