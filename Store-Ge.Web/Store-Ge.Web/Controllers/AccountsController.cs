@@ -11,7 +11,7 @@ namespace Store_Ge.Web.Controllers
     [Authorize]
     [ApiController]
     [Route(Routes.ACCOUNTS_CONTROLLER)]
-    public class AccountsController : Controller
+    public class AccountsController : ControllerBase
     {
         private readonly IAccountsService accountsService;
         private readonly IEmailService emailService;
@@ -29,16 +29,22 @@ namespace Store_Ge.Web.Controllers
         [Route(Routes.ACCOUNTS_LOGIN_ENDPOINT)]
         public async Task<IActionResult> Login([FromBody] ApplicationUserLoginDto userLoginModel)
         {
-            if (!ModelState.IsValid)
+            var user = new ApplicationUserLoginResponseDto();
+
+            try
             {
-                return BadRequest(ModelState);
+                user = await this.accountsService.AuthenticateUser(userLoginModel);
             }
-
-            var user = await this.accountsService.AuthenticateUser(userLoginModel);
-
-            if (user == null)
+            catch (NullReferenceException e)
             {
-                return Unauthorized(user);
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                if (e is InvalidOperationException || e is MemberAccessException)
+                {
+                    return Unauthorized(e.Message);
+                }
             }
 
             return Ok(user);
@@ -49,23 +55,11 @@ namespace Store_Ge.Web.Controllers
         [Route(Routes.ACCOUNTS_REGISTER_ENDPOINT)]
         public async Task<IActionResult> Register([FromBody] ApplicationUserRegisterDto userRegisterModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (userRegisterModel.Password != userRegisterModel.ConfirmPassword)
-            {
-                ModelState.AddModelError(Shared.CONFIRM_PASSWORD_STRING_LITERAL, Shared.CONFIRM_PASSWORD_SHOULD_MATCH_THE_PASSWORD);
-
-                return BadRequest(ModelState);
-            }
-
             var result = await accountsService.RegisterUser(userRegisterModel);
 
             if (!result.Succeeded)
             {
-                return BadRequest(result.Errors.FirstOrDefault());
+                return BadRequest(result.Errors);
             }
 
             var user = await accountsService.GetUserByEmail(userRegisterModel.Email);
@@ -84,11 +78,19 @@ namespace Store_Ge.Web.Controllers
         [Route(Routes.REFRESH_ACCESS_TOKEN_ENDPOINT)]
         public async Task<IActionResult> RefreshAccessToken([FromQuery] string refreshToken, [FromQuery] int userId)
         {
-            var result = await accountsService.RefreshAccessTokenAsync(refreshToken, userId);
+            var result = new ApplicationUserTokensDto();
 
-            if (result == null)
+            try
             {
-                return Unauthorized(result);
+                result = await accountsService.RefreshAccessTokenAsync(refreshToken, userId);
+            }
+            catch (NullReferenceException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (MemberAccessException e)
+            {
+                return Unauthorized(e.Message);
             }
 
             return Ok(result);

@@ -3,8 +3,9 @@ using System.Text;
 using Store_Ge.Data;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
-using Store_Ge.Services;
+using Store_Ge.Configurations.Services;
 using Store_Ge.Web.Configurations;
+using Store_Ge.Services.EmailSender;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
@@ -21,7 +22,6 @@ var builder = WebApplication.CreateBuilder(args);
 var jwtSettingsSection = builder.Configuration.GetSection("JwtSettings");
 builder.Services.Configure<JwtSettings>(jwtSettingsSection);
 
-// Add services to the container.
 var dbConnectionStringSection = builder.Configuration.GetSection("DbConfiguration");
 builder.Services.Configure<DbConfiguration>(dbConnectionStringSection);
 
@@ -60,10 +60,14 @@ builder.Services.AddAuthentication(options =>
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
+            ValidateLifetime = true
         };
     });
 builder.Services.AddAuthorization();
+
+var ngAppSettingsSection = builder.Configuration.GetSection("StoreGeAppSettings");
+builder.Services.Configure<StoreGeAppSettings>(ngAppSettingsSection);
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -71,6 +75,10 @@ builder.Services.AddDataProtection();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+var sendGridSection = builder.Configuration.GetSection("SendGridSettings");
+builder.Services.Configure<SendGridSettings>(sendGridSection);
+
 builder.Services.AddServiceLayer();
 
 builder.Services.AddSwaggerGen(sg =>

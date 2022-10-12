@@ -18,6 +18,7 @@
             {
                 public const string CONFIRM_PASSWORD_STRING_LITERAL = "Confirm Password";
                 public const string CONFIRM_PASSWORD_SHOULD_MATCH_THE_PASSWORD = "Confirm Password input should match the Password.";
+                public const string INVALID_CREDENTIALS = "Invalid credentials";
             }
         }
     }
