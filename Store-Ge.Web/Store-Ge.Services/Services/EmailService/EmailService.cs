@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
 using Store_Ge.Data.Models;
-using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Configurations;
 using Store_Ge.Services.Services.EmailService.EmailSender;
-using Store_Ge.Services.Services.AccountsService;
 using System.Reflection;
 using System.Text;
 using static Store_Ge.Services.Constants.Constants.EmailService;
+using static Store_Ge.Common.Constants.CommonConstants;
 using Microsoft.AspNetCore.DataProtection;
 
 namespace Store_Ge.Services.Services.EmailService
@@ -29,7 +28,7 @@ namespace Store_Ge.Services.Services.EmailService
             this.userManager = userManager;
             this.emailSender = emailSender;
             this.storeGeAppSettings = storeGeAppSettings.Value;
-            this.dataProtector = dataProtectionProvider.CreateProtector(EMAIL_SERVICE_PROTECTION);
+            this.dataProtector = dataProtectionProvider.CreateProtector(STORE_GE_DATA_PROTECTION_STRING_LITERAL);
         }
 
         public async Task SendConfirmationMail(string emailToken, ApplicationUser user)

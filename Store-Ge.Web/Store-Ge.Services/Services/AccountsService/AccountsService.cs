@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Models;
+using static Store_Ge.Common.Constants.CommonConstants;
 using static Store_Ge.Common.Constants.AccountsConstants;
 
 using System.IdentityModel.Tokens.Jwt;
@@ -38,7 +39,7 @@ namespace Store_Ge.Services.Services.AccountsService
             this.usersRepository = usersRepository;
             this.userManager = userManager;
             this.roleManager = roleManager;
-            this.dataProtector = dataProtectionProvider.CreateProtector(ACCOUNTS_SERVICE_ACCESS_TOKEN_PURPOSE);
+            this.dataProtector = dataProtectionProvider.CreateProtector(STORE_GE_DATA_PROTECTION_STRING_LITERAL);
             this.jwtSettings = jwtSettings.Value;
             this.mapper = mapper;
         }

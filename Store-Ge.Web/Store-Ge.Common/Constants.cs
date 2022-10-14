@@ -6,6 +6,7 @@
         {
             public const string CREATED_ON_PROPERTY_STRING_LITERAL = "CreatedOn";
             public const string MODIFIED_ON_PROPERTY_STRING_LITERAL = "ModifiedOn";
+            public const string STORE_GE_DATA_PROTECTION_STRING_LITERAL = "Store-Ge App: Data Protection";
         }
 
         public static class ValidationConstants
@@ -22,7 +23,6 @@
 
         public static class AccountsConstants
         {
-            public const string ACCOUNTS_SERVICE_ACCESS_TOKEN_PURPOSE = "AccountsService: AccessToken - Data Protection";
             public const string USER_NOT_FOUND = "User not found";
             public const string EMAIL_NOT_CONFIRMED = "The provided email address is not confirmed.";
             public const string WRONG_CREDENTIALS = "The provided credentials are not correct.";

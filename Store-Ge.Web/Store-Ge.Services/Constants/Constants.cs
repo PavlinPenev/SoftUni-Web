@@ -14,7 +14,6 @@ namespace Store_Ge.Services.Constants
             public const string STORE_GE_STRING_LITERAL = "Store-Ge";
             public const string CONFIRM_EMAIL_STRING_LITERAL = "Confirm Email Address";
             public const string RESET_PASSWORD_EMAIL_STRING_LITERAL = "Reset Password Email";
-            public const string EMAIL_SERVICE_PROTECTION = "Protect EmailService sensitive data";
         }
     }
 }
