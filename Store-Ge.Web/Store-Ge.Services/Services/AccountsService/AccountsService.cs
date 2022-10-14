@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Models;
+using static Store_Ge.Common.Constants.CommonConstants;
 using static Store_Ge.Common.Constants.AccountsConstants;
 
 using System.IdentityModel.Tokens.Jwt;
@@ -38,7 +39,7 @@ namespace Store_Ge.Services.Services.AccountsService
             this.usersRepository = usersRepository;
             this.userManager = userManager;
             this.roleManager = roleManager;
-            this.dataProtector = dataProtectionProvider.CreateProtector(ACCOUNTS_SERVICE_ACCESS_TOKEN_PURPOSE);
+            this.dataProtector = dataProtectionProvider.CreateProtector(STORE_GE_DATA_PROTECTION_STRING_LITERAL);
             this.jwtSettings = jwtSettings.Value;
             this.mapper = mapper;
         }
@@ -68,6 +69,7 @@ namespace Store_Ge.Services.Services.AccountsService
             await GenerateTokens(findUser);
 
             var mappedUser = mapper.Map<ApplicationUserLoginResponseDto>(findUser);
+            mappedUser.Id = dataProtector.Protect(mappedUser.Id);
 
             return mappedUser;
         }
@@ -122,15 +124,55 @@ namespace Store_Ge.Services.Services.AccountsService
             return user;
         }
 
-        public async Task<IdentityResult> ConfirmEmail(int userId, string emailToken)
+        public async Task<IdentityResult> ConfirmEmail(ConfirmEmailDto confirmEmailDto)
         {
-            var user = await userManager.FindByIdAsync(userId.ToString());
+            var decodedUserId = dataProtector.Unprotect(confirmEmailDto.UserId);
 
-            var decodedTokenBytes = WebEncoders.Base64UrlDecode(emailToken);
+            var user = await userManager.FindByIdAsync(decodedUserId);
+
+            if (user == null)
+            {
+                throw new NullReferenceException(USER_NOT_FOUND);
+            }
+
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(confirmEmailDto.EmailToken);
             var decodedToken = Encoding.Default.GetString(decodedTokenBytes);
 
             var result = await userManager.ConfirmEmailAsync(user, decodedToken);
         
+            return result;
+        }
+
+        public async Task<string> GenerateForgottenPasswordResetToken(ForgotPasswordDto forgotPassword)
+        {
+            var user = await userManager.FindByEmailAsync(forgotPassword.Email);
+
+            if (user == null)
+            {
+                throw new NullReferenceException(USER_NOT_FOUND);
+            }
+
+            var passwordResetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+
+            return passwordResetToken;
+        }
+
+        public async Task<IdentityResult> PasswordReset(PasswordResetDto passwordResetDto)
+        {
+            var decodedEmail = dataProtector.Unprotect(passwordResetDto.Email);
+
+            var user = await userManager.FindByEmailAsync(decodedEmail);
+
+            if (user == null)
+            {
+                throw new NullReferenceException(USER_NOT_FOUND);
+            }
+
+            var decodedTokenBytes = WebEncoders.Base64UrlDecode(passwordResetDto.ResetToken);
+            var decodedToken = Encoding.Default.GetString(decodedTokenBytes);
+
+            var result = await userManager.ResetPasswordAsync(user, decodedToken, passwordResetDto.Password);
+
             return result;
         }
 
