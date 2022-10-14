@@ -21,14 +21,14 @@ namespace Store_Ge.Services.Services.AccountsService
         Task<IdentityResult> RegisterUser(ApplicationUserRegisterDto user);
 
         /// <summary>
-        ///  Generate Confirmation Email token
+        ///  Generates Confirmation Email token
         /// </summary>
         /// <param name="user"> A user record taken from the database on which an email token generation is needed </param>
         /// <returns> The token itself </returns>
         Task<string> GenerateConfirmationEmailToken(ApplicationUser user);
 
         /// <summary>
-        ///  Refresh the JWT access token with the use of the user's refresh token
+        ///  Refreshes the JWT access token with the use of the user's refresh token
         /// </summary>
         /// <param name="refreshToken"> The user's refresh token </param>
         /// <param name="userId"> The user's Id </param>
@@ -37,18 +37,31 @@ namespace Store_Ge.Services.Services.AccountsService
 
 
         /// <summary>
-        ///  Get a user from the database using his email address 
+        ///  Gets a user from the database using his email address 
         /// </summary>
         /// <param name="email"> The user's email address </param>
         /// <returns> The user </returns>
         Task<ApplicationUser> GetUserByEmail(string email);
 
         /// <summary>
-        ///  Confirm a user's email address
+        ///  Confirms a user's email address
         /// </summary>
-        /// <param name="userId"> The user's Id </param>
-        /// <param name="emailToken"> An email confirmation token generated in the register process. It's passed into the link in the verification email </param>
+        /// <param name="confirmEmailDto"> Model containing the user's Id and EmailToken </param>
         /// <returns> Metadata about the confirmation process. It determines if the confirmation was successful </returns>
-        Task<IdentityResult> ConfirmEmail(int userId, string emailToken);
+        Task<IdentityResult> ConfirmEmail(ConfirmEmailDto confirmEmailDto);
+
+        /// <summary>
+        ///  Generates a reset password token for when user's has forgotten his password. Also sends email for the reset itself
+        /// </summary>
+        /// <param name="forgotPassword"> Model which contains the user's email address </param>
+        /// <returns> The reset token </returns>
+        Task<string> GenerateForgottenPasswordResetToken(ForgotPasswordDto forgotPassword);
+
+        /// <summary>
+        ///  Resets the password, setting a new one to the user
+        /// </summary>
+        /// <param name="passwordResetDto"> A model containing the user info needed for password reset(Password, ConfirmPassword, Email, ResetToken) </param>
+        /// <returns> Metadata info about the reset process. It determines if the reset was successful </returns>
+        Task<IdentityResult> PasswordReset(PasswordResetDto passwordResetDto);
     }
 }

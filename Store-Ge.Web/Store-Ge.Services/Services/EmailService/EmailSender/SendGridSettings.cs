@@ -1,4 +1,4 @@
-﻿namespace Store_Ge.Services.EmailSender
+﻿namespace Store_Ge.Services.Services.EmailService.EmailSender
 {
     public class SendGridSettings
     {

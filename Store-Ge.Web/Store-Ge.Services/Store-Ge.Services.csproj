@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Resource Include="Services\EmailService\EmailSender\MailTemplates\ConfirmEmailTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Store-Ge.Common\Store-Ge.Common.csproj" />
     <ProjectReference Include="..\Store-Ge.Data\Store-Ge.Data.csproj" />
   </ItemGroup>
@@ -18,7 +24,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="EmailSender\MailTemplates\ConfirmEmailTemplate.html">
+    <Compile Update="Services\EmailService\EmailSender\EmailAttachment.cs">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Services\EmailService\EmailSender\MailTemplates\ConfirmEmailTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Services\EmailService\EmailSender\MailTemplates\PasswordResetEmailTemplate.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

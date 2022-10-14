@@ -6,7 +6,7 @@ namespace Store_Ge.Services.Models
 {
     public class ApplicationUserLoginResponseDto
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string UserName { get; set; }
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Store_Ge.Services.EmailSender;
-using Store_Ge.Services.Services.AccountsService;
 using Store_Ge.Services.Services.EmailService;
+using Store_Ge.Services.Services.AccountsService;
+using Store_Ge.Services.Services.EmailService.EmailSender;
 
 namespace Store_Ge.Services.Configurations
 {

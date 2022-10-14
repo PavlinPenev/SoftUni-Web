@@ -5,7 +5,7 @@ using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
 using Store_Ge.Configurations.Services;
 using Store_Ge.Web.Configurations;
-using Store_Ge.Services.EmailSender;
+using Store_Ge.Services.Services.EmailService.EmailSender;
 
 using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
@@ -44,6 +44,9 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 })
     .AddEntityFrameworkStores<StoreGeDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+   opt.TokenLifespan = TimeSpan.FromHours(1));
 
 var jwtSettings = jwtSettingsSection.Get<JwtSettings>();
 var jwtKey = Encoding.ASCII.GetBytes(jwtSettings.Secret);

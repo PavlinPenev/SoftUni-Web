@@ -12,6 +12,8 @@
                 public const string REFRESH_ACCESS_TOKEN_ENDPOINT = "refresh-token";
                 public const string CONFIRM_EMAIL_ENDPOINT = "confirm-email";
                 public const string RESEND_EMAIL_ENDPOINT = "resend-confirmation-email";
+                public const string FORGOT_PASSWORD_ENDPOINT = "forgot-password";
+                public const string PASSWORD_RESET_ENDPOINT = "password-reset";
             }
 
             public static class Shared

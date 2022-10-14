@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 using Store_Ge.Services.Models;
@@ -33,7 +34,7 @@ namespace Store_Ge.Web.Controllers
 
             try
             {
-                user = await this.accountsService.AuthenticateUser(userLoginModel);
+                user = await accountsService.AuthenticateUser(userLoginModel);
             }
             catch (NullReferenceException e)
             {
@@ -66,7 +67,7 @@ namespace Store_Ge.Web.Controllers
 
             var emailConfirmationToken = await accountsService.GenerateConfirmationEmailToken(user);
 
-            await emailService.SendConfirmationMail(emailConfirmationToken, user.Id);
+            await emailService.SendConfirmationMail(emailConfirmationToken, user);
 
             return StatusCode(201);
         }
@@ -96,12 +97,21 @@ namespace Store_Ge.Web.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
         [Route(Routes.CONFIRM_EMAIL_ENDPOINT)]
-        public async Task<IActionResult> ConfirmEmail([FromQuery] int userId, [FromQuery] string emailToken)
+        public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto confirmEmailDto)
         {
-            var result = await accountsService.ConfirmEmail(userId, emailToken);
+            var result = new IdentityResult();
+
+            try
+            {
+                result = await accountsService.ConfirmEmail(confirmEmailDto);
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
 
             if (!result.Succeeded)
             {
@@ -117,6 +127,49 @@ namespace Store_Ge.Web.Controllers
         public async Task<IActionResult> ResendConfirmationEmail([FromQuery] string email)
         {
             await emailService.ResendConfirmationMail(email);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route(Routes.FORGOT_PASSWORD_ENDPOINT)]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPassword)
+        {
+            var user = await accountsService.GetUserByEmail(forgotPassword.Email);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var passwordResetToken = await accountsService.GenerateForgottenPasswordResetToken(forgotPassword);
+
+            await emailService.SendPasswordResetMail(user, passwordResetToken);
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route(Routes.PASSWORD_RESET_ENDPOINT)]
+        public async Task<IActionResult> PasswordReset([FromBody] PasswordResetDto passwordResetDto)
+        {
+            var result = new IdentityResult();
+
+            try
+            {
+                result = await accountsService.PasswordReset(passwordResetDto);
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+
+            if (!result.Succeeded)
+            {
+                return BadRequest();
+            }
 
             return Ok();
         }
