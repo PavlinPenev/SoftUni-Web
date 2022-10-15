@@ -1,0 +1,27 @@
+﻿@using Watchlist.Models.Movies
+@model AllMoviesQueryModel
+
+@{
+    ViewBag.Title = "Watchlist";
+}
+
+<div class="text-center row">
+    @foreach (var movie in Model.Movies)
+    {
+        <div class="card col-4" style="width: 20rem;">
+            <img class="card-img-top" style="width: 18rem;"
+             src="@movie.ImageUrl" alt="Book Image">
+            <div class="card-body">
+
+                <h5 class="card-title mt-1">@movie.Title</h5>
+                <p class="mb-0">Director: @movie.Director</p>
+                <p class="mb-0">Rating: @movie.Rating</p>
+                <p>Genre: @movie.Genre</p>
+            </div>
+
+            <form class="input-group-sm">
+                <input type="submit" value="Mark as Watched" class="fs-6 btn btn-success mb-3 p-2" />
+            </form>
+        </div>
+    }
+</div>

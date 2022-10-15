@@ -1,0 +1,58 @@
+﻿@model MovieFormModel
+
+@{
+    ViewBag.Title = "Add Movie";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form>
+            <div class="mb-3">
+                <label class="form-label">Title</label>
+                <input class="form-control" aria-required="true" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Director</label>
+                <input class="form-control" aria-required="true" />
+                <span asp-validation-for="Director" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                <textarea class="form-control" aria-required="true" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Image URL</label>
+                <input class="form-control" aria-required="true" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Rating</label>
+                <input class="form-control" value="" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Genre</label>
+                <select class="form-control">
+                    @foreach (var genre in Model.Genres)
+                    {
+                        <option value="@genre.Id">@genre.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="GenreId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <input class="btn btn-primary" type="submit" value="Add" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
