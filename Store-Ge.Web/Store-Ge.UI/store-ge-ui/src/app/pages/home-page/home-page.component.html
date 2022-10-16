@@ -1,3 +1,29 @@
-<p>Home Page</p>
-<button mat-raised-button color="primary">Login</button>
-<button mat-raised-button color="primary">Register</button>
+<div class="background"></div>
+<div class="title"><p>{{constants.APP_NAME}}</p></div>
+<mat-divider class="separator"></mat-divider>
+<div class="info-row">
+    <div class="card-wrapper">
+        <div class="mat-icon-wrapper" fxLayout="row" fxLayoutAlign="center"><mat-icon fxFlexAlign="center">store</mat-icon></div>
+        <p>{{constants.INFO_TEXT_1}}</p>
+    </div>
+    <div class="card-wrapper">
+        <div class="mat-icon-wrapper" fxLayout="row" fxLayoutAlign="center"><mat-icon fxFlexAlign="center">inventory</mat-icon></div>
+        <p>{{constants.INFO_TEXT_2}}</p>
+    </div>
+    <div class="card-wrapper">
+        <div class="mat-icon-wrapper" fxLayout="row" fxLayoutAlign="center"><mat-icon fxFlexAlign="center">point_of_sale</mat-icon></div>
+        <p>{{constants.INFO_TEXT_3}}</p>
+    </div>
+</div>
+<mat-divider class="separator"></mat-divider>
+<div class="info-row">
+    <div class="card-wrapper">
+        <div class="mat-icon-wrapper" fxLayout="row" fxLayoutAlign="center"><mat-icon fxFlexAlign="center">local_shipping</mat-icon></div>
+        <p>{{constants.INFO_TEXT_4}}</p>
+    </div>
+    <div class="card-wrapper">
+        <div class="mat-icon-wrapper" fxLayout="row" fxLayoutAlign="center"><mat-icon fxFlexAlign="center">mood</mat-icon></div>
+        <p>{{constants.INFO_TEXT_5}}</p>
+    </div>
+</div>
+<div class="empty-space"></div>

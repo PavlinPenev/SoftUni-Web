@@ -1,0 +1,37 @@
+.footer-wrapper {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    height: 40px;
+
+    .footer{
+        text-align: center;
+        padding: 20px;
+    }
+    
+    .separator{
+        margin: 0 100px 30px 100px;
+    }
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 1px 1px 1px 1px #888888;
+    position: sticky;
+    top: 0;
+
+    .store-ge-logo{
+        background-color: #512DA8;
+        color: white;
+        padding: 5px 15px 5px 5px;
+        border-radius: 4px;
+        box-shadow: 1px 1px 0 0 #888888;
+        margin-left: 30px;
+    }
+
+    div > button {
+        margin-left: 15px;
+    }
+}

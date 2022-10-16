@@ -1,1 +1,21 @@
+<mat-toolbar class="navbar" *ngIf="isUserNotLoggedIn">
+    <div class="store-ge-logo">
+        <mat-icon>shopping_cart</mat-icon>     {{constants.APP_NAME}}
+    </div>
+    <div>
+        <button mat-raised-button color="primary" routerLink="/home">
+            <mat-icon>home</mat-icon>     {{constants.HOME }}
+        </button>
+        <button mat-raised-button color="primary" routerLink="/login">
+            <mat-icon>login</mat-icon>     {{constants.LOGIN}}
+        </button>
+        <button mat-raised-button color="primary" routerLink="/register">
+            <mat-icon>password</mat-icon>     {{constants.REGISTER}}
+        </button>
+    </div>
+</mat-toolbar>
 <router-outlet></router-outlet>
+<div class="footer-wrapper">
+    <mat-divider class="separator"></mat-divider>
+    <footer class="footer">{{constants.FOOTER_TEXT}} {{currentYear}}</footer>
+</div>
