@@ -33,6 +33,23 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatTooltipModule,
     MatBottomSheetModule,
     MatFormFieldModule
+  ],
+  exports: [
+    CommonModule,
+    MatButtonModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatIconModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatBottomSheetModule,
+    MatFormFieldModule
   ]
 })
 export class SharedModule { }
