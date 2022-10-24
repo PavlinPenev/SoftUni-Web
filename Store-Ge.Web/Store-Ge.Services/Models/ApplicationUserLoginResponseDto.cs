@@ -10,8 +10,6 @@ namespace Store_Ge.Services.Models
 
         public string UserName { get; set; }
 
-        [Required]
-        [EmailAddress]
         public string Email { get; set; }
 
         public string AccessToken { get; set; }
