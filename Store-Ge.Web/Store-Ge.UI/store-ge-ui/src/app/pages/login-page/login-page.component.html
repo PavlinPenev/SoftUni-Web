@@ -21,14 +21,17 @@
             <mat-icon class="fields-icon" color="primary">mail</mat-icon>
         </div>
         <div class="field">
-            <mat-form-field appearance="outline">
+            <mat-form-field style="width: 200px;" appearance="outline">
                 <mat-label>{{constants.PASSWORD}}</mat-label>
-                <input matInput formControlName="password">
+                <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password">
                 <mat-error
                     *ngIf="form.controls['password'].hasError('required')"
                 >
                     {{ constants.FIELD_REQUIRED }}
-              </mat-error>
+                </mat-error>
+                <div matSuffix class="suffix-wrapper">
+                    <mat-icon class="btn" (click)="togglePasswordVisibility()" color="primary">{{showPassword?'visibility_off':'visibility'}}</mat-icon>
+                </div>
             </mat-form-field>
             <mat-icon class="fields-icon" color="primary">password</mat-icon>
         </div>

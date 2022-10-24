@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import * as textConstants from '../../../assets/text.constants';
 
 @Component({
@@ -9,12 +9,13 @@ import * as textConstants from '../../../assets/text.constants';
 })
 export class LoginPageComponent implements OnInit {
   constants = textConstants;
+  showPassword: boolean = false;
 
-  form = new FormGroup({
-    email: new FormControl('',
+  form = new UntypedFormGroup({
+    email: new UntypedFormControl('',
             [Validators.required,
             Validators.email]),
-    password: new FormControl('', 
+    password: new UntypedFormControl('', 
             [Validators.required,
             Validators.pattern(this.constants.PASSWORD_VALIDATION_PATTERN)])
   });
@@ -22,5 +23,9 @@ export class LoginPageComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }

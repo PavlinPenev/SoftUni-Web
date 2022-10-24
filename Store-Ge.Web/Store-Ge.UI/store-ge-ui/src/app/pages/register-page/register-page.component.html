@@ -31,33 +31,39 @@
             <mat-icon class="fields-icon" color="primary">mail</mat-icon>
         </div>
         <div class="passwords-wrapper">
-            <div>
-                <mat-form-field appearance="outline">
+            <div >
+                <mat-form-field class="password-field" appearance="outline">
                     <mat-label>{{constants.PASSWORD}}</mat-label>
-                    <input matInput formControlName="password">
+                    <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password">
                     <mat-error
                         *ngIf="form.controls['password'].hasError('required')"
                     >
                         {{ constants.FIELD_REQUIRED }}
-                  </mat-error>
-                  <mat-error
+                    </mat-error>
+                    <mat-error
                         *ngIf="
                         !form.controls['password'].hasError('required') &&
                         form.controls['password'].hasError('pattern')
                         "
                     >
                     {{ constants.INVALID_PASSWORD }}
-                  </mat-error>
+                    </mat-error>
+                    <div matSuffix class="suffix-wrapper">
+                        <mat-icon class="btn" (click)="togglePasswordVisibility()" color="primary">{{showPassword?'visibility_off':'visibility'}}</mat-icon>
+                    </div>
                 </mat-form-field>
             </div>
             <mat-icon style="margin-top: 12px" color="primary">password</mat-icon>
-            <div>
-                <mat-form-field appearance="outline">
+            <div >
+                <mat-form-field class="password-field" style="margin-left: 24px;" appearance="outline">
                     <mat-label>{{constants.CONFIRM_PASSWORD}}</mat-label>
-                    <input matInput formControlName="confirmPassword" (input)="onPasswordInput()">
+                    <input matInput [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" (input)="onPasswordInput()">
                     <mat-error *ngIf="confirmPassword?.invalid">
                         {{ constants.PASSWORDS_DONT_MATCH }}
-                      </mat-error>
+                    </mat-error>
+                    <div matSuffix class="suffix-wrapper">
+                        <mat-icon class="btn" (click)="toggleConfirmPasswordVisibility()" color="primary">{{showConfirmPassword?'visibility_off':'visibility'}}</mat-icon>
+                    </div>
                 </mat-form-field>
             </div>
         </div>

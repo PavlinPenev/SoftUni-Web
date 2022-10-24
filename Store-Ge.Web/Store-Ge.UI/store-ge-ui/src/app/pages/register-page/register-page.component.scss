@@ -17,6 +17,10 @@
         border: solid 2px rgba(0, 0, 0, 0.3);
         border-radius: 10px;
         box-shadow: 3px 3px 1px 3px #888888;
+
+        .password-field {
+            width: 89%;
+        }
     }
 
     .checkbox {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import * as textConstants from '../../../assets/text.constants';
 
 
@@ -11,6 +11,9 @@ import * as textConstants from '../../../assets/text.constants';
 export class RegisterPageComponent implements OnInit {
   constants = textConstants;
 
+  showPassword = false;
+  showConfirmPassword = false;
+
   private passwordMatchValidator: ValidatorFn = (formGroup: AbstractControl): ValidationErrors | null => {
     if (formGroup.get('password')?.value === formGroup.get('confirmPassword')?.value)
       return null;
@@ -18,16 +21,16 @@ export class RegisterPageComponent implements OnInit {
       return {passwordMismatch: true};
   };
 
-  form = new FormGroup({
-    username: new FormControl('', Validators.required),
-    email: new FormControl('',
+  form = new UntypedFormGroup({
+    username: new UntypedFormControl('', Validators.required),
+    email: new UntypedFormControl('',
             [Validators.required,
             Validators.email]),
-    password: new FormControl('', 
+    password: new UntypedFormControl('', 
             [Validators.required,
             Validators.pattern(this.constants.PASSWORD_VALIDATION_PATTERN)]),
-    confirmPassword: new FormControl('', Validators.required),
-    acceptanceCheckbox: new FormControl(false, Validators.requiredTrue)
+    confirmPassword: new UntypedFormControl('', Validators.required),
+    acceptanceCheckbox: new UntypedFormControl(false, Validators.requiredTrue)
   }, {validators:  this.passwordMatchValidator});
 
   get password() { return this.form.get('password'); }
@@ -36,6 +39,14 @@ export class RegisterPageComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+	this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   onPasswordInput(){
