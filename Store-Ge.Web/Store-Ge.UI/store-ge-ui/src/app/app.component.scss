@@ -1,9 +1,9 @@
 .footer-wrapper {
-    position: sticky;
+    position: fixed;
     bottom: 0;
     width: 100%;
     background-color: white;
-    height: 40px;
+    height: fit-content;
 
     .footer{
         text-align: center;

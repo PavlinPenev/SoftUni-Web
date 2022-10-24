@@ -9,10 +9,8 @@ using static Store_Ge.Web.Constants.Constants.Accounts;
 
 namespace Store_Ge.Web.Controllers
 {
-    [Authorize]
-    [ApiController]
     [Route(Routes.ACCOUNTS_CONTROLLER)]
-    public class AccountsController : ControllerBase
+    public class AccountsController : StoreGeBaseController
     {
         private readonly IAccountsService accountsService;
         private readonly IEmailService emailService;

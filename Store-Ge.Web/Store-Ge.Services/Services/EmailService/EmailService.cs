@@ -37,7 +37,7 @@ namespace Store_Ge.Services.Services.EmailService
 
             var encodedUserId = dataProtector.Protect(Encoding.UTF8.GetBytes(user.Id.ToString()));
 
-            var htmlString = GenerateHtmlContent(token, encodedUserId.ToString(), "ConfirmEmailTemplate.html");
+            var htmlString = GenerateHtmlContent(token, encodedUserId.ToString(), "ConfirmEmailTemplate.html", storeGeAppSettings.StoreGeAppConfirmEmailUrl);
 
             await emailSender.SendEmailAsync(
                 STORE_GE_EMAIL_ADDRESS, 
@@ -61,7 +61,7 @@ namespace Store_Ge.Services.Services.EmailService
 
             var encodedUserId = dataProtector.Protect(Encoding.UTF8.GetBytes(user.Email));
 
-            var htmlString = GenerateHtmlContent(token, encodedUserId.ToString(), "PasswordResetEmailTemplate.html");
+            var htmlString = GenerateHtmlContent(token, encodedUserId.ToString(), "PasswordResetEmailTemplate.html", storeGeAppSettings.StoreGeAppResetPasswordUrl);
 
             await emailSender.SendEmailAsync(
                 STORE_GE_EMAIL_ADDRESS,
@@ -71,7 +71,7 @@ namespace Store_Ge.Services.Services.EmailService
                 htmlString);
         }
 
-        private string GenerateHtmlContent(string emailToken, string userId, string fileName)
+        private string GenerateHtmlContent(string emailToken, string userId, string fileName, string urlToFrontEnd)
         {
             var asm = Assembly.GetExecutingAssembly();
             var path = Path.GetDirectoryName(asm.Location);
@@ -80,7 +80,7 @@ namespace Store_Ge.Services.Services.EmailService
             var htmlContent = string.Format(
                 htmlString,
                 storeGeAppSettings.StoreGeAppBaseUrl,
-                storeGeAppSettings.StoreGeAppConfirmEmailUrl,
+                urlToFrontEnd,
                 emailToken,
                 userId);
 

@@ -10,12 +10,12 @@ import * as textConstants from '../assets/text.constants';
 export class AppComponent {
   constants = textConstants;
   currentYear = new Date().getFullYear();
+  route: string = '';
 
   get isUserNotLoggedIn(){
-    const route = this.router.url;
-    console.log(route);
+    this.route = this.router.url;
     
-    return route === '/login' || route === '/register' || route === '/home' || route === '/'
+    return this.route === '/login' || this.route === '/register' || this.route === '/home' || this.route === '/'
   }
 
   constructor(private router: Router){}

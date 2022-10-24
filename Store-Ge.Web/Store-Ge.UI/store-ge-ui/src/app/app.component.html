@@ -3,13 +3,13 @@
         <mat-icon>shopping_cart</mat-icon>     {{constants.APP_NAME}}
     </div>
     <div>
-        <button mat-raised-button color="primary" routerLink="/home">
+        <button *ngIf="route != '/home'" mat-raised-button color="primary" routerLink="/home">
             <mat-icon>home</mat-icon>     {{constants.HOME }}
         </button>
-        <button mat-raised-button color="primary" routerLink="/login">
+        <button *ngIf="route != '/login'" mat-raised-button color="primary" routerLink="/login">
             <mat-icon>login</mat-icon>     {{constants.LOGIN}}
         </button>
-        <button mat-raised-button color="primary" routerLink="/register">
+        <button *ngIf="route != '/register'" mat-raised-button color="primary" routerLink="/register">
             <mat-icon>password</mat-icon>     {{constants.REGISTER}}
         </button>
     </div>
