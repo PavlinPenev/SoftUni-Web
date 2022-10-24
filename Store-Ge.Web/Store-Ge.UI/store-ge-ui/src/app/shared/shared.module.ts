@@ -14,6 +14,9 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [],
@@ -32,7 +35,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatToolbarModule,
     MatTooltipModule,
     MatBottomSheetModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatCardModule,
+    MatCheckboxModule,
+    ReactiveFormsModule
   ],
   exports: [
     CommonModule,
@@ -49,7 +55,10 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatToolbarModule,
     MatTooltipModule,
     MatBottomSheetModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatCardModule,
+    MatCheckboxModule,
+    ReactiveFormsModule
   ]
 })
 export class SharedModule { }

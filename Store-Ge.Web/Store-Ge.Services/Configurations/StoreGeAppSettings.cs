@@ -6,6 +6,8 @@
 
         public string StoreGeAppConfirmEmailUrl { get; set; }
 
+        public string StoreGeAppResetPasswordUrl { get; set; }
+
         public string StoreGeAppLoginUrl { get; set; }
     }
 }
