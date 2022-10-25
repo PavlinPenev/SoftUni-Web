@@ -37,7 +37,7 @@
         </div>
         <mat-divider></mat-divider>
         <div class="button-wrapper">
-            <button mat-raised-button color="primary" [disabled]="!form.valid">{{constants.LOGIN}}</button>
+            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="login()">{{constants.LOGIN}}</button>
         </div>
     </form>    
 </div>

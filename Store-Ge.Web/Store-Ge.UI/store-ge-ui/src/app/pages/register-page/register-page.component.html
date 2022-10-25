@@ -75,7 +75,7 @@
         </div>
         <mat-divider style="margin-top: 10px;"></mat-divider>
         <div class="button-wrapper">
-            <button mat-raised-button color="primary" [disabled]="!form.valid">{{constants.REGISTER}}</button>
+            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="register()">{{constants.REGISTER}}</button>
         </div>
     </form>    
 </div>

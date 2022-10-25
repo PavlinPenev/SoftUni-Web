@@ -1,22 +1,31 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 import * as textConstants from '../assets/text.constants';
+import { AccountsService } from './services/accounts.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
   constants = textConstants;
   currentYear = new Date().getFullYear();
   route: string = '';
 
-  get isUserNotLoggedIn(){
+  get isUserLoggedIn() {
     this.route = this.router.url;
-    
-    return this.route === '/login' || this.route === '/register' || this.route === '/home' || this.route === '/'
+
+    return this.accountsService.isLoggedIn;
   }
 
-  constructor(private router: Router){}
+  constructor(
+    private router: Router,
+    private accountsService: AccountsService
+  ) {}
+
+  logout(): void {
+    this.accountsService.logout();
+  }
 }

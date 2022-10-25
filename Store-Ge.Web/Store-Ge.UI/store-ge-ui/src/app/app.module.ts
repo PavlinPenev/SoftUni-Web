@@ -8,6 +8,8 @@ import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { ErrorPageComponent } from './pages/error-page/error-page.component';
 import { SharedModule } from './shared/shared.module';
+import { ResendEmailPageComponent } from './pages/resend-email-page/resend-email-page.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,15 +17,17 @@ import { SharedModule } from './shared/shared.module';
     HomePageComponent,
     LoginPageComponent,
     RegisterPageComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    ResendEmailPageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    SharedModule
+    HttpClientModule,
+    SharedModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

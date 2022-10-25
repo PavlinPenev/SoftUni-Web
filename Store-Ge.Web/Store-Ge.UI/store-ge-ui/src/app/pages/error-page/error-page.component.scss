@@ -1,0 +1,24 @@
+.content-wrapper {
+    margin: auto;
+    margin-top: 160px;
+    overflow-wrap: break-word;
+    width: fit-content;
+
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 3px 3px 1px 3px #888888;
+
+    .mat-icon-wrapper {
+        width: 150px;
+        margin: auto;
+
+        mat-icon {
+            font-size: 150px;
+        }
+    }
+
+    mat-divider {
+        margin-bottom: 10px;
+    }
+}

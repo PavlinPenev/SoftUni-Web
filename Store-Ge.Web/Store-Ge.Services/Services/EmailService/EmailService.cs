@@ -49,7 +49,9 @@ namespace Store_Ge.Services.Services.EmailService
 
         public async Task ResendConfirmationMail(string email)
         {
-            var user = await userManager.FindByEmailAsync(email);
+            var decodedEmail = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(email));
+
+            var user = await userManager.FindByEmailAsync(decodedEmail);
             var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
             await SendConfirmationMail(token, user);

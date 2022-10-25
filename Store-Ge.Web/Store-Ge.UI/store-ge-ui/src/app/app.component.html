@@ -1,16 +1,21 @@
-<mat-toolbar class="navbar" *ngIf="isUserNotLoggedIn">
+<mat-toolbar class="navbar">
     <div class="store-ge-logo">
         <mat-icon>shopping_cart</mat-icon>     {{constants.APP_NAME}}
     </div>
-    <div>
-        <button *ngIf="route != '/home'" mat-raised-button color="primary" routerLink="/home">
+    <div class="navbar-buttons-wrapper">
+        <button mat-raised-button color="primary" routerLink="/home">
             <mat-icon>home</mat-icon>     {{constants.HOME }}
         </button>
-        <button *ngIf="route != '/login'" mat-raised-button color="primary" routerLink="/login">
-            <mat-icon>login</mat-icon>     {{constants.LOGIN}}
-        </button>
-        <button *ngIf="route != '/register'" mat-raised-button color="primary" routerLink="/register">
-            <mat-icon>password</mat-icon>     {{constants.REGISTER}}
+        <div *ngIf="!isUserLoggedIn">
+            <button *ngIf="route != '/login'" mat-raised-button color="primary" routerLink="/login">
+                <mat-icon>login</mat-icon>     {{constants.LOGIN}}
+            </button>
+            <button *ngIf="route != '/register'" mat-raised-button color="primary" routerLink="/register">
+                <mat-icon>password</mat-icon>     {{constants.REGISTER}}
+            </button>
+        </div>
+        <button *ngIf="isUserLoggedIn" mat-raised-button color="primary" (click)="logout()">
+            <mat-icon>logout</mat-icon>      {{constants.LOGOUT}}
         </button>
     </div>
 </mat-toolbar>
