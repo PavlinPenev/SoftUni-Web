@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.AspNetCore.WebUtilities;
 using Store_Ge.Services.Models;
 using Store_Ge.Services.Services.AccountsService;
 using Store_Ge.Services.Services.EmailService;
+using System.Text;
 using static Store_Ge.Web.Constants.Constants.Accounts;
 
 namespace Store_Ge.Web.Controllers
@@ -67,7 +68,9 @@ namespace Store_Ge.Web.Controllers
 
             await emailService.SendConfirmationMail(emailConfirmationToken, user);
 
-            return StatusCode(201);
+            var encodedEmail = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(user.Email));
+
+            return StatusCode(201, encodedEmail);
         }
 
 

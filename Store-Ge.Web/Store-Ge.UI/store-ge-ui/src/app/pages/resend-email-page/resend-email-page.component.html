@@ -1,0 +1,12 @@
+<div class="resend-email-wrapper">
+    <h1>{{constants.REGISTRATION_SUCCESSFULL}}</h1>
+    <mat-divider></mat-divider>
+    <div class="content-wrapper">
+        <p>{{constants.WE_HAVE_SENT_EMAIL}}</p>
+        <p>{{constants.IF_NO_EMAIL}}</p>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="button-wrapper">
+        <button mat-raised-button color="primary" (click)="resendConfirmationEmail()">{{constants.RESEND}}</button>
+    </div>
+</div>
