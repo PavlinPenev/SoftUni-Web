@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
 import * as textConstants from '../assets/text.constants';
 import { AccountsService } from './services/accounts.service';
 
