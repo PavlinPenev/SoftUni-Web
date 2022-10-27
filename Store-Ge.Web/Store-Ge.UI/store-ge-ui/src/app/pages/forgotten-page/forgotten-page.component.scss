@@ -8,20 +8,19 @@
     width: fit-content;
     margin-top: 160px;
 
-    .button-wrapper {
-        margin-top: 10px;
-        margin-left: 10px;
-
-        a {
-            display: block;
-        }
+    mat-divider{
+        margin-bottom: 10px;
     }
-}
 
-.field {
-    padding-left: 11px;
-}
+    .field {
+        margin-left: 10px;
+    }
 
-.fields-icon {
-    margin-left: 24px;
+    .fields-icon {
+        margin-left: 24px;
+    }
+
+    .button-wrapper {
+        margin-left: 10px;
+    }
 }

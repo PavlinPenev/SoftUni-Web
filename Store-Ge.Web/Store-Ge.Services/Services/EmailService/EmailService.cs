@@ -61,9 +61,9 @@ namespace Store_Ge.Services.Services.EmailService
         {
             var token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(passwordResetToken));
 
-            var encodedUserId = dataProtector.Protect(Encoding.UTF8.GetBytes(user.Email));
+            var encodedEmail = dataProtector.Protect(Encoding.UTF8.GetBytes(user.Email));
 
-            var htmlString = GenerateHtmlContent(token, encodedUserId.ToString(), "PasswordResetEmailTemplate.html", storeGeAppSettings.StoreGeAppResetPasswordUrl);
+            var htmlString = GenerateHtmlContent(token, encodedEmail.ToString(), "PasswordResetEmailTemplate.html", storeGeAppSettings.StoreGeAppResetPasswordUrl);
 
             await emailSender.SendEmailAsync(
                 STORE_GE_EMAIL_ADDRESS,
@@ -73,7 +73,7 @@ namespace Store_Ge.Services.Services.EmailService
                 htmlString);
         }
 
-        private string GenerateHtmlContent(string emailToken, string userId, string fileName, string urlToFrontEnd)
+        private string GenerateHtmlContent(string emailToken, string secondParameter, string fileName, string urlToFrontEnd)
         {
             var asm = Assembly.GetExecutingAssembly();
             var path = Path.GetDirectoryName(asm.Location);
@@ -84,7 +84,7 @@ namespace Store_Ge.Services.Services.EmailService
                 storeGeAppSettings.StoreGeAppBaseUrl,
                 urlToFrontEnd,
                 emailToken,
-                userId);
+                secondParameter);
 
             return htmlContent;
         }

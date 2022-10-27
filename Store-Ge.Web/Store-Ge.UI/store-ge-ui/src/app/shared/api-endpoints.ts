@@ -24,3 +24,9 @@ export const REFRESH_ACCESS_TOKEN_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('refresh-token');
 export const RESEND_CONFIRMATION_EMAIL_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('resend-confirmation-email');
+export const CONFIRM_EMAIL_ENDPOINT =
+  prependBaseUrlAndAccountsControllerRoute('confirm-email');
+export const FORGOT_PASSWORD_ENDPOINT =
+  prependBaseUrlAndAccountsControllerRoute('forgot-password');
+export const RESET_PASSWORD_ENDPOINT =
+  prependBaseUrlAndAccountsControllerRoute('password-reset');

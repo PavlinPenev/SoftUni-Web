@@ -119,7 +119,7 @@ namespace Store_Ge.Web.Controllers
                 return BadRequest(result);
             }
 
-            return Ok();
+            return Ok(result.Succeeded);
         }
 
         [HttpGet]
@@ -172,7 +172,7 @@ namespace Store_Ge.Web.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return Ok(result.Succeeded);
         }
     }
 }
