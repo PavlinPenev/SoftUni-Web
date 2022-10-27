@@ -37,6 +37,7 @@
         </div>
         <mat-divider></mat-divider>
         <div class="button-wrapper">
+            <a routerLink="/forgot-password">{{constants.FORGOTTEN_PASSWORD}}</a>
             <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="login()">{{constants.LOGIN}}</button>
         </div>
     </form>    

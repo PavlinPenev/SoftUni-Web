@@ -10,6 +10,9 @@ import { ErrorPageComponent } from './pages/error-page/error-page.component';
 import { SharedModule } from './shared/shared.module';
 import { ResendEmailPageComponent } from './pages/resend-email-page/resend-email-page.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ConfirmEmailPageComponent } from './pages/confirm-email-page/confirm-email-page.component';
+import { ForgottenPageComponent } from './pages/forgotten-page/forgotten-page.component';
+import { ResetPasswordPageComponent } from './pages/reset-password-page/reset-password-page.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +22,9 @@ import { HttpClientModule } from '@angular/common/http';
     RegisterPageComponent,
     ErrorPageComponent,
     ResendEmailPageComponent,
+    ConfirmEmailPageComponent,
+    ForgottenPageComponent,
+    ResetPasswordPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { AccountsService } from 'src/app/services/accounts.service';
 import * as constants from '../../../assets/text.constants';
 
 @Component({
@@ -11,7 +12,10 @@ export class ResendEmailPageComponent implements OnInit {
   constants = constants;
   email!: string;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private accountsService: AccountsService
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -19,5 +23,7 @@ export class ResendEmailPageComponent implements OnInit {
     });
   }
 
-  resendConfirmationEmail(): void {}
+  resendConfirmationEmail(): void {
+    this.accountsService.resendConfirmationEmail(this.email);
+  }
 }

@@ -51,6 +51,10 @@ export const PROCEED_REGISTRATION =
 export const ACCEPT_CHECKBOX = 'Terms of Agreement should be accepted.';
 // end of Register page constants
 
+// Login page constants
+export const FORGOTTEN_PASSWORD = 'Forgot your password?';
+// end of Login page constants
+
 // Resend email page constants
 export const REGISTRATION_SUCCESSFULL = 'Registration process successful!';
 export const WE_HAVE_SENT_EMAIL =
@@ -59,3 +63,24 @@ export const IF_NO_EMAIL =
   "If you haven't received a mail click the button below for us to resend the confirmation email.";
 export const RESEND = 'Resend';
 // end of Resend email page constants
+
+// Confirm Email page constants
+export const CONFIRMATION_SUCCESSFUL = 'Thank you for confirming your email!';
+export const TO_START =
+  'To start using our application click the Login button.';
+export const SOMETHING_WENT_WRONG = 'Something went wrong.';
+export const CLOSE = 'Close';
+// end of Confirm Email page constants
+
+// Forgotten Password page constants
+export const FORGOT_PASSWORD = 'Forgotten Password';
+export const SUBMIT = 'Submit';
+export const FILL_EMAIL_TO_SEND_RESET_PASSWORD_MAIL =
+  'Fill your Email Address for us to send our Reset Password mail.';
+// end of Forgotten Password page constants
+
+// Reset Password page constants
+export const RESET_PASSWORD = 'Reset Password';
+export const FILL_PASSWORDS_TO_RESET =
+  'Fill your new password, confirm it for us to reset it.';
+// end of Reset Password page constants
