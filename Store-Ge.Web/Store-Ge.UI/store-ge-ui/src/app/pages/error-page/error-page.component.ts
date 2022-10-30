@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as constants from '../../../assets/text.constants';
+import * as constants from 'src/assets/text.constants';
 
 @Component({
   selector: 'app-error-page',

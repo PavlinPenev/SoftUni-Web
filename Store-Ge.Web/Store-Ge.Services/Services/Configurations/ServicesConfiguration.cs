@@ -2,6 +2,8 @@
 using Store_Ge.Services.Services.EmailService;
 using Store_Ge.Services.Services.AccountsService;
 using Store_Ge.Services.Services.EmailService.EmailSender;
+using Store_Ge.Services.Services.StoresService;
+using Store_Ge.Services.Services.AuditTrailService;
 
 namespace Store_Ge.Services.Configurations
 {
@@ -10,8 +12,10 @@ namespace Store_Ge.Services.Configurations
         public static void AddServiceLayer(this IServiceCollection services)
         {
             services.AddScoped<IAccountsService,AccountsService>();
+            services.AddScoped<IStoresService, StoresService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddTransient<IEmailSender, SendGridEmailSender>();
+            services.AddScoped<IAuditTrailService, AuditTrailService>();
         }
     }
 }

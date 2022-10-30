@@ -35,7 +35,7 @@ namespace Store_Ge.Services.Services.EmailService
         {
             var token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(emailToken));
 
-            var encodedUserId = dataProtector.Protect(Encoding.UTF8.GetBytes(user.Id.ToString()));
+            var encodedUserId = dataProtector.Protect(user.Id.ToString());
 
             var htmlString = GenerateHtmlContent(token, encodedUserId.ToString(), "ConfirmEmailTemplate.html", storeGeAppSettings.StoreGeAppConfirmEmailUrl);
 
@@ -61,7 +61,7 @@ namespace Store_Ge.Services.Services.EmailService
         {
             var token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(passwordResetToken));
 
-            var encodedEmail = dataProtector.Protect(Encoding.UTF8.GetBytes(user.Email));
+            var encodedEmail = dataProtector.Protect(user.Email);
 
             var htmlString = GenerateHtmlContent(token, encodedEmail.ToString(), "PasswordResetEmailTemplate.html", storeGeAppSettings.StoreGeAppResetPasswordUrl);
 

@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { ResetPasswordRequest } from 'src/app/models/reset-password.model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import * as constants from '../../../assets/text.constants';
+import * as constants from 'src/assets/text.constants';
 
 @Component({
   selector: 'app-reset-password-page',

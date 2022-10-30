@@ -1,0 +1,53 @@
+.empty-state-container {
+    margin: auto;
+    margin-top: 100px;
+    overflow-wrap: break-word;
+    width: 30%;
+
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 3px 3px 1px 3px #888888;
+
+    mat-divider {
+        margin-bottom: 10px;
+    }
+
+    .mat-icon-wrapper {
+        margin-left: 36%;
+        mat-icon {
+            font-size: 150px;
+
+        }
+    }
+}
+
+.cards-wrapper {
+    display: flex;
+    margin-left: 30%;
+    margin-top: 20px;
+
+    .card {
+        width: 200px;
+        height: 80px;
+        margin-right: 20px;
+
+        mat-card-content {
+            display: flex;
+            justify-content: space-between;
+            height: 100%;
+
+            mat-icon {
+                font-size: 50px;
+            }
+
+            mat-divider {
+                margin: 0 20px 0 30px;
+            }
+
+            .title-wrapper {
+                display: block;
+            }
+        }
+    }
+}

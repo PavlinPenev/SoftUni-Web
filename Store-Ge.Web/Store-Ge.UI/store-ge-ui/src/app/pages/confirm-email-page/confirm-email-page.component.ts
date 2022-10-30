@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { filter, first } from 'rxjs';
 import { ConfirmEmailRequest } from 'src/app/models/confirm-email.model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import * as constants from '../../../assets/text.constants';
+import * as constants from 'src/assets/text.constants';
 
 @Component({
   selector: 'app-confirm-email-page',

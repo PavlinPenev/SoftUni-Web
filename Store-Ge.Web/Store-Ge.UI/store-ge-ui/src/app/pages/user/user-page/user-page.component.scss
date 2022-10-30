@@ -1,0 +1,36 @@
+.sidenav-container {
+    width: fit-content;
+    position: fixed;
+    display: flex;
+    margin-top: 250px;
+
+    .sidenav {
+
+        mat-list-item {
+            display: block;
+
+            button {
+                width: 100%;
+            }
+
+            .list-item-container {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+    }
+}
+
+.spinner-wrapper {
+    position: fixed;
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+
+    mat-spinner {
+        position: sticky;
+        top: 40%;
+        left: 48%;
+    }
+}

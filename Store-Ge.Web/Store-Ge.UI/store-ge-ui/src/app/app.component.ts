@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import * as textConstants from '../assets/text.constants';
 import { AccountsService } from './services/accounts.service';
@@ -8,7 +8,7 @@ import { AccountsService } from './services/accounts.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   constants = textConstants;
   currentYear = new Date().getFullYear();
   route: string = '';
@@ -21,8 +21,10 @@ export class AppComponent {
 
   constructor(
     private router: Router,
-    private accountsService: AccountsService
+    public accountsService: AccountsService
   ) {}
+
+  ngOnInit(): void {}
 
   logout(): void {
     this.accountsService.logout();

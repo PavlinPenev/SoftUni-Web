@@ -8,6 +8,7 @@ namespace Store_Ge.Services.AutoMapper
     {
         public ApplicationUserProfile() 
         {
+            CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<ApplicationUserRegisterDto, ApplicationUser>();
             CreateMap<ApplicationUserLoginDto, ApplicationUser>();
             CreateMap<ApplicationUser, ApplicationUserLoginResponseDto>();

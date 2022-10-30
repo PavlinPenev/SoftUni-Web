@@ -21,6 +21,7 @@
     box-shadow: 1px 1px 1px 1px #888888;
     position: sticky;
     top: 0;
+    z-index: 10;
 
     .store-ge-logo{
         background-color: #512DA8;
@@ -38,4 +39,20 @@
     div > button {
         margin-left: 15px;
     }
+}
+
+.logout-button {
+    margin: 10px 20px;
+}
+
+.menu-divider {
+    margin: 0 10px;
+}
+
+.menu-title {
+    margin-left: 10px;
+}
+
+.menu-p {
+    margin-bottom: 0px;
 }
