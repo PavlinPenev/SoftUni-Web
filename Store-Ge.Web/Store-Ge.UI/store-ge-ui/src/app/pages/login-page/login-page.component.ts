@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { LoginRequest } from 'src/app/models/login-request.model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import * as textConstants from '../../../assets/text.constants';
+import * as textConstants from 'src/assets/text.constants';
 
 @Component({
   selector: 'app-login-page',

@@ -30,3 +30,17 @@ export const FORGOT_PASSWORD_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('forgot-password');
 export const RESET_PASSWORD_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('password-reset');
+export const GET_USER_ENDPOINT =
+  prependBaseUrlAndAccountsControllerRoute('get-user');
+
+// Stores Controller
+const prependStoresControllerRoute = joinWithSlash('api/stores');
+const prependBaseUrlAndStoresControllerRoute = compose(
+  prependWithBaseUrl,
+  prependStoresControllerRoute
+);
+
+export const GET_USER_STORES_ENDPOINT =
+  prependBaseUrlAndStoresControllerRoute('get-stores');
+export const ADD_STORE_ENDPOINT =
+  prependBaseUrlAndStoresControllerRoute('add-store');

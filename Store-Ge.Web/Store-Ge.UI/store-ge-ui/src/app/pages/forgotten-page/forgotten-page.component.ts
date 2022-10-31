@@ -6,7 +6,7 @@ import {
 } from '@angular/forms';
 import { ForgotPasswordRequest } from 'src/app/models/forgot-password.model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import * as constants from '../../../assets/text.constants';
+import * as constants from 'src/assets/text.constants';
 @Component({
   selector: 'app-forgotten-page',
   templateUrl: './forgotten-page.component.html',

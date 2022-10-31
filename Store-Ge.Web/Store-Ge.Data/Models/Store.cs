@@ -13,6 +13,7 @@ namespace Store_Ge.Data.Models
             UsersStores = new HashSet<UserStore>();
             Orders = new HashSet<Order>();
             Products = new HashSet<Product>();
+            AuditEvents = new HashSet<AuditEvent>();
         }
 
         [Key]
@@ -38,5 +39,7 @@ namespace Store_Ge.Data.Models
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
+
+        public virtual ICollection<AuditEvent> AuditEvents { get; set; }
     }
 }

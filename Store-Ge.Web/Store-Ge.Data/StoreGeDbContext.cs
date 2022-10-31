@@ -56,6 +56,10 @@ namespace Store_Ge.Data
                 .HasMany(s => s.Orders)
                 .WithOne(o => o.Store)
                 .OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Store>()
+                .HasMany(s => s.AuditEvents)
+                .WithOne(ae => ae.Store)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Product Model Creating
             builder.Entity<Product>()

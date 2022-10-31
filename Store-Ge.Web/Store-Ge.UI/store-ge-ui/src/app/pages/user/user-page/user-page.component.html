@@ -1,0 +1,53 @@
+<div *ngIf="isUserLoading && areStoresLoading" class="spinner-wrapper">
+    <mat-spinner diameter="100" color="accent"></mat-spinner>
+</div>
+<div class="sidenav-container">
+    <mat-sidenav #drawer class="sidenav" mode="side" opened="true">
+        <mat-list-item>
+           <button mat-button >
+                <div class="list-item-container">
+                    <p *ngIf="isExpanded">{{constants.STORES}}</p>
+                    <a mat-button routerLink="/stores">
+                        <mat-icon color="primary">store</mat-icon>
+                    </a>
+                </div>
+           </button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button >
+                <div class="list-item-container">
+                    <p *ngIf="isExpanded">{{constants.SUPPLIERS}}</p>
+                    <a mat-button routerLink="/suppliers">
+                        <mat-icon color="primary">local_shipping</mat-icon>
+                    </a>
+                </div>
+            </button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button >
+                <div class="list-item-container">
+                    <p *ngIf="isExpanded">{{constants.ORDERS}}</p>
+                    <a mat-button routerLink="/orders">
+                        <mat-icon color="primary">inventory</mat-icon>
+                    </a>
+                </div>
+            </button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button>
+                <div class="list-item-container">
+                    <p *ngIf="isExpanded">{{constants.SALES}}</p>
+                    <a mat-button routerLink="">
+                        <mat-icon color="primary">point_of_sale</mat-icon>
+                    </a>
+                </div>
+            </button>                 
+        </mat-list-item>
+    </mat-sidenav>
+    <div class="sidenav-toggle">
+      <button mat-icon-button (click)="isExpanded = !isExpanded">
+        <mat-icon color="primary">{{ isExpanded ? 'chevron_left' : 'chevron_right' }}</mat-icon>
+      </button>
+    </div>
+</div>
+<router-outlet></router-outlet>

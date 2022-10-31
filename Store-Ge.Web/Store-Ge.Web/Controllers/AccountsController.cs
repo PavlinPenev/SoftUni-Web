@@ -53,6 +53,8 @@ namespace Store_Ge.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route(Routes.ACCOUNTS_REGISTER_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register([FromBody] ApplicationUserRegisterDto userRegisterModel)
         {
             var result = await accountsService.RegisterUser(userRegisterModel);
@@ -70,15 +72,15 @@ namespace Store_Ge.Web.Controllers
 
             var encodedEmail = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(user.Email));
 
-            return StatusCode(201, encodedEmail);
+            return StatusCode(201, new { encodedEmail });
         }
 
 
 
-        [HttpPost]
+        [HttpGet]
         [AllowAnonymous]
         [Route(Routes.REFRESH_ACCESS_TOKEN_ENDPOINT)]
-        public async Task<IActionResult> RefreshAccessToken([FromQuery] string refreshToken, [FromQuery] int userId)
+        public async Task<IActionResult> RefreshAccessToken([FromQuery] string refreshToken, [FromQuery] string userId)
         {
             var result = new ApplicationUserTokensDto();
 
@@ -173,6 +175,20 @@ namespace Store_Ge.Web.Controllers
             }
 
             return Ok(result.Succeeded);
+        }
+
+        [HttpGet]
+        [Route(Routes.GET_USER_ENDPOINT)]
+        public async Task<IActionResult> GetUser([FromQuery] string userId)
+        {
+            var user = await accountsService.GetUser(userId);
+
+            if (user == null)
+            {
+                return BadRequest(userId);
+            }
+
+            return Ok(user);
         }
     }
 }

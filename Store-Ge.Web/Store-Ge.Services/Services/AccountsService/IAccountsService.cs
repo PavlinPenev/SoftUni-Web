@@ -33,7 +33,7 @@ namespace Store_Ge.Services.Services.AccountsService
         /// <param name="refreshToken"> The user's refresh token </param>
         /// <param name="userId"> The user's Id </param>
         /// <returns> A model containing both Refresh and Access tokens </returns>
-        Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, int userId);
+        Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, string userId);
 
 
         /// <summary>
@@ -42,6 +42,13 @@ namespace Store_Ge.Services.Services.AccountsService
         /// <param name="email"> The user's email address </param>
         /// <returns> The user </returns>
         Task<ApplicationUser> GetUserByEmail(string email);
+
+        /// <summary>
+        ///  Gets a user using his user Id
+        /// </summary>
+        /// <param name="userId"> The user's Id(protected) </param>
+        /// <returns> The user </returns>
+        Task<ApplicationUserDto> GetUser(string userId);
 
         /// <summary>
         ///  Confirms a user's email address

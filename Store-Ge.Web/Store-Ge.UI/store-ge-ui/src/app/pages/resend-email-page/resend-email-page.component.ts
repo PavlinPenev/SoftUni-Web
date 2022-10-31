@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AccountsService } from 'src/app/services/accounts.service';
-import * as constants from '../../../assets/text.constants';
+import * as constants from 'src/assets/text.constants';
 
 @Component({
   selector: 'app-resend-email-page',

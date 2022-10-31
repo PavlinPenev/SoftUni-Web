@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { RegisterRequest } from 'src/app/models/register-request.model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import * as textConstants from '../../../assets/text.constants';
+import * as textConstants from 'src/assets/text.constants';
 
 @Component({
   selector: 'app-register-page',

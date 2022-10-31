@@ -6,7 +6,7 @@ import {
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { catchError, throwError } from 'rxjs';
+import { catchError, filter, first, Observable, of, throwError } from 'rxjs';
 import { ConfirmEmailRequest } from '../models/confirm-email.model';
 import { LoginRequest } from '../models/login-request.model';
 import { LoginResponse } from '../models/login-response.model';
@@ -16,6 +16,7 @@ import { ForgotPasswordRequest } from '../models/forgot-password.model';
 import {
   CONFIRM_EMAIL_ENDPOINT,
   FORGOT_PASSWORD_ENDPOINT,
+  GET_USER_ENDPOINT,
   LOGIN_ENDPOINT,
   REFRESH_ACCESS_TOKEN_ENDPOINT,
   REGISTER_ENDPOINT,
@@ -23,22 +24,23 @@ import {
   RESET_PASSWORD_ENDPOINT,
 } from '../shared/api-endpoints';
 import { ResetPasswordRequest } from '../models/reset-password.model';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccountsService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
+  loggedUser!: User;
 
-  get isLoggedIn(): boolean {
-    return !!this.getAccessToken() ? true : false;
+  get isLoggedIn(): Observable<boolean> {
+    return of(!!this.getAccessToken() ? true : false);
   }
 
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
-    private router: Router,
-    private activatedRoute: ActivatedRoute
+    private router: Router
   ) {}
 
   getAccessToken() {
@@ -47,11 +49,14 @@ export class AccountsService {
 
   register(request: RegisterRequest) {
     return this.http
-      .post<string>(REGISTER_ENDPOINT, request)
-      .pipe(catchError(this.handleError))
-      .subscribe((response: string) => {
+      .post<any>(REGISTER_ENDPOINT, request)
+      .pipe(
+        filter((x) => !!x),
+        first()
+      )
+      .subscribe((response) => {
         this.router.navigate(['/resend-email'], {
-          queryParams: { email: response },
+          queryParams: { email: response.encodedEmail },
         });
       });
   }
@@ -69,24 +74,21 @@ export class AccountsService {
 
   refreshAccessToken() {
     const refreshToken = this.cookieService.get('refresh_token');
-    const userId = this.activatedRoute.snapshot.params['userId'];
+    const userId = this.router.url.replace('/user/', '');
 
-    return this.http.post<RefreshAccessTokenResponse>(
+    return this.http.get<RefreshAccessTokenResponse>(
       REFRESH_ACCESS_TOKEN_ENDPOINT,
       {
-        options: {
-          params: {
-            refreshToken: refreshToken,
-            userId: userId,
-          },
+        params: {
+          refreshToken: refreshToken,
+          userId: userId,
         },
       }
     );
   }
 
   logout() {
-    this.cookieService.delete('access_token');
-    this.cookieService.delete('refresh_token');
+    this.cookieService.deleteAll();
     if (!this.getAccessToken()) {
       this.router.navigate(['/login']);
     }
@@ -117,6 +119,14 @@ export class AccountsService {
           this.router.navigate(['/login']);
         }
       });
+  }
+
+  getUser(userId: string): Observable<User> {
+    return this.http.get<User>(GET_USER_ENDPOINT, {
+      params: {
+        userId: userId,
+      },
+    });
   }
 
   handleError(error: HttpErrorResponse) {

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../services/authorization.interceptor';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [],
@@ -41,6 +45,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatCheckboxModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    MatMenuModule,
+    MatListModule,
   ],
   exports: [
     CommonModule,
@@ -62,6 +68,15 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatCheckboxModule,
     ReactiveFormsModule,
     MatSnackBarModule,
+    MatMenuModule,
+    MatListModule,
+  ],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
   ],
 })
 export class SharedModule {}

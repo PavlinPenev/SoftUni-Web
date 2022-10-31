@@ -94,17 +94,18 @@ namespace Store_Ge.Services.Services.AccountsService
             return token;
         }
 
-        public async Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, int userId)
+        public async Task<ApplicationUserTokensDto> RefreshAccessTokenAsync(string refreshToken, string userId)
         {
-            var user = await userManager.FindByIdAsync(userId.ToString());
+            var decodedUserId = dataProtector.Unprotect(userId);
+            var user = await userManager.FindByIdAsync(decodedUserId);
             if (user == null)
             {
                 throw new NullReferenceException(USER_NOT_FOUND);
             }
 
-            var userOldRefreshToken = dataProtector.Unprotect(user.RefreshToken);
+            refreshToken = dataProtector.Unprotect(refreshToken);
 
-            if (refreshToken != userOldRefreshToken)
+            if (refreshToken != user.RefreshToken && DateTime.UtcNow > user.RefreshTokenExpirationDate)
             {
                 throw new MemberAccessException(WRONG_CREDENTIALS);
             }
@@ -122,6 +123,16 @@ namespace Store_Ge.Services.Services.AccountsService
             var user = await userManager.FindByEmailAsync(email);
 
             return user;
+        }
+
+        public async Task<ApplicationUserDto> GetUser(string userId)
+        {
+            var unprotectedUserId = dataProtector.Unprotect(userId);
+            var user = await userManager.FindByIdAsync(unprotectedUserId);
+
+            var mappedUser = mapper.Map<ApplicationUserDto>(user);
+
+            return mappedUser;
         }
 
         public async Task<IdentityResult> ConfirmEmail(ConfirmEmailDto confirmEmailDto)
@@ -204,8 +215,8 @@ namespace Store_Ge.Services.Services.AccountsService
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.AccessToken = dataProtector.Protect(tokenHandler.WriteToken(token));
-            user.RefreshToken = dataProtector.Protect(GenerateRefreshToken());
+            user.AccessToken = tokenHandler.WriteToken(token);
+            user.RefreshToken = GenerateRefreshToken();
             user.RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1.5);
 
             usersRepository.Update(user);

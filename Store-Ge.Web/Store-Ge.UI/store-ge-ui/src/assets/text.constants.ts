@@ -26,6 +26,7 @@ export const INVALID_EMAIL = 'Invalid Email Address format.';
 export const INVALID_PASSWORD =
   'Invalid password. Password should be at least 8 characters long and also should contain at least one lower case, one upper case, one digit and one special symbol.';
 export const PASSWORDS_DONT_MATCH = "Passwords don't match.";
+export const UNAUTHORIZED = 'Unauthorized access!';
 // end of Error Messages
 
 // Validations
@@ -84,3 +85,17 @@ export const RESET_PASSWORD = 'Reset Password';
 export const FILL_PASSWORDS_TO_RESET =
   'Fill your new password, confirm it for us to reset it.';
 // end of Reset Password page constants
+
+// User Common page constants
+export const COUNT = 'Count: ';
+export const ACCOUNT_SETTINGS = 'Account Settings';
+export const ADD_STORE = 'Add Store';
+export const STORES = 'Stores';
+export const ADD_SUPPLIER = 'Add Supplier';
+export const SUPPLIERS = 'Suppliers';
+export const ADD_ORDER = 'Add Order';
+export const ORDERS = 'Orders';
+export const SALES = 'Sales';
+export const NO_STORES_ADDED =
+  "You still haven't added any stores in your profile. Click the Add Store button below and start managing your stores.";
+// end of User Common page constants
