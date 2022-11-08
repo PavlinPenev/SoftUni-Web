@@ -32,6 +32,7 @@ export const UNAUTHORIZED = 'Unauthorized access!';
 // Validations
 export const PASSWORD_VALIDATION_PATTERN =
   '^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$';
+export const STORE_NAME_MAX_LENGTH = 20;
 // end of Validations
 
 // Error page constants
@@ -98,4 +99,18 @@ export const ORDERS = 'Orders';
 export const SALES = 'Sales';
 export const NO_STORES_ADDED =
   "You still haven't added any stores in your profile. Click the Add Store button below and start managing your stores.";
+export const NAME = 'Name';
+export const TYPE = 'Type';
 // end of User Common page constants
+
+// Store page constants
+export const STORE_DATA = 'Store Data';
+export const PRODUCTS = 'Products';
+export const EXPORT_EXCEL = 'Export Excel Report';
+export const SEARCH_BY_NAME = 'Search by name';
+export const PRICE = 'Price';
+export const QUANTITY = 'Quantity';
+export const MEASUREMENT_UNIT = 'Measurement Unit';
+export const GO_BACK = 'Go Back';
+export const NO_PRODUCTS_FOUND = 'No Products Found';
+// end of Store page constants

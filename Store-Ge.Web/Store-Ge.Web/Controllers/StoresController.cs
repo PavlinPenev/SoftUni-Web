@@ -32,8 +32,23 @@ namespace Store_Ge.Web.Controllers
             return Ok(result);
         }
 
+        //TODO: GetStore(storeId)
+        [HttpGet]
+        [Route(Routes.GET_STORE_ENDPOINT)]
+        public async Task<IActionResult> GetStore([FromQuery] string storeId)
+        {
+            var result = await storesService.GetStore(storeId);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
         [HttpPost]
-        [Route(Routes.ADD_STORE)]
+        [Route(Routes.ADD_STORE_ENDPOINT)]
         public async Task<IActionResult> AddStore([FromBody] AddStoreDto addStoreRequest)
         {
             var result = await storesService.AddStore(addStoreRequest);

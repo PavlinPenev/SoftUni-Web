@@ -28,7 +28,7 @@ namespace Store_Ge.Services.Services.EmailService
             this.userManager = userManager;
             this.emailSender = emailSender;
             this.storeGeAppSettings = storeGeAppSettings.Value;
-            this.dataProtector = dataProtectionProvider.CreateProtector(STORE_GE_DATA_PROTECTION_STRING_LITERAL);
+            this.dataProtector = dataProtectionProvider.CreateProtector(this.storeGeAppSettings.DataProtectionKey);
         }
 
         public async Task SendConfirmationMail(string emailToken, ApplicationUser user)

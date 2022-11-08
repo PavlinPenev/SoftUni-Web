@@ -1,17 +1,6 @@
 <div class="cards-wrapper">
     <mat-card class="card">
         <mat-card-content>
-            <mat-icon color="primary">store</mat-icon>
-            <mat-divider [vertical]="true"></mat-divider>
-            <div class="title-wrapper">
-                <mat-card-title>{{constants.STORES}}</mat-card-title>
-                <mat-card-subtitle>{{constants.COUNT}}{{userStores.length}}</mat-card-subtitle>
-                <a mat-button routerLink="/stores">{{constants.STORES}}</a>
-            </div>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="card">
-        <mat-card-content>
             <mat-icon color="primary">local_shipping</mat-icon>
             <mat-divider [vertical]="true"></mat-divider>
             <div class="title-wrapper">
@@ -33,24 +22,32 @@
         </mat-card-content>
     </mat-card>
 </div>
-<div *ngIf="userStores.length === 0" class="empty-state-container">
+<div *ngIf="isEmptyStateVisible()" class="empty-state-container">
     <h1>{{constants.NO_STORES_ADDED}}</h1>
     <mat-divider></mat-divider>
     <div class="mat-icon-wrapper">
         <mat-icon color="primary">store</mat-icon>
     </div>
     <mat-divider></mat-divider>
-    <button mat-button>
+    <button mat-button (click)="addStore()">
         <mat-icon>add_business</mat-icon>    {{constants.ADD_STORE}}
     </button>
 </div>
-<div *ngIf="userStores.length > 0">
-    <button mat-button *ngFor="let store of userStores">
-        <mat-card>
-            <mat-card-header>
-                <mat-card-title>{{store.name}}</mat-card-title>
-                <mat-card-subtitle>{{store.type}}</mat-card-subtitle>
-            </mat-card-header>
-        </mat-card>
-    </button>
+<div *ngIf="isStoreCardContainerVisible()" class="stores-cards-container">
+    <div class="add-store-button-container">
+        <button mat-button (click)="addStore()">
+            <mat-icon>add_business</mat-icon>    {{constants.ADD_STORE}}
+        </button>
+    </div>
+    <mat-divider style="margin-bottom: 20px;"></mat-divider>
+    <div class="store-cards-wrapper">
+        <button class="card" mat-button *ngFor="let store of userStores" (click)="goToStorePage(store)">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>{{store.name}}</mat-card-title>
+                    <mat-card-subtitle>{{getStoreTypeString(store.type)}}</mat-card-subtitle>
+                </mat-card-header>
+            </mat-card>
+        </button>
+    </div>
 </div>

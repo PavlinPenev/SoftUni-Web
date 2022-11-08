@@ -20,6 +20,13 @@ namespace Store_Ge.Services.Services.StoresService
         Task<StoreDto> GetStoreByNameAndUserId(string userId, string name);
 
         /// <summary>
+        /// Gets a store by its Id
+        /// </summary>
+        /// <param name="storeId"> The store's Id </param>
+        /// <returns> The store </returns>
+        Task<StoreDto> GetStore(string storeId);
+
+        /// <summary>
         ///  Adds a store to the user's stores
         /// </summary>
         /// <param name="addStoreDto"> The add store request model containing request params(UserId, Name, Type) </param>

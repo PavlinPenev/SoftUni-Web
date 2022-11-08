@@ -31,7 +31,17 @@
             {
                 public const string STORES_CONTROLLER = "api/stores";
                 public const string GET_USER_STORES_ENDPOINT = "get-stores";
-                public const string ADD_STORE = "add-store";
+                public const string ADD_STORE_ENDPOINT = "add-store";
+                public const string GET_STORE_ENDPOINT = "get-store";
+            }
+        }
+
+        public static class Products
+        {
+            public static class Routes
+            {
+                public const string PRODUCTS_CONTROLLER = "api/products";
+                public const string GET_STORE_PRODUCTS_ENDPOINT = "get-store-products";
             }
         }
     }

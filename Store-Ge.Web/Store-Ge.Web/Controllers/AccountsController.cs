@@ -92,9 +92,9 @@ namespace Store_Ge.Web.Controllers
             {
                 return NotFound(e.Message);
             }
-            catch (MemberAccessException e)
+            catch (MemberAccessException)
             {
-                return Unauthorized(e.Message);
+                return Forbid();
             }
 
             return Ok(result);

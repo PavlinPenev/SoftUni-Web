@@ -42,5 +42,17 @@ const prependBaseUrlAndStoresControllerRoute = compose(
 
 export const GET_USER_STORES_ENDPOINT =
   prependBaseUrlAndStoresControllerRoute('get-stores');
+export const GET_STORE_ENDPOINT =
+  prependBaseUrlAndStoresControllerRoute('get-store');
 export const ADD_STORE_ENDPOINT =
   prependBaseUrlAndStoresControllerRoute('add-store');
+
+// Products Controller
+const prependProductsControllerRoute = joinWithSlash('api/products');
+const prependBaseUrlAndProductsControllerRoute = compose(
+  prependWithBaseUrl,
+  prependProductsControllerRoute
+);
+
+export const GET_STORE_PRODUCTS_ENDPOINT =
+  prependBaseUrlAndProductsControllerRoute('get-store-products');

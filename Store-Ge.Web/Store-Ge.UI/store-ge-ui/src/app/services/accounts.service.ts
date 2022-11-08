@@ -34,7 +34,7 @@ export class AccountsService {
   loggedUser!: User;
 
   get isLoggedIn(): Observable<boolean> {
-    return of(!!this.getAccessToken() ? true : false);
+    return of(this.getAccessToken() ? true : false);
   }
 
   constructor(
@@ -67,6 +67,7 @@ export class AccountsService {
       .subscribe((response: LoginResponse) => {
         this.cookieService.set('access_token', response.accessToken);
         this.cookieService.set('refresh_token', response.refreshToken);
+        this.cookieService.set('uid', response.id);
 
         this.router.navigate(['/user', response.id]);
       });
@@ -74,7 +75,7 @@ export class AccountsService {
 
   refreshAccessToken() {
     const refreshToken = this.cookieService.get('refresh_token');
-    const userId = this.router.url.replace('/user/', '');
+    const userId = this.cookieService.get('uid');
 
     return this.http.get<RefreshAccessTokenResponse>(
       REFRESH_ACCESS_TOKEN_ENDPOINT,

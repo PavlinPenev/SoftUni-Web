@@ -1,0 +1,32 @@
+<div class="form-wrapper">
+    <h1>{{constants.ADD_STORE}}</h1>
+    <mat-divider style="margin-bottom: 10px;"></mat-divider>
+    <form [formGroup]="form">
+        <div class="field">
+            <mat-form-field appearance="outline">
+                <mat-label>{{constants.NAME}}</mat-label>
+                <input matInput formControlName="name">
+                <mat-error *ngIf="form.controls['name'].hasError('required')">
+                    {{constants.FIELD_REQUIRED}}
+                </mat-error>
+            </mat-form-field>
+            <mat-icon class="fields-icon" color="primary">badge</mat-icon>
+        </div>
+        <div class="field">
+            <mat-form-field style="width: 200px;" appearance="outline">
+                <mat-label>{{constants.TYPE}}</mat-label>
+                <mat-select formControlName="type">
+                    <mat-option *ngFor="let type of storeTypeConfiguration" [value]="type.value">{{type.name}}</mat-option>
+                </mat-select>
+                <mat-error *ngIf="form.controls['type'].hasError('required')">
+                    {{constants.FIELD_REQUIRED}}
+                </mat-error>
+            </mat-form-field>
+            <mat-icon class="fields-icon" color="primary">category</mat-icon>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="button-wrapper">
+            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="onAddStore($event)">{{constants.ADD_STORE}}</button>
+        </div>
+    </form>    
+</div>

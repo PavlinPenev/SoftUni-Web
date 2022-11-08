@@ -9,5 +9,7 @@
         public string StoreGeAppResetPasswordUrl { get; set; }
 
         public string StoreGeAppLoginUrl { get; set; }
+
+        public string DataProtectionKey { get; set; }
     }
 }

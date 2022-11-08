@@ -48,8 +48,7 @@ namespace Store_Ge.Data
                 .OnDelete(DeleteBehavior.Restrict);
             builder.Entity<Order>()
                 .HasMany(o => o.Products)
-                .WithOne(p => p.Order)
-                .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(p => p.Orders);
 
             // Store Model Creating
             builder.Entity<Store>()
@@ -63,9 +62,8 @@ namespace Store_Ge.Data
 
             // Product Model Creating
             builder.Entity<Product>()
-                .HasOne(p => p.Supplier)
-                .WithMany(s => s.Products)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasMany(p => p.Suppliers)
+                .WithMany(s => s.Products);
 
             // Composite keys
             builder.Entity<Models.UserStore>()

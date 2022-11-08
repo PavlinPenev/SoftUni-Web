@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 using Store_Ge.Configurations.Services;
+using Store_Ge.Services.Configurations;
 
 namespace Store_Ge.Services.Services.AccountsService
 {
@@ -25,6 +26,7 @@ namespace Store_Ge.Services.Services.AccountsService
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
         private readonly IDataProtector dataProtector;
+        private readonly StoreGeAppSettings appSettings;
         private readonly JwtSettings jwtSettings;
         private readonly IMapper mapper;
 
@@ -34,12 +36,14 @@ namespace Store_Ge.Services.Services.AccountsService
             RoleManager<ApplicationRole> roleManager,
             IDataProtectionProvider dataProtectionProvider,
             IOptions<JwtSettings> jwtSettings,
+            IOptions<StoreGeAppSettings> appSettings,
             IMapper mapper)
         {
             this.usersRepository = usersRepository;
             this.userManager = userManager;
             this.roleManager = roleManager;
-            this.dataProtector = dataProtectionProvider.CreateProtector(STORE_GE_DATA_PROTECTION_STRING_LITERAL);
+            this.appSettings = appSettings.Value;
+            this.dataProtector = dataProtectionProvider.CreateProtector(this.appSettings.DataProtectionKey);
             this.jwtSettings = jwtSettings.Value;
             this.mapper = mapper;
         }
@@ -103,9 +107,7 @@ namespace Store_Ge.Services.Services.AccountsService
                 throw new NullReferenceException(USER_NOT_FOUND);
             }
 
-            refreshToken = dataProtector.Unprotect(refreshToken);
-
-            if (refreshToken != user.RefreshToken && DateTime.UtcNow > user.RefreshTokenExpirationDate)
+            if (refreshToken != user.RefreshToken || DateTime.UtcNow > user.RefreshTokenExpirationDate)
             {
                 throw new MemberAccessException(WRONG_CREDENTIALS);
             }

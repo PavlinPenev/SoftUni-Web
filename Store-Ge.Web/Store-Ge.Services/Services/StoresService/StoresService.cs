@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
+using Store_Ge.Services.Configurations;
 using Store_Ge.Services.Models.StoreModels;
 using System.Linq;
 using static Store_Ge.Common.Constants.CommonConstants;
@@ -13,23 +15,29 @@ namespace Store_Ge.Services.Services.StoresService
     public class StoresService : IStoresService
     {
         private readonly IRepository<Store> storeRepository;
+        private readonly IRepository<UserStore> userStoreRepository;
         private readonly IRepository<ApplicationUser> userRepository;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMapper mapper;
         private readonly IDataProtector dataProtector;
+        private readonly StoreGeAppSettings appSettings;
 
         public StoresService(
             IRepository<Store> storeRepository,
+            IRepository<UserStore> userStoreRepository,
             IRepository<ApplicationUser> userRepository,
             UserManager<ApplicationUser> userManager,
             IDataProtectionProvider dataProtectionProvider,
+            IOptions<StoreGeAppSettings> appSettings,
             IMapper mapper)
         {
             this.storeRepository = storeRepository;
+            this.userStoreRepository = userStoreRepository;
             this.userRepository = userRepository;
             this.userManager = userManager;
             this.mapper = mapper;
-            this.dataProtector = dataProtectionProvider.CreateProtector(STORE_GE_DATA_PROTECTION_STRING_LITERAL);
+            this.appSettings = appSettings.Value;
+            this.dataProtector = dataProtectionProvider.CreateProtector(this.appSettings.DataProtectionKey);
         }
 
         public async Task<List<StoreDto>> GetStores(string userId)
@@ -55,7 +63,7 @@ namespace Store_Ge.Services.Services.StoresService
 
         public async Task<bool> AddStore(AddStoreDto addStoreDtoRequest)
         {
-            var decryptedUserId = dataProtector.Unprotect(addStoreDtoRequest.UserId);
+            addStoreDtoRequest.UserId = dataProtector.Unprotect(addStoreDtoRequest.UserId);
             var user = await userManager.FindByIdAsync(addStoreDtoRequest.UserId);
 
             if (user == null)
@@ -64,38 +72,41 @@ namespace Store_Ge.Services.Services.StoresService
             }
 
             var storeToAdd = mapper.Map<Store>(addStoreDtoRequest);
+            storeToAdd.UsersStores.Add(new UserStore
+            {
+                User = user,
+                StoreId = storeToAdd.Id
+            });
+
             await storeRepository.AddAsync(storeToAdd);
             await storeRepository.SaveChangesAsync();
-
-            var store = await GetStoreByNameAndUserId(addStoreDtoRequest.UserId, addStoreDtoRequest.Name);
-
-            if (store == null)
-            {
-                return false;
-            }
-
-            var userStore = new UserStore
-            {
-                UserId = user.Id,
-                StoreId = int.Parse(store.Id)
-            };
-
-            user.UsersStores.Add(userStore);
-            userRepository.Update(user);
-            await userRepository.SaveChangesAsync();
 
             return true;
         }
 
+        public async Task<StoreDto> GetStore(string storeId)
+        {
+            var decryptedStoreId = dataProtector.Unprotect(storeId);
+
+            var store = await storeRepository.GetAll().FirstOrDefaultAsync(x => x.Id == int.Parse(decryptedStoreId));
+
+            var mappedStore = mapper.Map<StoreDto>(store);
+
+            mappedStore.Id = dataProtector.Protect(mappedStore.Id);
+
+            return mappedStore;
+        }
+
         public async Task<StoreDto> GetStoreByNameAndUserId(string userId, string name)
         {
+            var userStoresIds = await userStoreRepository.GetAll().Where(x => x.UserId == int.Parse(userId)).Select(x => x.StoreId).ToListAsync();
+
             var store = await storeRepository
                 .GetAll()
-                .FirstOrDefaultAsync(x =>
+                .SingleOrDefaultAsync(x =>
                     x.Name == name 
-                    && x.UsersStores
-                        .Select(x => x.UserId)
-                        .Contains(int.Parse(userId)));
+                    && userStoresIds
+                        .Contains(x.Id));
 
             var mappedStore = mapper.Map<StoreDto>(store);
 
