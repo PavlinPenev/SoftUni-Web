@@ -32,8 +32,12 @@ namespace Store_Ge.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public virtual Order Order { get; set; }
+        public int StoreId { get; set; }
 
-        public virtual Supplier Supplier { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
+
+        public virtual ICollection<Supplier> Suppliers { get; set; }
+
+        public virtual Store Store { get; set; }
     }
 }

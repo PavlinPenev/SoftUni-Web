@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorIntl,
+  MatPaginatorModule,
+} from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
@@ -22,6 +26,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../services/authorization.interceptor';
 import { MatListModule } from '@angular/material/list';
+import { MyCustomPaginatorIntl } from '../services/configurations/store-ge-mat-paginator-intl';
 
 @NgModule({
   declarations: [],
@@ -76,6 +81,10 @@ import { MatListModule } from '@angular/material/list';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true,
+    },
+    {
+      provide: MatPaginatorIntl,
+      useClass: MyCustomPaginatorIntl,
     },
   ],
 })

@@ -4,6 +4,7 @@ using Store_Ge.Services.Services.AccountsService;
 using Store_Ge.Services.Services.EmailService.EmailSender;
 using Store_Ge.Services.Services.StoresService;
 using Store_Ge.Services.Services.AuditTrailService;
+using Store_Ge.Services.Services.ProductsService;
 
 namespace Store_Ge.Services.Configurations
 {
@@ -13,6 +14,7 @@ namespace Store_Ge.Services.Configurations
         {
             services.AddScoped<IAccountsService,AccountsService>();
             services.AddScoped<IStoresService, StoresService>();
+            services.AddScoped<IProductsService, ProductsService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddTransient<IEmailSender, SendGridEmailSender>();
             services.AddScoped<IAuditTrailService, AuditTrailService>();
