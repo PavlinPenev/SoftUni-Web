@@ -6,6 +6,8 @@ import { DashboardPageComponent } from './user-page/dashboard-page/dashboard-pag
 import { RouterModule } from '@angular/router';
 import { AddStoreModalComponent } from './user-page/dashboard-page/add-store-modal/add-store-modal.component';
 import { StorePageComponent } from './store-page/store-page.component';
+import { OrdersPageComponent } from './orders-page/orders-page.component';
+import { AddOrderComponent } from './orders-page/add-order/add-order.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +15,8 @@ import { StorePageComponent } from './store-page/store-page.component';
     DashboardPageComponent,
     AddStoreModalComponent,
     StorePageComponent,
+    OrdersPageComponent,
+    AddOrderComponent,
   ],
   imports: [
     CommonModule,
@@ -22,6 +26,7 @@ import { StorePageComponent } from './store-page/store-page.component';
         children: [
           { path: '', component: DashboardPageComponent },
           { path: 'store/:storeId', component: StorePageComponent },
+          { path: 'store/:storeId/orders', component: OrdersPageComponent },
         ],
       },
     ]),

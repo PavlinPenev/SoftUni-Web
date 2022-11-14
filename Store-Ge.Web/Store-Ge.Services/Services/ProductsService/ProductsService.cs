@@ -44,9 +44,37 @@ namespace Store_Ge.Services.Services.ProductsService
 
             mappedProducts = FilterProducts(mappedProducts, request);
 
-            var pagedProducts = new PagedList<ProductDto>(mappedProducts);
+            var pagedProducts = new PagedList<ProductDto>(mappedProducts, products.Count);
 
             return pagedProducts;
+        }
+
+        public async Task<List<ProductDto>> GetStoreAddProducts(string storeId)
+        {
+            var decryptedStoreId = int.Parse(dataProtector.Unprotect(storeId));
+
+            var products = await productsRepository.GetAll().Where(p => p.StoreId == decryptedStoreId).ToListAsync();
+
+            var mappedProducts = mapper.Map<List<ProductDto>>(products);
+
+            mappedProducts.ForEach(p => p.Id = dataProtector.Protect(p.Id));
+
+            return mappedProducts;
+        }
+
+        public async Task UpsertProducts(List<AddProductDto> addProducts)
+        {
+            for (int i = 0; i < addProducts.Count; i++)
+            {
+                if (addProducts[i].PlusQuantity.HasValue)
+                {
+                    addProducts[i].Quantity += addProducts[i].PlusQuantity.Value;
+                };
+            }
+
+            var products = mapper.Map<List<Product>>(addProducts);
+
+            await productsRepository.BulkMerge(products);
         }
 
         #region Private Methods

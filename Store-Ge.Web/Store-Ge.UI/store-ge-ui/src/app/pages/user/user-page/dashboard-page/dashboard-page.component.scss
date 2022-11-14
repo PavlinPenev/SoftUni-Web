@@ -22,36 +22,6 @@
     }
 }
 
-.cards-wrapper {
-    display: flex;
-    margin-left: 36%;
-    margin-top: 20px;
-
-    .card {
-        width: 200px;
-        height: 80px;
-        margin-right: 20px;
-
-        mat-card-content {
-            display: flex;
-            justify-content: space-between;
-            height: 100%;
-
-            mat-icon {
-                font-size: 50px;
-            }
-
-            mat-divider {
-                margin: 0 20px 0 30px;
-            }
-
-            .title-wrapper {
-                display: block;
-            }
-        }
-    }
-}
-
 .add-store-button-container {
     display: flex;
     justify-content: end;

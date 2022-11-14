@@ -1,27 +1,3 @@
-<div class="cards-wrapper">
-    <mat-card class="card">
-        <mat-card-content>
-            <mat-icon color="primary">local_shipping</mat-icon>
-            <mat-divider [vertical]="true"></mat-divider>
-            <div class="title-wrapper">
-                <mat-card-title>{{constants.SUPPLIERS}}</mat-card-title>
-                <mat-card-subtitle>{{constants.COUNT}}{{suppliers.length}}</mat-card-subtitle>
-                <a mat-button routerLink="/suppliers">{{constants.SUPPLIERS}}</a>
-            </div>
-        </mat-card-content>
-    </mat-card>
-    <mat-card class="card">
-        <mat-card-content>
-            <mat-icon color="primary">inventory</mat-icon>
-            <mat-divider [vertical]="true"></mat-divider>
-            <div class="title-wrapper">
-                <mat-card-title>{{constants.ORDERS}}</mat-card-title>
-                <mat-card-subtitle>{{constants.COUNT}}{{orders.length}}</mat-card-subtitle>
-                <a mat-button routerLink="/orders">{{constants.ORDERS}}</a>
-            </div>
-        </mat-card-content>
-    </mat-card>
-</div>
 <div *ngIf="isEmptyStateVisible()" class="empty-state-container">
     <h1>{{constants.NO_STORES_ADDED}}</h1>
     <mat-divider></mat-divider>

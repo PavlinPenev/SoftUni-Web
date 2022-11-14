@@ -1,9 +1,11 @@
 import { Location } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { ActivatedRoute } from '@angular/router';
-import { filter, first, Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { debounceTime, filter, first, Subject, Subscription } from 'rxjs';
 import { Order } from 'src/app/models/order.model';
 import { ProductsResponse } from 'src/app/models/products-response.model';
 import { StoreProductsRequest } from 'src/app/models/store-products-request.model';
@@ -21,14 +23,19 @@ import * as constants from 'src/assets/text.constants';
 })
 export class StorePageComponent implements OnInit, OnDestroy {
   @ViewChild('paginator', { static: true }) paginator!: MatPaginator;
+  searchField = new UntypedFormControl('');
 
   constants = constants;
 
-  products!: ProductsResponse;
+  products: ProductsResponse = {
+    items: [],
+    totalItemsCount: 0,
+  };
   orders: Order[] = [];
   suppliers: Supplier[] = [];
   store!: Store;
   storeId!: string;
+  userId!: string;
 
   subs: Subscription[] = [];
 
@@ -49,14 +56,23 @@ export class StorePageComponent implements OnInit, OnDestroy {
     take: 10,
   };
 
+  subject: Subject<string> = new Subject();
+
   constructor(
     private productsService: ProductsService,
     private storesService: StoresService,
     private route: ActivatedRoute,
-    private location: Location
+    private router: Router,
+    private location: Location,
+    private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
+    this.subject.pipe(debounceTime(800)).subscribe((searchTextValue) => {
+      this.searchByProductName(searchTextValue);
+    });
+
+    this.userId = this.cookieService.get('uid');
     this.storeId = this.route.snapshot.params['storeId'];
 
     this.storesService
@@ -67,7 +83,11 @@ export class StorePageComponent implements OnInit, OnDestroy {
       )
       .subscribe((response) => (this.store = response));
 
-    this.productsRequest.storeId = this.storeId;
+    this.productsRequest = {
+      ...this.productsRequest,
+      storeId: this.storeId,
+      take: this.paginator.pageSize,
+    };
 
     this.subs.push(
       this.productsService
@@ -106,23 +126,28 @@ export class StorePageComponent implements OnInit, OnDestroy {
     this.paginator.firstPage();
   }
 
-  pageChanged(e: PageEvent): void {
-    const previousPageIndex = e.previousPageIndex! + 1;
-    const pageIndex = e.pageIndex + 1;
-
+  pageChanged(): void {
     this.productsRequest = {
       ...this.productsRequest,
       skip: this.paginator.pageIndex * this.paginator.pageSize,
       take: this.paginator.pageSize,
     };
+
+    this.productsService
+      .getStoreProducts(this.productsRequest)
+      .pipe(
+        filter((x) => !!x),
+        first()
+      )
+      .subscribe((response) => (this.products = response));
   }
 
-  searchByProductName(event: any): void {
+  searchByProductName(searchTerm: string): void {
     this.paginator.firstPage();
 
     this.productsRequest = {
       ...this.initialProductsRequest,
-      searchTerm: event.target.value,
+      searchTerm: searchTerm,
     };
 
     this.productsService
@@ -136,6 +161,30 @@ export class StorePageComponent implements OnInit, OnDestroy {
 
   goBack(): void {
     this.location.back();
+  }
+
+  navigateToOrdersPage(): void {
+    this.router.navigate([
+      '/user',
+      this.userId,
+      'store',
+      this.storeId,
+      'orders',
+    ]);
+  }
+
+  navigateToSuppliersPage(): void {
+    this.router.navigate([
+      '/user',
+      this.userId,
+      'store',
+      this.storeId,
+      'suppliers',
+    ]);
+  }
+
+  onKeyUp(): void {
+    const searchTerm = this.searchField.value;
   }
 
   ngOnDestroy(): void {

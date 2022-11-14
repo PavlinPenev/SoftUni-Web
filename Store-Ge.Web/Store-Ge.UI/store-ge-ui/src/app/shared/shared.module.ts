@@ -27,6 +27,10 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../services/authorization.interceptor';
 import { MatListModule } from '@angular/material/list';
 import { MyCustomPaginatorIntl } from '../services/configurations/store-ge-mat-paginator-intl';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatStepperModule } from '@angular/material/stepper';
 
 @NgModule({
   declarations: [],
@@ -52,6 +56,10 @@ import { MyCustomPaginatorIntl } from '../services/configurations/store-ge-mat-p
     MatSnackBarModule,
     MatMenuModule,
     MatListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatDialogModule,
+    MatStepperModule,
   ],
   exports: [
     CommonModule,
@@ -75,6 +83,10 @@ import { MyCustomPaginatorIntl } from '../services/configurations/store-ge-mat-p
     MatSnackBarModule,
     MatMenuModule,
     MatListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatDialogModule,
+    MatStepperModule,
   ],
   providers: [
     {

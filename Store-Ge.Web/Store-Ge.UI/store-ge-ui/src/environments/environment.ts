@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  webApiBaseUrl: 'https://localhost:44343'
+  webApiBaseUrl: 'https://localhost:44343',
+  cookieBaseDomain: 'localhost',
 };
 
 /*

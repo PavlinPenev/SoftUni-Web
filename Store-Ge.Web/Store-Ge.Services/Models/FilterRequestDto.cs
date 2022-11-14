@@ -11,5 +11,9 @@
         public int Skip { get; set; }
 
         public int Take { get; set; }
+
+        public DateTime? DateAddedFrom { get; set; }
+
+        public DateTime? DateAddedTo { get; set; }
     }
 }
