@@ -23,6 +23,8 @@ namespace Store_Ge.Data.Repositories
 
         public Task<int> SaveChangesAsync() => this.Context.SaveChangesAsync();
 
+        public Task BulkMerge(ICollection<TEntity> items) => this.Context.BulkMergeAsync(items);
+
         public void Update(TEntity entity)
         {
             var entry = this.Context.Entry(entity);

@@ -12,5 +12,7 @@
         void Delete(TEntity entity);
 
         Task<int> SaveChangesAsync();
+
+        Task BulkMerge(ICollection<TEntity> items);
     }
 }

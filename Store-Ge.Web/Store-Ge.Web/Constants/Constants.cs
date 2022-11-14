@@ -42,6 +42,26 @@
             {
                 public const string PRODUCTS_CONTROLLER = "api/products";
                 public const string GET_STORE_PRODUCTS_ENDPOINT = "get-store-products";
+                public const string GET_STORE_ADD_PRODUCTS_ENDPOINT = "get-store-add-products";
+            }
+        }
+
+        public static class Orders
+        {
+            public static class Routes
+            {
+                public const string ORDERS_CONTROLLER = "api/orders";
+                public const string GET_STORE_ORDERS_ENDPOINT = "get-store-orders";
+                public const string ADD_ORDER_ENDPOINT = "add-order";
+            }
+        }
+
+        public static class Suppliers
+        {
+            public static class Routes
+            {
+                public const string SUPPLIERS_CONTROLLER = "api/suppliers";
+                public const string GET_USER_SUPPLIERS_ENDPOINT = "get-user-suppliers";
             }
         }
     }

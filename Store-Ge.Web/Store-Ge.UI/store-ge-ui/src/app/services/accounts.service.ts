@@ -4,7 +4,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { catchError, filter, first, Observable, of, throwError } from 'rxjs';
 import { ConfirmEmailRequest } from '../models/confirm-email.model';
@@ -25,6 +25,7 @@ import {
 } from '../shared/api-endpoints';
 import { ResetPasswordRequest } from '../models/reset-password.model';
 import { User } from '../models/user.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -32,6 +33,7 @@ import { User } from '../models/user.model';
 export class AccountsService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   loggedUser!: User;
+  env = environment;
 
   get isLoggedIn(): Observable<boolean> {
     return of(this.getAccessToken() ? true : false);
@@ -89,7 +91,7 @@ export class AccountsService {
   }
 
   logout() {
-    this.cookieService.deleteAll();
+    this.cookieService.deleteAll('/', this.env.cookieBaseDomain);
     if (!this.getAccessToken()) {
       this.router.navigate(['/login']);
     }

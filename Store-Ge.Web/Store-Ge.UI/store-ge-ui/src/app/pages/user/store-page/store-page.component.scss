@@ -20,6 +20,7 @@ mat-divider {
 
 .main-card-content {
     display: flex;
+    justify-content: space-around;
 }
 
 .card-wrapper {
@@ -54,7 +55,7 @@ mat-divider {
     display: flex;
     justify-content: end;
     height: fit-content;
-    margin-top: 15%;
+    margin-top: 20%;
 
     a {
         margin-right: 10px;

@@ -56,3 +56,27 @@ const prependBaseUrlAndProductsControllerRoute = compose(
 
 export const GET_STORE_PRODUCTS_ENDPOINT =
   prependBaseUrlAndProductsControllerRoute('get-store-products');
+export const GET_STORE_ADD_PRODUCTS_ENDPOINT =
+  prependBaseUrlAndProductsControllerRoute('get-store-add-products');
+
+// Orders Controller
+const prependOrdersControllerRoute = joinWithSlash('api/orders');
+const prependBaseUrlAndOrdersControllerRoute = compose(
+  prependWithBaseUrl,
+  prependOrdersControllerRoute
+);
+
+export const GET_STORE_ORDERS_ENDPOINT =
+  prependBaseUrlAndOrdersControllerRoute('get-store-orders');
+export const ADD_ORDER_ENDPOINT =
+  prependBaseUrlAndOrdersControllerRoute('add-order');
+
+// Suppliers Controller
+const prependSuppliersControllerRoute = joinWithSlash('api/suppliers');
+const prependBaseUrlAndSuppliersControllerRoute = compose(
+  prependWithBaseUrl,
+  prependSuppliersControllerRoute
+);
+
+export const GET_USER_SUPPLIERS_ENDPOINT =
+  prependBaseUrlAndSuppliersControllerRoute('get-user-suppliers');

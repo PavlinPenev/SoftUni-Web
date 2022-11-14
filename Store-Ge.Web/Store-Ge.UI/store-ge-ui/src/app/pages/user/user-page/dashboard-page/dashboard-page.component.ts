@@ -20,8 +20,6 @@ export class DashboardPageComponent implements OnInit {
   userId: string = '';
 
   userStores: Store[] = [];
-  suppliers: Supplier[] = [];
-  orders: Order[] = [];
   areStoresLoading: boolean = true;
 
   constructor(

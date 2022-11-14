@@ -27,12 +27,15 @@ export const INVALID_PASSWORD =
   'Invalid password. Password should be at least 8 characters long and also should contain at least one lower case, one upper case, one digit and one special symbol.';
 export const PASSWORDS_DONT_MATCH = "Passwords don't match.";
 export const UNAUTHORIZED = 'Unauthorized access!';
+export const PRODUCT_NAME_LENGTH =
+  'Product name max length should be no more than 50!';
 // end of Error Messages
 
 // Validations
 export const PASSWORD_VALIDATION_PATTERN =
   '^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$';
 export const STORE_NAME_MAX_LENGTH = 20;
+export const PRODUCT_NAME_MAX_LENGTH = 50;
 // end of Validations
 
 // Error page constants
@@ -114,3 +117,29 @@ export const MEASUREMENT_UNIT = 'Measurement Unit';
 export const GO_BACK = 'Go Back';
 export const NO_PRODUCTS_FOUND = 'No Products Found';
 // end of Store page constants
+
+// Orders page constants
+export const ORDER_NUMBER = 'Order Number';
+export const SEARCH_BY_ORDER_NUMBER = 'Search by Order Number';
+export const SUPPLIER_NAME = 'Supplier Name';
+export const NO_ORDERS_FOUND = 'No Orders Found';
+export const DATE_ADDED = 'Date Added';
+export const SEARCH = 'Search';
+export const PICK_DATE_RANGE = 'Enter a date range';
+
+export const CHOOSE_SUPPLIER = 'Choose a supplier';
+export const IF_NO_SUPPLIER =
+  'If you have no suppliers added click the button below to go to the suppliers page and add one. This step is a must if you want to continue.';
+export const SUPPLIER = 'Supplier';
+export const NEXT = 'Next Step';
+export const BACK = 'Previous Step';
+export const ADD = 'Add';
+export const ADD_EXISTING_PRODUCT = 'Add existing product';
+export const ADD_QUANTITY = 'Add quantity';
+export const OR_ADD_NEW_ONE = 'or add a new product';
+export const PRODUCT_NAME = 'Product Name';
+export const ADD_NEW_PRODUCT = 'Add new product';
+export const DONE = 'Done';
+export const CLICK_BELOW_TO_ADD_ORDER =
+  'Click the button below to add to order.';
+// end of Orders page constants

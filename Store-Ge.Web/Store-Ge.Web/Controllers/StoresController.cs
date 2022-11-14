@@ -20,6 +20,8 @@ namespace Store_Ge.Web.Controllers
 
         [HttpGet]
         [Route(Routes.GET_USER_STORES_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetStores([FromQuery] string userId)
         {
             var result = await storesService.GetStores(userId);
@@ -32,9 +34,10 @@ namespace Store_Ge.Web.Controllers
             return Ok(result);
         }
 
-        //TODO: GetStore(storeId)
         [HttpGet]
         [Route(Routes.GET_STORE_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetStore([FromQuery] string storeId)
         {
             var result = await storesService.GetStore(storeId);
@@ -49,6 +52,8 @@ namespace Store_Ge.Web.Controllers
 
         [HttpPost]
         [Route(Routes.ADD_STORE_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> AddStore([FromBody] AddStoreDto addStoreRequest)
         {
             var result = await storesService.AddStore(addStoreRequest);

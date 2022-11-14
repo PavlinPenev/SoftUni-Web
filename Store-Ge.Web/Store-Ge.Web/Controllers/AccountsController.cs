@@ -27,6 +27,9 @@ namespace Store_Ge.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route(Routes.ACCOUNTS_LOGIN_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> Login([FromBody] ApplicationUserLoginDto userLoginModel)
         {
             var user = new ApplicationUserLoginResponseDto();
@@ -80,6 +83,9 @@ namespace Store_Ge.Web.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route(Routes.REFRESH_ACCESS_TOKEN_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> RefreshAccessToken([FromQuery] string refreshToken, [FromQuery] string userId)
         {
             var result = new ApplicationUserTokensDto();
@@ -103,6 +109,9 @@ namespace Store_Ge.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route(Routes.CONFIRM_EMAIL_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ConfirmEmail([FromBody] ConfirmEmailDto confirmEmailDto)
         {
             var result = new IdentityResult();
@@ -127,6 +136,7 @@ namespace Store_Ge.Web.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route(Routes.RESEND_EMAIL_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> ResendConfirmationEmail([FromQuery] string email)
         {
             await emailService.ResendConfirmationMail(email);
@@ -137,6 +147,8 @@ namespace Store_Ge.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route(Routes.FORGOT_PASSWORD_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPassword)
         {
             var user = await accountsService.GetUserByEmail(forgotPassword.Email);
@@ -156,6 +168,9 @@ namespace Store_Ge.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route(Routes.PASSWORD_RESET_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PasswordReset([FromBody] PasswordResetDto passwordResetDto)
         {
             var result = new IdentityResult();
@@ -179,6 +194,8 @@ namespace Store_Ge.Web.Controllers
 
         [HttpGet]
         [Route(Routes.GET_USER_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetUser([FromQuery] string userId)
         {
             var user = await accountsService.GetUser(userId);
