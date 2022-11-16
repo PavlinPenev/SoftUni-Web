@@ -4,20 +4,10 @@
 <div class="sidenav-container">
     <mat-sidenav #drawer class="sidenav" mode="side" opened="true">
         <mat-list-item>
-            <button mat-button >
-                <div class="list-item-container">
-                    <p *ngIf="isExpanded">{{constants.SUPPLIERS}}</p>
-                    <a mat-button routerLink="/suppliers">
-                        <mat-icon color="primary">local_shipping</mat-icon>
-                    </a>
-                </div>
-            </button>
-        </mat-list-item>
-        <mat-list-item>
-            <button mat-button >
+            <button mat-button (click)="navigateToAllOrders()">
                 <div class="list-item-container">
                     <p *ngIf="isExpanded">{{constants.ORDERS}}</p>
-                    <a mat-button routerLink="/orders">
+                    <a mat-button>
                         <mat-icon color="primary">inventory</mat-icon>
                     </a>
                 </div>

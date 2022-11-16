@@ -22,7 +22,7 @@
                 <p class="menu-title menu-p">{{accountsService.loggedUser.userName}}</p>
                 <mat-hint class="menu-title">{{accountsService.loggedUser.email}}</mat-hint>
                 <mat-divider class="menu-divider"></mat-divider>
-                <a mat-button routerLink="/account-settings">
+                <a mat-button (click)="navigateToAccountSettings()">
                     <mat-icon color="primary">person</mat-icon>      {{constants.ACCOUNT_SETTINGS}}
                 </a>
                 <mat-divider class="menu-divider"></mat-divider>

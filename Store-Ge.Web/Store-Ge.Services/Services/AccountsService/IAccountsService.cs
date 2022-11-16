@@ -70,5 +70,14 @@ namespace Store_Ge.Services.Services.AccountsService
         /// <param name="passwordResetDto"> A model containing the user info needed for password reset(Password, ConfirmPassword, Email, ResetToken) </param>
         /// <returns> Metadata info about the reset process. It determines if the reset was successful </returns>
         Task<IdentityResult> PasswordReset(PasswordResetDto passwordResetDto);
+
+        /// <summary>
+        ///  Updates the user's info
+        /// </summary>
+        /// <param name="userId"> The user's Id </param>
+        /// <param name="email"> The user's new Email Address </param>
+        /// <param name="userName"> The user's new UserName </param>
+        /// <returns> If the update was successful </returns>
+        Task<bool> UpdateUser(string userId, string email, string userName);
     }
 }

@@ -15,6 +15,7 @@
                 public const string FORGOT_PASSWORD_ENDPOINT = "forgot-password";
                 public const string PASSWORD_RESET_ENDPOINT = "password-reset";
                 public const string GET_USER_ENDPOINT = "get-user";
+                public const string UPDATE_USER_INFO_ENDPOINT = "update-user";
             }
 
             public static class Shared
@@ -51,6 +52,7 @@
             public static class Routes
             {
                 public const string ORDERS_CONTROLLER = "api/orders";
+                public const string GET_USER_ORDERS_ENDPOINT = "get-user-orders";
                 public const string GET_STORE_ORDERS_ENDPOINT = "get-store-orders";
                 public const string ADD_ORDER_ENDPOINT = "add-order";
             }
@@ -62,6 +64,8 @@
             {
                 public const string SUPPLIERS_CONTROLLER = "api/suppliers";
                 public const string GET_USER_SUPPLIERS_ENDPOINT = "get-user-suppliers";
+                public const string GET_USER_SUPPLIERS_PAGED_ENDPOINT = "get-user-suppliers-paged";
+                public const string ADD_SUPPLIER_ENDPOINT = "add-supplier";
             }
         }
     }

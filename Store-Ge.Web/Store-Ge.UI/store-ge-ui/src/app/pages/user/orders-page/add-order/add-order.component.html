@@ -44,7 +44,7 @@
                     <div class="products-wrapper">
                         <mat-list role="list" class="products-list">
                             <mat-list-item role="listitem" *ngFor="let product of orderProducts">
-                                <p>{{product.name}}  ({{product.quantity}} + {{product.plusQuantity}}) {{getUnitTypeString(product.measurementUnit)}}</p>
+                                <p>{{product.name}}  ({{product.quantity}} + {{product.plusQuantity ? product.plusQuantity : 0}}) {{getUnitTypeString(product.measurementUnit)}}</p>
                             </mat-list-item>
                         </mat-list>
                         <div class="existing-product" *ngIf="products.length > 0">
@@ -92,6 +92,9 @@
                                     </mat-form-field>
                                 </div>
                             </div>
+                            <div style="display:flex;justify-content:center;"> 
+                                <mat-icon color="primary">category</mat-icon>
+                            </div>
                             <div class="fields">
                                 <div class="field">
                                     <mat-form-field appearance="outline">
@@ -103,14 +106,14 @@
                                     <mat-form-field appearance="outline">
                                         <mat-label>{{constants.MEASUREMENT_UNIT}}</mat-label>
                                         <mat-select formControlName="newProductMeasurementUnit">
-                                            <mat-option *ngFor="let unit of productMeasurementUnitConfiguration" [value]="unit.value">
+                                            <mat-option *ngFor="let unit of productMeasurementUnitConfiguration" [value]="unit">
                                                 {{unit.name}}
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <button color="primary" [disabled]="isNewProductFormValid()" mat-button (click)="addNewProductToList()">
+                            <button color="primary" [disabled]="!isNewProductFormValid()" mat-button (click)="addNewProductToList()">
                                 <mat-icon>add</mat-icon>    {{constants.ADD_NEW_PRODUCT}}
                             </button>
                         </div>

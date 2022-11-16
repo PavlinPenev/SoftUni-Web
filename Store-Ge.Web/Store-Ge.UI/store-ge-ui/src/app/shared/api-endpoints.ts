@@ -32,6 +32,8 @@ export const RESET_PASSWORD_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('password-reset');
 export const GET_USER_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('get-user');
+export const UPDATE_USER_ENDPOINT =
+  prependBaseUrlAndAccountsControllerRoute('update-user');
 
 // Stores Controller
 const prependStoresControllerRoute = joinWithSlash('api/stores');
@@ -66,6 +68,8 @@ const prependBaseUrlAndOrdersControllerRoute = compose(
   prependOrdersControllerRoute
 );
 
+export const GET_USER_ORDERS_ENDPOINT =
+  prependBaseUrlAndOrdersControllerRoute('get-user-orders');
 export const GET_STORE_ORDERS_ENDPOINT =
   prependBaseUrlAndOrdersControllerRoute('get-store-orders');
 export const ADD_ORDER_ENDPOINT =
@@ -80,3 +84,7 @@ const prependBaseUrlAndSuppliersControllerRoute = compose(
 
 export const GET_USER_SUPPLIERS_ENDPOINT =
   prependBaseUrlAndSuppliersControllerRoute('get-user-suppliers');
+export const GET_USER_SUPPLIERS_PAGED_ENDPOINT =
+  prependBaseUrlAndSuppliersControllerRoute('get-user-suppliers-paged');
+export const ADD_SUPPLIER_ENDPOINT =
+  prependBaseUrlAndSuppliersControllerRoute('add-supplier');

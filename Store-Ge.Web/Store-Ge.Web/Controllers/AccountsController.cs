@@ -207,5 +207,29 @@ namespace Store_Ge.Web.Controllers
 
             return Ok(user);
         }
+
+        [HttpPut]
+        [Route(Routes.UPDATE_USER_INFO_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateUser([FromQuery] string userId, [FromQuery] string email, [FromQuery] string userName)
+        {
+            try
+            {
+                var result = await accountsService.UpdateUser(userId, email, userName);
+
+                if (!result)
+                {
+                    return BadRequest();
+                }
+
+                return Ok();
+            }
+            catch (NullReferenceException)
+            {
+
+                return NotFound();
+            }
+        }
     }
 }

@@ -8,6 +8,7 @@ using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Configurations;
 using Store_Ge.Services.Models;
 using Store_Ge.Services.Models.ProductModels;
+using Store_Ge.Services.Services.AuditTrailService;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -18,17 +19,20 @@ namespace Store_Ge.Services.Services.ProductsService
         private readonly StoreGeAppSettings appSettings;
         private readonly IDataProtector dataProtector;
         private readonly IRepository<Product> productsRepository;
+        private readonly IAuditTrailService auditTrailService;
         private readonly IMapper mapper;
 
         public ProductsService(
             IDataProtectionProvider dataProtectionProvider, 
             IRepository<Product> productsRepository, 
+            IAuditTrailService auditTrailService,
             IMapper mapper, 
             IOptions<StoreGeAppSettings> appSettings)
         {
             this.appSettings = appSettings.Value;
             this.dataProtector = dataProtectionProvider.CreateProtector(this.appSettings.DataProtectionKey);
             this.productsRepository = productsRepository;
+            this.auditTrailService = auditTrailService;
             this.mapper = mapper;
         }
 
@@ -62,17 +66,26 @@ namespace Store_Ge.Services.Services.ProductsService
             return mappedProducts;
         }
 
-        public async Task UpsertProducts(List<AddProductDto> addProducts)
+        public async Task UpsertProducts(List<AddProductDto> addProducts, int storeId)
         {
             for (int i = 0; i < addProducts.Count; i++)
             {
+                if (addProducts[i].Id != null)
+                {
+                    addProducts[i].Id = dataProtector.Unprotect(addProducts[i].Id);
+                    await auditTrailService.AddProduct(addProducts[i], storeId);
+                }
+
                 if (addProducts[i].PlusQuantity.HasValue)
                 {
                     addProducts[i].Quantity += addProducts[i].PlusQuantity.Value;
+                    await auditTrailService.AddProductQuantity(addProducts[i], storeId);
                 };
             }
 
             var products = mapper.Map<List<Product>>(addProducts);
+
+            products.ForEach(x => x.StoreId = storeId);
 
             await productsRepository.BulkMerge(products);
         }

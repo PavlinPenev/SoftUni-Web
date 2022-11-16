@@ -8,6 +8,10 @@ import { AddStoreModalComponent } from './user-page/dashboard-page/add-store-mod
 import { StorePageComponent } from './store-page/store-page.component';
 import { OrdersPageComponent } from './orders-page/orders-page.component';
 import { AddOrderComponent } from './orders-page/add-order/add-order.component';
+import { SuppliersPageComponent } from './suppliers-page/suppliers-page.component';
+import { AddSupplierComponent } from './suppliers-page/add-supplier/add-supplier.component';
+import { AllOrdersComponent } from './all-orders/all-orders.component';
+import { AccountSettingsPageComponent } from './account-settings-page/account-settings-page.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +21,10 @@ import { AddOrderComponent } from './orders-page/add-order/add-order.component';
     StorePageComponent,
     OrdersPageComponent,
     AddOrderComponent,
+    SuppliersPageComponent,
+    AddSupplierComponent,
+    AllOrdersComponent,
+    AccountSettingsPageComponent,
   ],
   imports: [
     CommonModule,
@@ -25,8 +33,14 @@ import { AddOrderComponent } from './orders-page/add-order/add-order.component';
         path: '',
         children: [
           { path: '', component: DashboardPageComponent },
+          { path: 'account-settings', component: AccountSettingsPageComponent },
+          { path: 'all-orders', component: AllOrdersComponent },
           { path: 'store/:storeId', component: StorePageComponent },
           { path: 'store/:storeId/orders', component: OrdersPageComponent },
+          {
+            path: 'store/:storeId/suppliers',
+            component: SuppliersPageComponent,
+          },
         ],
       },
     ]),

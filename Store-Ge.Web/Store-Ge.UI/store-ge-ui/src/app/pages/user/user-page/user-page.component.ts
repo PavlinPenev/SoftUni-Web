@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { filter, first } from 'rxjs';
 import { Store } from 'src/app/models/store.model';
 import { AccountsService } from 'src/app/services/accounts.service';
@@ -12,6 +12,7 @@ import * as constants from 'src/assets/text.constants';
 })
 export class UserPageComponent implements OnInit {
   constants = constants;
+  userId: string = '';
 
   userStores: Store[] = [];
   isUserLoading: boolean = true;
@@ -21,12 +22,15 @@ export class UserPageComponent implements OnInit {
 
   constructor(
     private accountsService: AccountsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.userId = this.route.snapshot.params['userId'];
+
     this.accountsService
-      .getUser(this.route.snapshot.params['userId'])
+      .getUser(this.userId)
       .pipe(
         filter((x) => !!x),
         first()
@@ -35,5 +39,9 @@ export class UserPageComponent implements OnInit {
         this.accountsService.loggedUser = response;
         this.isUserLoading = false;
       });
+  }
+
+  navigateToAllOrders(): void {
+    this.router.navigate(['/user', this.userId, 'all-orders']);
   }
 }

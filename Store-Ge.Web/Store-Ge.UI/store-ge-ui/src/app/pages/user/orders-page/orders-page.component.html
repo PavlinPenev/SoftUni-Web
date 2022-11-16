@@ -17,7 +17,7 @@
             [matSortActive]="'orderNumber'"
             [matSortDirection]="'asc'"
             [matSortDisableClear]="true"
-            [dataSource]="orders.items"
+            [dataSource]="dataSource"
         >
             <!-- Order Number Column -->
             <ng-container [matColumnDef]="'orderNumber'">
@@ -62,7 +62,7 @@
                         </button>
                     </form>
                 </mat-header-cell>
-                <mat-cell *matCellDef="let order">{{order.createdOn}}</mat-cell>
+                <mat-cell *matCellDef="let order">{{order.createdOn | date}}</mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
@@ -70,6 +70,6 @@
         <div *ngIf="!orders || orders.totalItemsCount === 0" class="empty-state">
             {{constants.NO_ORDERS_FOUND}}
         </div>
-        <mat-paginator #paginator (page)="pageChanged()" [length]="orders.totalItemsCount" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #paginator (page)="pageChanged()" [length]="orders ? orders.totalItemsCount : 0" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
 </div>

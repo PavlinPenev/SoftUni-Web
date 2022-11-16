@@ -189,6 +189,24 @@ namespace Store_Ge.Services.Services.AccountsService
             return result;
         }
 
+        public async Task<bool> UpdateUser(string userId, string email, string userName)
+        {
+            var decodedUserId = dataProtector.Unprotect(userId);
+
+            var user = await userManager.FindByIdAsync(decodedUserId);
+
+            if (user == null)
+            {
+                throw new NullReferenceException(USER_NOT_FOUND);
+            }
+
+            var emailChangeResult = await userManager.SetEmailAsync(user, email);
+
+            var userNameChangeResult = await userManager.SetUserNameAsync(user, userName);
+
+            return emailChangeResult.Succeeded && userNameChangeResult.Succeeded;
+        }
+
         private async Task GenerateTokens(ApplicationUser user)
         {
             var claims = new List<Claim>

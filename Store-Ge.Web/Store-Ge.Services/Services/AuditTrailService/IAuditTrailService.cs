@@ -1,4 +1,6 @@
-﻿using Store_Ge.Services.Models.StoreModels;
+﻿using Store_Ge.Data.Models;
+using Store_Ge.Services.Models.ProductModels;
+using Store_Ge.Services.Models.StoreModels;
 
 namespace Store_Ge.Services.Services.AuditTrailService
 {
@@ -10,5 +12,33 @@ namespace Store_Ge.Services.Services.AuditTrailService
         /// <param name="addStoreDtoRequest"> The model of the request containing store info </param>
         /// <param name="storeId"> Id of the store </param>
         Task AddStore(AddStoreDto addStoreDtoRequest, int storeId);
+
+        /// <summary>
+        ///  Adds an 'Add Product Quantity' event into the audit trail
+        /// </summary>
+        /// <param name="product"> The product which the user added a certain amount to </param>
+        /// <param name="storeId"> Id of the store </param>
+        Task AddProductQuantity(AddProductDto product, int storeId);
+
+        /// <summary>
+        ///  Adds an 'Add Product' event into the audit trail
+        /// </summary>
+        /// <param name="product"> The product which the user added </param>
+        /// <param name="storeId"> Id of the store </param>
+        Task AddProduct(AddProductDto product, int storeId);
+
+        /// <summary>
+        ///  Adds an 'Add Order' event into the audit trail
+        /// </summary>
+        /// <param name="order"> The order which the user added </param>
+        /// <param name="storeId"> Id of the store </param>
+        Task AddOrder(Order order, int storeId);
+
+        /// <summary>
+        ///  Adds an 'Add Supplier' event into the audit trail
+        /// </summary>
+        /// <param name="supplier"> The supplier added </param>
+        /// <param name="storeIds"> The Ids of the stores the supplier was added to </param>
+        Task AddSupplier(Supplier supplier, List<int> storeIds);
     }
 }

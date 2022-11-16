@@ -10,6 +10,9 @@ namespace Store_Ge.Services.AutoMapper
         {
             CreateMap<Order, OrderDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
+            CreateMap<Order, UserOrderDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()))
+                .ForMember(dest => dest.StoreName, opt => opt.MapFrom(src => src.Store.Name));
         }
     }
 }

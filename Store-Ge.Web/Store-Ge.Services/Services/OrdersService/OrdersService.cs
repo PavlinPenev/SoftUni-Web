@@ -8,6 +8,7 @@ using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Configurations;
 using Store_Ge.Services.Models;
 using Store_Ge.Services.Models.OrderModels;
+using Store_Ge.Services.Services.AuditTrailService;
 using Store_Ge.Services.Services.ProductsService;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -19,6 +20,9 @@ namespace Store_Ge.Services.Services.OrdersService
         private readonly StoreGeAppSettings appSettings;
         private readonly IDataProtector dataProtector;
         private readonly IProductsService productsService;
+        private readonly IRepository<Store> storeRepository;
+        private readonly IRepository<UserStore> userStoreRepository;
+        private readonly IAuditTrailService auditTrailService;
         private readonly IRepository<Order> orderRepository;
         private readonly IMapper mapper;
 
@@ -26,15 +30,48 @@ namespace Store_Ge.Services.Services.OrdersService
             IOptions<StoreGeAppSettings> appSettings,
             IDataProtectionProvider dataProtectionProvider,
             IProductsService productsService,
+            IRepository<Store> storeRepository,
+            IRepository<UserStore> userStoreRepository,
+            IAuditTrailService auditTrailService,
             IRepository<Order> orderRepository,
             IMapper mapper)
         {
             this.appSettings = appSettings.Value;
             this.dataProtector = dataProtectionProvider.CreateProtector(this.appSettings.DataProtectionKey);
             this.productsService = productsService;
+            this.storeRepository = storeRepository;
+            this.userStoreRepository = userStoreRepository;
+            this.auditTrailService = auditTrailService;
             this.orderRepository = orderRepository;
             this.mapper = mapper;
         }
+
+        public async Task<PagedList<UserOrderDto>> GetUserOrders(UserOrdersRequestDto request)
+        {
+            var decryptedUserId = int.Parse(dataProtector.Unprotect(request.UserId));
+
+            var storeIds = await userStoreRepository
+                .GetAll()
+                .Where(x => x.UserId == decryptedUserId)
+                .Select(x => x.StoreId)
+                .ToListAsync();
+
+            var orders = await orderRepository
+                .GetAll()
+                .Include(x => x.Store)
+                .Where(x => storeIds.Contains(x.StoreId))
+                .ToListAsync();
+
+            var mappedOrders = mapper.Map<List<UserOrderDto>>(orders);
+
+            mappedOrders = FilterUserOrders(mappedOrders, request);
+            mappedOrders.ForEach(x => x.Id = dataProtector.Protect(x.Id));
+
+            var pagedOrders = new PagedList<UserOrderDto>(mappedOrders, orders.Count);
+
+            return pagedOrders;
+        }
+
 
         public async Task<PagedList<OrderDto>> GetStoreOrders(StoreOrdersRequestDto request)
         {
@@ -81,7 +118,9 @@ namespace Store_Ge.Services.Services.OrdersService
                 return false;
             }
 
-            await productsService.UpsertProducts(request.Products);
+            await auditTrailService.AddOrder(order, decryptedStoreId);
+
+            await productsService.UpsertProducts(request.Products, decryptedStoreId);
 
             return true;
         }
@@ -122,6 +161,57 @@ namespace Store_Ge.Services.Services.OrdersService
                 var flags = BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public;
 
                 var orderByPropertyInfo = typeof(OrderDto).GetProperty(request.OrderBy, flags);
+
+                if (!request.IsDescending)
+                {
+                    ordersToFilter = ordersToFilter
+                        .OrderBy(x => orderByPropertyInfo.GetValue(x)).ToList();
+                }
+                else
+                {
+                    ordersToFilter = ordersToFilter
+                        .OrderByDescending(x => orderByPropertyInfo.GetValue(x)).ToList();
+                }
+            }
+
+            return ordersToFilter.Skip(request.Skip).Take(request.Take).ToList();
+        }
+
+        private List<UserOrderDto> FilterUserOrders(List<UserOrderDto> ordersToFilter, UserOrdersRequestDto request)
+        {
+            Expression<Func<UserOrderDto, bool>> filterTemplate = x => true;
+
+            if (!string.IsNullOrEmpty(request.SearchTerm))
+            {
+                filterTemplate = filterTemplate.And(x =>
+                    x.OrderNumber.ToString().Contains(request.SearchTerm)
+                    || x.StoreName.Contains(request.SearchTerm));
+            }
+
+            if (request.DateAddedFrom.HasValue || request.DateAddedTo.HasValue)
+            {
+                if (request.DateAddedFrom.HasValue && !request.DateAddedTo.HasValue)
+                {
+                    filterTemplate = filterTemplate.And(x => x.CreatedOn >= request.DateAddedFrom);
+                }
+                else if (!request.DateAddedFrom.HasValue && request.DateAddedTo.HasValue)
+                {
+                    filterTemplate = filterTemplate.And(x => x.CreatedOn <= request.DateAddedTo);
+                }
+                else
+                {
+                    filterTemplate = filterTemplate.And(x =>
+                        x.CreatedOn >= request.DateAddedFrom && x.CreatedOn <= request.DateAddedTo);
+                }
+            }
+
+            ordersToFilter = ordersToFilter.Where(filterTemplate.Compile()).ToList();
+
+            if (!string.IsNullOrEmpty(request.OrderBy))
+            {
+                var flags = BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public;
+
+                var orderByPropertyInfo = typeof(UserOrderDto).GetProperty(request.OrderBy, flags);
 
                 if (!request.IsDescending)
                 {
