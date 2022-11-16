@@ -45,14 +45,15 @@ export class AddOrderComponent implements OnInit {
     orderNumber: new UntypedFormControl('', Validators.required),
     existingProduct: new UntypedFormControl(''),
     addQuantity: new UntypedFormControl(''),
-    newProductName: new UntypedFormControl(
-      '',
-      Validators.maxLength(constants.PRODUCT_NAME_MAX_LENGTH)
-    ),
-    newProductPrice: new UntypedFormControl(''),
-    newProductQuantity: new UntypedFormControl(''),
+    newProductName: new UntypedFormControl('', [
+      Validators.maxLength(constants.PRODUCT_NAME_MAX_LENGTH),
+      Validators.required,
+    ]),
+    newProductPrice: new UntypedFormControl('', Validators.required),
+    newProductQuantity: new UntypedFormControl('', Validators.required),
     newProductMeasurementUnit: new UntypedFormControl(
-      this.productMeasurementUnitConfiguration[0]
+      this.productMeasurementUnitConfiguration[0],
+      Validators.required
     ),
   });
 
@@ -109,11 +110,6 @@ export class AddOrderComponent implements OnInit {
     };
 
     this.orderProducts.push(newProductToAdd);
-
-    this.orderForm.controls['newProductName'].setValue('');
-    this.orderForm.controls['newProductQuantity'].setValue('');
-    this.orderForm.controls['newProductPrice'].setValue('');
-    this.orderForm.controls['newProductMeasurementUnit'].setValue('');
   }
 
   isNewProductFormValid(): boolean {
@@ -130,7 +126,7 @@ export class AddOrderComponent implements OnInit {
       orderNumber: this.orderForm.controls['orderNumber'].value,
       storeId: this.data.storeId,
       products: this.orderProducts,
-      supplierId: this.supplierForm.value,
+      supplierId: this.supplierForm.value.id,
     };
 
     this.bottomSheetRef.dismiss();

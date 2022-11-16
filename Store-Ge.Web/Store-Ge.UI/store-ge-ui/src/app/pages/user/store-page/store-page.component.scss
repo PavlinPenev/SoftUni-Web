@@ -84,3 +84,11 @@ mat-divider {
         width: 150px;
     }
 }
+
+.table-wrapper {
+    overflow: auto;
+}
+
+mat-paginator {
+    margin-bottom: 100px;
+}

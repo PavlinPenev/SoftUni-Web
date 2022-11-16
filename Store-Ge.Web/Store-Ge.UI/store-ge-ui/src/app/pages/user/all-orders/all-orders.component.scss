@@ -1,0 +1,67 @@
+.orders-page-wrapper {
+    margin: auto;
+    width: 50%;
+    margin-top: 20px;
+
+    .back-button {
+        margin-top: 50px;
+        margin-bottom: 80px;
+        border-radius: 30px;
+    }
+}
+
+.header-wrapper {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+
+    .title {
+        margin: 0;
+    }
+}
+
+mat-divider {
+    margin-bottom: 20px;
+}
+
+.empty-state {
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.05);
+    text-align: center;
+    line-height: 60px;
+}
+
+.name-header-cell {
+    display: flex;
+
+    div {
+        text-align: center;
+        line-height: 60px;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+
+    mat-form-field {
+        margin-right: 10px;
+        width: 150px;
+    }
+}
+
+.date-header {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    .search-icon {
+        margin-left: 10px;
+        
+        :hover {
+            cursor: pointer;
+        }
+    }
+}
+
+.button-filter-date {
+    background-color: rgba(0, 0, 0, 0);
+    box-shadow: none !important;
+}

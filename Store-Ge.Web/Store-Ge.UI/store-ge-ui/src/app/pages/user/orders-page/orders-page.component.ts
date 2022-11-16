@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import * as constants from 'src/assets/text.constants';
 import { Sort } from '@angular/material/sort';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { OrdersResponse } from 'src/app/models/orders-response.model';
 import { Store } from 'src/app/models/store.model';
 import { ActivatedRoute } from '@angular/router';
@@ -13,7 +13,7 @@ import { OrdersRequest } from 'src/app/models/orders-request.model';
 import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { AddOrderComponent } from './add-order/add-order.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-orders-page',
@@ -22,6 +22,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class OrdersPageComponent implements OnInit, OnDestroy {
   @ViewChild('paginator', { static: true }) paginator!: MatPaginator;
+  dataSource = new MatTableDataSource();
 
   searchFormControl = new UntypedFormControl('');
 
@@ -47,7 +48,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     dateAddedFrom: null,
     dateAddedTo: null,
     skip: 0,
-    take: 10,
+    take: 5,
   };
 
   initialOrdersRequest: OrdersRequest = {
@@ -58,7 +59,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     dateAddedFrom: null,
     dateAddedTo: null,
     skip: 0,
-    take: 10,
+    take: 5,
   };
 
   displayedColumns: string[] = ['orderNumber', 'supplierName', 'createdOn'];
@@ -82,7 +83,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     this.storeId = this.route.snapshot.params['storeId'];
     this.userId = this.route.snapshot.params['userId'];
     this.initialOrdersRequest.storeId = this.storeId;
-    this.ordersRequest.storeId = this.storeId;
+    this.ordersRequest = { ...this.initialOrdersRequest };
     this.storesService
       .getStore(this.storeId)
       .pipe(
@@ -98,7 +99,11 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
           filter((x) => !!x),
           first()
         )
-        .subscribe((response) => (this.orders = response))
+        .subscribe((response) => {
+          this.orders = response;
+
+          this.dataSource.data = this.orders.items;
+        })
     );
   }
 
@@ -116,13 +121,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
       isDescending: e.direction === 'desc',
     };
 
-    this.ordersService
-      .getStoreOrders(this.ordersRequest)
-      .pipe(
-        filter((x) => !!x),
-        first()
-      )
-      .subscribe((response) => (this.orders = response));
+    this.getStoreOrders(this.ordersRequest);
 
     this.paginator.firstPage();
   }
@@ -134,13 +133,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
       take: this.paginator.pageSize,
     };
 
-    this.ordersService
-      .getStoreOrders(this.ordersRequest)
-      .pipe(
-        filter((x) => !!x),
-        first()
-      )
-      .subscribe((response) => (this.orders = response));
+    this.getStoreOrders(this.ordersRequest);
   }
 
   search(searchTerm: string): void {
@@ -149,13 +142,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
       searchTerm: searchTerm,
     };
 
-    this.ordersService
-      .getStoreOrders(this.ordersRequest)
-      .pipe(
-        filter((x) => !!x),
-        first()
-      )
-      .subscribe((response) => (this.orders = response));
+    this.getStoreOrders(this.ordersRequest);
 
     this.paginator.firstPage();
   }
@@ -167,13 +154,7 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
       dateAddedTo: this.dateRangeFormControl.controls['end'].value,
     };
 
-    this.ordersService
-      .getStoreOrders(this.ordersRequest)
-      .pipe(
-        filter((x) => !!x),
-        first()
-      )
-      .subscribe((response) => (this.orders = response));
+    this.getStoreOrders(this.ordersRequest);
 
     this.paginator.firstPage();
   }
@@ -189,5 +170,15 @@ export class OrdersPageComponent implements OnInit, OnDestroy {
     this.addOrderBottomSheet.open(AddOrderComponent, {
       data: { storeId, userId },
     });
+  }
+
+  private getStoreOrders(request: OrdersRequest) {
+    this.ordersService
+      .getStoreOrders(request)
+      .pipe(
+        filter((x) => !!x),
+        first()
+      )
+      .subscribe((response) => (this.orders = response));
   }
 }

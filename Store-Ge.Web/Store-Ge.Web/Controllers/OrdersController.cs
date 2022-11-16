@@ -16,6 +16,21 @@ namespace Store_Ge.Web.Controllers
         }
 
         [HttpPost]
+        [Route(Routes.GET_USER_ORDERS_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetUserOrders(UserOrdersRequestDto request)
+        {
+            var orders = await ordersService.GetUserOrders(request);
+            if (orders == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(orders);
+        }
+
+        [HttpPost]
         [Route(Routes.GET_STORE_ORDERS_ENDPOINT)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

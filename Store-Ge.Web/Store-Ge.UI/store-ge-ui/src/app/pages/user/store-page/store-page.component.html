@@ -60,7 +60,7 @@
             [matSortActive]="'name'"
             [matSortDirection]="'asc'"
             [matSortDisableClear]="true"
-            [dataSource]="products.items"
+            [dataSource]="dataSource"
         >
             <!-- Product Name Column -->
             <ng-container [matColumnDef]="'name'">
@@ -99,7 +99,7 @@
                         <div>{{constants.MEASUREMENT_UNIT}}</div>
                     </div>
                 </mat-header-cell>
-                <mat-cell *matCellDef="let product">{{product.measurementUnit}}</mat-cell>
+                <mat-cell *matCellDef="let product">{{getUnitTypeString(product.measurementUnit)}}</mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
@@ -107,6 +107,6 @@
         <div *ngIf="products.totalItemsCount === 0" class="empty-state">
             {{constants.NO_PRODUCTS_FOUND}}
         </div>
-        <mat-paginator #paginator (page)="pageChanged()" [length]="products.totalItemsCount" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator #paginator (page)="pageChanged()" [length]="products ? products.totalItemsCount : 0" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
 </div>

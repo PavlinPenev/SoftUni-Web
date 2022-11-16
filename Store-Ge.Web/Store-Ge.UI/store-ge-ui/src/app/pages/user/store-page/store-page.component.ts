@@ -3,9 +3,11 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { debounceTime, filter, first, Subject, Subscription } from 'rxjs';
+import { debounceTime, filter, first, Subject } from 'rxjs';
+import { MeasurementUnitEnum } from 'src/app/models/measurement-unit.enum';
 import { Order } from 'src/app/models/order.model';
 import { ProductsResponse } from 'src/app/models/products-response.model';
 import { StoreProductsRequest } from 'src/app/models/store-products-request.model';
@@ -21,8 +23,10 @@ import * as constants from 'src/assets/text.constants';
   templateUrl: './store-page.component.html',
   styleUrls: ['./store-page.component.scss'],
 })
-export class StorePageComponent implements OnInit, OnDestroy {
+export class StorePageComponent implements OnInit {
   @ViewChild('paginator', { static: true }) paginator!: MatPaginator;
+  dataSource = new MatTableDataSource();
+
   searchField = new UntypedFormControl('');
 
   constants = constants;
@@ -37,15 +41,13 @@ export class StorePageComponent implements OnInit, OnDestroy {
   storeId!: string;
   userId!: string;
 
-  subs: Subscription[] = [];
-
   displayedColumns: string[] = ['name', 'price', 'quantity', 'measurementUnit'];
   productsRequest: StoreProductsRequest = {
     storeId: '',
     searchTerm: '',
     isDescending: false,
     skip: 0,
-    take: 10,
+    take: 5,
   };
 
   initialProductsRequest: StoreProductsRequest = {
@@ -53,7 +55,7 @@ export class StorePageComponent implements OnInit, OnDestroy {
     searchTerm: '',
     isDescending: false,
     skip: 0,
-    take: 10,
+    take: 5,
   };
 
   subject: Subject<string> = new Subject();
@@ -83,25 +85,20 @@ export class StorePageComponent implements OnInit, OnDestroy {
       )
       .subscribe((response) => (this.store = response));
 
+    this.initialProductsRequest.storeId = this.storeId;
     this.productsRequest = {
-      ...this.productsRequest,
-      storeId: this.storeId,
-      take: this.paginator.pageSize,
+      ...this.initialProductsRequest,
     };
 
-    this.subs.push(
-      this.productsService
-        .getStoreProducts(this.productsRequest)
-        .pipe(
-          filter((x) => !!x),
-          first()
-        )
-        .subscribe((response) => (this.products = response))
-    );
+    this.getProducts(this.productsRequest);
   }
 
   getStoreTypeString(type: StoreTypeEnum) {
     return StoreTypeEnum[type];
+  }
+
+  getUnitTypeString(measurementUnit: MeasurementUnitEnum) {
+    return MeasurementUnitEnum[measurementUnit];
   }
 
   exportExcel(): void {
@@ -115,13 +112,7 @@ export class StorePageComponent implements OnInit, OnDestroy {
       isDescending: e.direction === 'desc',
     };
 
-    this.productsService
-      .getStoreProducts(this.productsRequest)
-      .pipe(
-        filter((x) => !!x),
-        first()
-      )
-      .subscribe((response) => (this.products = response));
+    this.getProducts(this.productsRequest);
 
     this.paginator.firstPage();
   }
@@ -133,13 +124,7 @@ export class StorePageComponent implements OnInit, OnDestroy {
       take: this.paginator.pageSize,
     };
 
-    this.productsService
-      .getStoreProducts(this.productsRequest)
-      .pipe(
-        filter((x) => !!x),
-        first()
-      )
-      .subscribe((response) => (this.products = response));
+    this.getProducts(this.productsRequest);
   }
 
   searchByProductName(searchTerm: string): void {
@@ -150,13 +135,7 @@ export class StorePageComponent implements OnInit, OnDestroy {
       searchTerm: searchTerm,
     };
 
-    this.productsService
-      .getStoreProducts(this.productsRequest)
-      .pipe(
-        filter((x) => !!x),
-        first()
-      )
-      .subscribe((response) => (this.products = response));
+    this.getProducts(this.productsRequest);
   }
 
   goBack(): void {
@@ -187,7 +166,17 @@ export class StorePageComponent implements OnInit, OnDestroy {
     const searchTerm = this.searchField.value;
   }
 
-  ngOnDestroy(): void {
-    this.subs.forEach((x) => x.unsubscribe());
+  private getProducts(request: StoreProductsRequest) {
+    this.productsService
+      .getStoreProducts(this.productsRequest)
+      .pipe(
+        filter((x) => !!x),
+        first()
+      )
+      .subscribe((response) => {
+        this.products = response;
+
+        this.dataSource.data = this.products.items;
+      });
   }
 }

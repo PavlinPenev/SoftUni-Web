@@ -6,6 +6,13 @@ namespace Store_Ge.Services.Services.OrdersService
     public interface IOrdersService
     {
         /// <summary>
+        ///  Gets all the given orders for the given user
+        /// </summary>
+        /// <param name="request"> A request model with all neccessary parameters for the filtration and the sorting </param>
+        /// <returns> A paged collection with the user's orders </returns>
+        Task<PagedList<UserOrderDto>> GetUserOrders(UserOrdersRequestDto request);
+
+        /// <summary>
         ///  Gets all the orders for the given store
         /// </summary>
         /// <param name="request"> A request model with all neccessary parameters for the filtration and the sorting </param>

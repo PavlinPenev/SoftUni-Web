@@ -22,10 +22,12 @@ import {
   REGISTER_ENDPOINT,
   RESEND_CONFIRMATION_EMAIL_ENDPOINT,
   RESET_PASSWORD_ENDPOINT,
+  UPDATE_USER_ENDPOINT,
 } from '../shared/api-endpoints';
 import { ResetPasswordRequest } from '../models/reset-password.model';
 import { User } from '../models/user.model';
 import { environment } from 'src/environments/environment';
+import { UPDATE_USER } from 'src/assets/text.constants';
 
 @Injectable({
   providedIn: 'root',
@@ -91,7 +93,7 @@ export class AccountsService {
   }
 
   logout() {
-    this.cookieService.deleteAll('/', this.env.cookieBaseDomain);
+    this.cookieService.deleteAll();
     if (!this.getAccessToken()) {
       this.router.navigate(['/login']);
     }
@@ -128,6 +130,16 @@ export class AccountsService {
     return this.http.get<User>(GET_USER_ENDPOINT, {
       params: {
         userId: userId,
+      },
+    });
+  }
+
+  updateUser(userId: string, email: string, userName: string): Observable<any> {
+    return this.http.put(UPDATE_USER_ENDPOINT, null, {
+      params: {
+        userId,
+        email,
+        userName,
       },
     });
   }

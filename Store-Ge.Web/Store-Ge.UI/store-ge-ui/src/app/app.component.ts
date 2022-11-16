@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import * as textConstants from '../assets/text.constants';
 import { AccountsService } from './services/accounts.service';
 
@@ -21,12 +22,19 @@ export class AppComponent implements OnInit {
 
   constructor(
     private router: Router,
-    public accountsService: AccountsService
+    public accountsService: AccountsService,
+    private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {}
 
   logout(): void {
     this.accountsService.logout();
+  }
+
+  navigateToAccountSettings(): void {
+    const userId = this.cookieService.get('uid');
+
+    this.router.navigate(['/user', userId, 'account-settings']);
   }
 }

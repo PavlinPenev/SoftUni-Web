@@ -10,6 +10,8 @@ namespace Store_Ge.Services.AutoMapper
         {
             CreateMap<Product, ProductDto>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
+            CreateMap<AddProductDto, Product>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => int.Parse(src.Id)));
         }
     }
 }

@@ -29,6 +29,8 @@ export const PASSWORDS_DONT_MATCH = "Passwords don't match.";
 export const UNAUTHORIZED = 'Unauthorized access!';
 export const PRODUCT_NAME_LENGTH =
   'Product name max length should be no more than 50!';
+export const SUPPLIER_NAME_MAX_LENGTH_ERROR =
+  'Supplier name max length should be no more than 20!';
 // end of Error Messages
 
 // Validations
@@ -36,6 +38,7 @@ export const PASSWORD_VALIDATION_PATTERN =
   '^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\\d]){1,})(?=(.*[\\W]){1,})(?!.*\\s).{8,}$';
 export const STORE_NAME_MAX_LENGTH = 20;
 export const PRODUCT_NAME_MAX_LENGTH = 50;
+export const SUPPLIER_NAME_MAX_LENGTH = 20;
 // end of Validations
 
 // Error page constants
@@ -143,3 +146,15 @@ export const DONE = 'Done';
 export const CLICK_BELOW_TO_ADD_ORDER =
   'Click the button below to add to order.';
 // end of Orders page constants
+
+// Suppliers page constants
+export const NO_SUPPLIERS_FOUND = 'No Suppliers found';
+// end of Suppliers page constants
+
+// All Suppliers page constants
+export const STORE_NAME = 'Store Name';
+// end of All Suppliers page constants
+
+// Account Settings page constants
+export const UPDATE_USER = 'Save';
+// end of Account Settings page constants

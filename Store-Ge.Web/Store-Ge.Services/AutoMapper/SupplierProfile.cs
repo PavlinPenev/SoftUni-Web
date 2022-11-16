@@ -8,7 +8,9 @@ namespace Store_Ge.Services.AutoMapper
     {
         public SupplierProfile()
         {
-            CreateMap<Supplier, AddOrderSupplierDto>();
+            CreateMap<Supplier, AddOrderSupplierDto>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
+            CreateMap<Supplier, UserSupplierDto>();
         }
     }
 }

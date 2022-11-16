@@ -23,6 +23,7 @@ namespace Store_Ge.Services.Services.ProductsService
         ///  Upsert products for a given order 
         /// </summary>
         /// <param name="products"> The products to upsert </param>
-        Task UpsertProducts(List<AddProductDto> products);
+        /// <param name="storeId"> The store's Id </param>
+        Task UpsertProducts(List<AddProductDto> products, int storeId);
     }
 }
