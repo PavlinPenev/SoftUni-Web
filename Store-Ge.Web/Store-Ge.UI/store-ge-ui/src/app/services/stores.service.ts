@@ -5,6 +5,7 @@ import { AddStoreRequest } from '../models/add-store-request.model';
 import { Store } from '../models/store.model';
 import {
   ADD_STORE_ENDPOINT,
+  EXPORT_STORE_REPORT_ENDPOINT,
   GET_STORE_ENDPOINT,
   GET_USER_STORES_ENDPOINT,
 } from '../shared/api-endpoints';
@@ -13,6 +14,15 @@ import {
   providedIn: 'root',
 })
 export class StoresService {
+  httpExcelOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    observe: 'response' as 'body',
+    responseType: 'blob' as 'json',
+    params: {},
+  };
+
   constructor(private http: HttpClient) {}
 
   getUserStores(userId: string): Observable<Store[]> {
@@ -33,5 +43,11 @@ export class StoresService {
 
   addStore(request: AddStoreRequest): Observable<any> {
     return this.http.post(ADD_STORE_ENDPOINT, request);
+  }
+
+  exportReport(storeId: string): Observable<any> {
+    this.httpExcelOptions.params = { storeId };
+
+    return this.http.get(EXPORT_STORE_REPORT_ENDPOINT, this.httpExcelOptions);
   }
 }

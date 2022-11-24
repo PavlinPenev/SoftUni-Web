@@ -3,18 +3,19 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using OfficeOpenXml;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Configurations;
 using Store_Ge.Services.Models.StoreModels;
-using System.Linq;
-using static Store_Ge.Common.Constants.CommonConstants;
+using Store_Ge.Services.Services.AuditTrailService;
 
 namespace Store_Ge.Services.Services.StoresService
 {
     public class StoresService : IStoresService
     {
         private readonly IRepository<Store> storeRepository;
+        private readonly IAuditTrailService auditTrailService;
         private readonly IRepository<UserStore> userStoreRepository;
         private readonly IRepository<ApplicationUser> userRepository;
         private readonly UserManager<ApplicationUser> userManager;
@@ -24,6 +25,7 @@ namespace Store_Ge.Services.Services.StoresService
 
         public StoresService(
             IRepository<Store> storeRepository,
+            IAuditTrailService auditTrailService,
             IRepository<UserStore> userStoreRepository,
             IRepository<ApplicationUser> userRepository,
             UserManager<ApplicationUser> userManager,
@@ -32,6 +34,7 @@ namespace Store_Ge.Services.Services.StoresService
             IMapper mapper)
         {
             this.storeRepository = storeRepository;
+            this.auditTrailService = auditTrailService;
             this.userStoreRepository = userStoreRepository;
             this.userRepository = userRepository;
             this.userManager = userManager;
@@ -111,6 +114,46 @@ namespace Store_Ge.Services.Services.StoresService
             var mappedStore = mapper.Map<StoreDto>(store);
 
             return mappedStore;
+        }
+
+        public async Task<byte[]> GetReportFile(string storeId)
+        {
+            var decodedStoreId = int.Parse(dataProtector.Unprotect(storeId));
+
+            var auditEvents = await auditTrailService.GetAll(decodedStoreId);
+
+            if (auditEvents == null)
+            {
+                return null;
+            }
+
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("Event Report");
+
+                //header row
+                worksheet.Cells["A1"].Value = "Action";
+                worksheet.Cells["A1"].AutoFitColumns();
+                worksheet.Cells["B1"].Value = "Description";
+                worksheet.Cells["B1"].AutoFitColumns();
+                worksheet.Cells["C1"].Value = "Created On";
+                worksheet.Cells["C1"].AutoFitColumns();
+
+                //data rows
+                for (int i = 1; i <= auditEvents.Count; i++)
+                {
+                    worksheet.Cells[i + 1, 1].Value = auditEvents[i - 1].Action;
+                    worksheet.Cells[i + 1, 1].AutoFitColumns();
+                    worksheet.Cells[i + 1, 2].Value = auditEvents[i - 1].Description;
+                    worksheet.Cells[i + 1, 2].AutoFitColumns();
+                    worksheet.Cells[i + 1, 3].Value = auditEvents[i - 1].CreatedOn.ToString("MM/dd/yyyy");
+                    worksheet.Cells[i + 1, 3].AutoFitColumns();
+                }
+
+                var excelData = package.GetAsByteArray();
+
+                return excelData;
+            }
         }
     }
 }

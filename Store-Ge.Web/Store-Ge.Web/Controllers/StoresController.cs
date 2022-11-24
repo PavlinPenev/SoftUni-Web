@@ -69,5 +69,23 @@ namespace Store_Ge.Web.Controllers
 
             return StatusCode(201);
         }
+
+        [HttpGet]
+        [Route(Routes.EXPORT_EXCEL_REPORT_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> ExportReport([FromQuery] string storeId) 
+        {
+            var excelFile = await storesService.GetReportFile(storeId);
+
+            if (excelFile == null)
+            {
+                return BadRequest();
+            }
+
+            var contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            var fileName = "StoreReport.xlsx";
+            return File(excelFile, contentType, fileName);
+        }
     }
 }

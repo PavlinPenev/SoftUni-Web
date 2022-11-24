@@ -24,6 +24,7 @@ import { OrdersResponse } from 'src/app/models/orders-response.model';
 import { SuppliersService } from 'src/app/services/suppliers.service';
 import { SuppliersRequest } from 'src/app/models/suppliers-request.model';
 import { SuppliersResponse } from 'src/app/models/suppliers-response.model';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-store-page',
@@ -180,7 +181,24 @@ export class StorePageComponent implements OnInit {
   }
 
   exportExcel(): void {
-    // TODO
+    this.storesService
+      .exportReport(this.storeId)
+      .pipe(first())
+      .subscribe((response: HttpResponse<Blob>) => {
+        var filename = '';
+        var disposition = response.headers.get('Content-Disposition');
+        if (disposition && disposition.indexOf('attachment') !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1])
+            filename = matches[1].replace(/['"]/g, '');
+        }
+        let a = document.createElement('a');
+        a.href = window.URL.createObjectURL(response.body!);
+        a.download = filename;
+        document.body.append(a);
+        a.click();
+      });
   }
 
   onSortChange(e: Sort): void {
