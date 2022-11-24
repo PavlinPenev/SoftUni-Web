@@ -32,5 +32,12 @@ namespace Store_Ge.Services.Services.StoresService
         /// <param name="addStoreDto"> The add store request model containing request params(UserId, Name, Type) </param>
         /// <returns> If the addition was successful </returns>
         Task<bool> AddStore(AddStoreDto addStoreDto);
+
+        /// <summary>
+        ///  Gets an excel file with events ocurred for the given store
+        /// </summary>
+        /// <param name="storeId"> The store's Id </param>
+        /// <returns> The file </returns>
+        Task<byte[]> GetReportFile(string storeId);
     }
 }

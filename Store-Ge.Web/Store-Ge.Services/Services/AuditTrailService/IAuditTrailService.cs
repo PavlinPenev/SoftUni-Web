@@ -1,4 +1,5 @@
 ﻿using Store_Ge.Data.Models;
+using Store_Ge.Services.Models.AuditTrailModels;
 using Store_Ge.Services.Models.ProductModels;
 using Store_Ge.Services.Models.StoreModels;
 
@@ -6,6 +7,13 @@ namespace Store_Ge.Services.Services.AuditTrailService
 {
     public interface IAuditTrailService
     {
+        /// <summary>
+        ///  Gets a list with all the events for a given store
+        /// </summary>
+        /// <param name="storeId"> The store's Id </param>
+        /// <returns> The events </returns>
+        Task<List<AuditEventDto>> GetAll(int storeId);
+
         /// <summary>
         ///  Adds an 'Add Store' event into the audit trail
         /// </summary>

@@ -1,5 +1,8 @@
-﻿using Store_Ge.Data.Models;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
+using Store_Ge.Services.Models.AuditTrailModels;
 using Store_Ge.Services.Models.ProductModels;
 using Store_Ge.Services.Models.StoreModels;
 
@@ -8,10 +11,24 @@ namespace Store_Ge.Services.Services.AuditTrailService
     public class AuditTrailService : IAuditTrailService
     {
         private readonly IRepository<AuditEvent> auditTrailRepository;
+        private readonly IMapper mapper;
 
-        public AuditTrailService(IRepository<AuditEvent> auditTrailRepository)
+        public AuditTrailService(IRepository<AuditEvent> auditTrailRepository, IMapper mapper)
         {
             this.auditTrailRepository = auditTrailRepository;
+            this.mapper = mapper;
+        }
+
+        public async Task<List<AuditEventDto>> GetAll(int storeId)
+        {
+            var auditEvents = await auditTrailRepository
+                .GetAll()
+                .Where(x => x.StoreId == storeId)
+                .ToListAsync();
+
+            var mappedEvents = mapper.Map<List<AuditEventDto>>(auditEvents);
+
+            return mappedEvents;
         }
 
         public async Task AddStore(AddStoreDto addStoreDtoRequest, int storeId)
@@ -45,7 +62,7 @@ namespace Store_Ge.Services.Services.AuditTrailService
             var auditEvent = new AuditEvent
             {
                 Action = nameof(SellProduct),
-                Description = $"Sold a product with name {product.Name}, quantity {product.Quantity}.",
+                Description = $"Sold a product with name {product.Name}, quantity {product.PlusQuantity}.",
                 StoreId = storeId
             };
 

@@ -50,6 +50,8 @@ export const GET_STORE_ENDPOINT =
   prependBaseUrlAndStoresControllerRoute('get-store');
 export const ADD_STORE_ENDPOINT =
   prependBaseUrlAndStoresControllerRoute('add-store');
+export const EXPORT_STORE_REPORT_ENDPOINT =
+  prependBaseUrlAndStoresControllerRoute('export-report');
 
 // Products Controller
 const prependProductsControllerRoute = joinWithSlash('api/products');

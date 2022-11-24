@@ -7,7 +7,6 @@ using Microsoft.IdentityModel.Tokens;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Models;
-using static Store_Ge.Common.Constants.CommonConstants;
 using static Store_Ge.Common.Constants.AccountsConstants;
 
 using System.IdentityModel.Tokens.Jwt;
@@ -26,7 +25,6 @@ namespace Store_Ge.Services.Services.AccountsService
         private readonly IRepository<ApplicationUser> usersRepository;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
-        private readonly IEmailService emailService;
         private readonly IDataProtector dataProtector;
         private readonly StoreGeAppSettings appSettings;
         private readonly JwtSettings jwtSettings;
@@ -36,7 +34,6 @@ namespace Store_Ge.Services.Services.AccountsService
             IRepository<ApplicationUser> usersRepository,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
-            IEmailService emailService,
             IDataProtectionProvider dataProtectionProvider,
             IOptions<JwtSettings> jwtSettings,
             IOptions<StoreGeAppSettings> appSettings,
@@ -45,7 +42,6 @@ namespace Store_Ge.Services.Services.AccountsService
             this.usersRepository = usersRepository;
             this.userManager = userManager;
             this.roleManager = roleManager;
-            this.emailService = emailService;
             this.appSettings = appSettings.Value;
             this.dataProtector = dataProtectionProvider.CreateProtector(this.appSettings.DataProtectionKey);
             this.jwtSettings = jwtSettings.Value;

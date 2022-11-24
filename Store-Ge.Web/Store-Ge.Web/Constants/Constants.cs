@@ -35,6 +35,7 @@
                 public const string GET_USER_STORES_ENDPOINT = "get-stores";
                 public const string ADD_STORE_ENDPOINT = "add-store";
                 public const string GET_STORE_ENDPOINT = "get-store";
+                public const string EXPORT_EXCEL_REPORT_ENDPOINT = "export-report";
             }
         }
 
