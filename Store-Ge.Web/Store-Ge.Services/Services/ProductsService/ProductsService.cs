@@ -9,6 +9,7 @@ using Store_Ge.Services.Configurations;
 using Store_Ge.Services.Models;
 using Store_Ge.Services.Models.ProductModels;
 using Store_Ge.Services.Services.AuditTrailService;
+using Store_Ge.Services.Services.StoresService;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -20,12 +21,14 @@ namespace Store_Ge.Services.Services.ProductsService
         private readonly IDataProtector dataProtector;
         private readonly IRepository<Product> productsRepository;
         private readonly IAuditTrailService auditTrailService;
+        private readonly IStoresService storesService;
         private readonly IMapper mapper;
 
         public ProductsService(
             IDataProtectionProvider dataProtectionProvider, 
             IRepository<Product> productsRepository, 
             IAuditTrailService auditTrailService,
+            IStoresService storesService,
             IMapper mapper, 
             IOptions<StoreGeAppSettings> appSettings)
         {
@@ -33,6 +36,7 @@ namespace Store_Ge.Services.Services.ProductsService
             this.dataProtector = dataProtectionProvider.CreateProtector(this.appSettings.DataProtectionKey);
             this.productsRepository = productsRepository;
             this.auditTrailService = auditTrailService;
+            this.storesService = storesService;
             this.mapper = mapper;
         }
 
@@ -64,6 +68,36 @@ namespace Store_Ge.Services.Services.ProductsService
             mappedProducts.ForEach(p => p.Id = dataProtector.Protect(p.Id));
 
             return mappedProducts;
+        }
+
+        public async Task<bool> SellProducts(SaleRequestDto request)
+        {
+            var decryptedStoreId = int.Parse(dataProtector.Unprotect(request.StoreId));
+            var store = await storesService.GetStore(request.StoreId);
+            if (store == null || !request.Products.Any())
+            {
+                return false;
+            }
+
+            for (int i = 0; i < request.Products.Count; i++)
+            {
+                if (request.Products[i].Quantity < request.Products[i].PlusQuantity.Value)
+                {
+                    return false;
+                }
+
+                request.Products[i].Id = dataProtector.Unprotect(request.Products[i].Id);
+                request.Products[i].Quantity -= request.Products[i].PlusQuantity.Value;
+                await auditTrailService.SellProduct(request.Products[i], decryptedStoreId);
+            }
+
+            var products = mapper.Map<List<Product>>(request.Products);
+
+            products.ForEach(x => x.StoreId = decryptedStoreId);
+
+            await productsRepository.BulkMerge(products);
+
+            return true;
         }
 
         public async Task UpsertProducts(List<AddProductDto> addProducts, int storeId)

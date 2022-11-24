@@ -40,6 +40,19 @@ namespace Store_Ge.Services.Services.AuditTrailService
             await auditTrailRepository.SaveChangesAsync();
         }
 
+        public async Task SellProduct(AddProductDto product, int storeId)
+        {
+            var auditEvent = new AuditEvent
+            {
+                Action = nameof(SellProduct),
+                Description = $"Sold a product with name {product.Name}, quantity {product.Quantity}.",
+                StoreId = storeId
+            };
+
+            await auditTrailRepository.AddAsync(auditEvent);
+            await auditTrailRepository.SaveChangesAsync();
+        }
+
         public async Task AddProductQuantity(AddProductDto product, int storeId)
         {
             var auditEvent = new AuditEvent

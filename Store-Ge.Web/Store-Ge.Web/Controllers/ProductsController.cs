@@ -44,5 +44,20 @@ namespace Store_Ge.Web.Controllers
 
             return Ok(products);
         }
+
+        [HttpPost]
+        [Route(Routes.SELL_PRODUCTS_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> SellProducts([FromBody] SaleRequestDto request)
+        {
+            var result = await productsService.SellProducts(request);
+            if (!result)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
     }
 }

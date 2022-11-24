@@ -37,4 +37,9 @@ export class AppComponent implements OnInit {
 
     this.router.navigate(['/user', userId, 'account-settings']);
   }
+
+  navigateToAllOrders(): void {
+    const userId = this.cookieService.get('uid');
+    this.router.navigate(['/user', userId, 'all-orders']);
+  }
 }

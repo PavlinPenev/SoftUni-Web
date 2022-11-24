@@ -17,6 +17,7 @@ using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 using Store_Ge.Configurations.Services;
 using Store_Ge.Services.Configurations;
+using Store_Ge.Services.Services.EmailService;
 
 namespace Store_Ge.Services.Services.AccountsService
 {
@@ -25,6 +26,7 @@ namespace Store_Ge.Services.Services.AccountsService
         private readonly IRepository<ApplicationUser> usersRepository;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
+        private readonly IEmailService emailService;
         private readonly IDataProtector dataProtector;
         private readonly StoreGeAppSettings appSettings;
         private readonly JwtSettings jwtSettings;
@@ -34,6 +36,7 @@ namespace Store_Ge.Services.Services.AccountsService
             IRepository<ApplicationUser> usersRepository,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
+            IEmailService emailService,
             IDataProtectionProvider dataProtectionProvider,
             IOptions<JwtSettings> jwtSettings,
             IOptions<StoreGeAppSettings> appSettings,
@@ -42,6 +45,7 @@ namespace Store_Ge.Services.Services.AccountsService
             this.usersRepository = usersRepository;
             this.userManager = userManager;
             this.roleManager = roleManager;
+            this.emailService = emailService;
             this.appSettings = appSettings.Value;
             this.dataProtector = dataProtectionProvider.CreateProtector(this.appSettings.DataProtectionKey);
             this.jwtSettings = jwtSettings.Value;
@@ -84,9 +88,9 @@ namespace Store_Ge.Services.Services.AccountsService
 
             var rolesInDb = roleManager.Roles.Select(x => x.Name).ToList();
        
-            var result = await userManager.CreateAsync(user, userModel.Password);
+            await userManager.CreateAsync(user, userModel.Password);
 
-            await userManager.AddToRolesAsync(user, rolesInDb);
+            var result = await userManager.AddToRolesAsync(user, rolesInDb);
 
             return result; 
         }
@@ -185,6 +189,27 @@ namespace Store_Ge.Services.Services.AccountsService
             var decodedToken = Encoding.Default.GetString(decodedTokenBytes);
 
             var result = await userManager.ResetPasswordAsync(user, decodedToken, passwordResetDto.Password);
+
+            return result;
+        }
+
+        public async Task<IdentityResult> RegisterCashier(AddCashierRequestDto request)
+        {
+            var user = mapper.Map<ApplicationUser>(request);
+
+            var decryptedStoreId = int.Parse(dataProtector.Unprotect(request.StoreId));
+
+            user.UsersStores.Add(new UserStore
+            {
+                StoreId = decryptedStoreId,
+                User = user
+            });
+
+            var cashierRole = await roleManager.FindByIdAsync("2");
+
+            await userManager.CreateAsync(user, request.Password);
+
+            var result = await userManager.AddToRoleAsync(user, cashierRole.Name);
 
             return result;
         }

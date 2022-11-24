@@ -28,6 +28,13 @@ namespace Store_Ge.Services.Services.AuditTrailService
         Task AddProduct(AddProductDto product, int storeId);
 
         /// <summary>
+        ///  Adds a 'Sell Product' event into the audit trail
+        /// </summary>
+        /// <param name="product"> The product which the user sold </param>
+        /// <param name="storeId"> Id of the store </param>
+        Task SellProduct(AddProductDto product, int storeId);
+
+        /// <summary>
         ///  Adds an 'Add Order' event into the audit trail
         /// </summary>
         /// <param name="order"> The order which the user added </param>

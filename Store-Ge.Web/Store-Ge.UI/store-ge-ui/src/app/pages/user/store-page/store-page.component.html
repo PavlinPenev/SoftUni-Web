@@ -20,7 +20,7 @@
                             </div>
                             <div class="content-card-title-wrapper">
                                 <mat-card-title>{{constants.ORDERS}}</mat-card-title>
-                                <mat-card-subtitle *ngIf="orders">{{constants.COUNT}}{{orders.length}}</mat-card-subtitle>
+                                <mat-card-subtitle *ngIf="orders">{{constants.COUNT}}{{orders.totalItemsCount}}</mat-card-subtitle>
                             </div>
                         </mat-card-content>
                         <mat-card-actions>
@@ -35,11 +35,25 @@
                             </div>
                             <div class="content-card-title-wrapper">
                                 <mat-card-title>{{constants.SUPPLIERS}}</mat-card-title>
-                                <mat-card-subtitle *ngIf="suppliers">{{constants.COUNT}}{{suppliers.length}}</mat-card-subtitle>
+                                <mat-card-subtitle *ngIf="suppliers">{{constants.COUNT}}{{suppliers.totalItemsCount}}</mat-card-subtitle>
                             </div>
                         </mat-card-content>
                         <mat-card-actions>
                             <a mat-button (click)="navigateToSuppliersPage()">{{constants.SUPPLIERS}}</a>
+                        </mat-card-actions>
+                    </mat-card>
+                    <mat-card class="content-card">
+                        <mat-card-content style="height: 54%;">
+                            <div class="divider-wrapper">
+                                <mat-icon color="primary">sell</mat-icon>
+                                <mat-divider [vertical]="true"></mat-divider>
+                            </div>
+                            <div class="content-card-title-wrapper">
+                                <mat-card-title>{{constants.SALES}}</mat-card-title>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <a mat-button (click)="navigateToSalesPage()">{{constants.SALES}}</a>
                         </mat-card-actions>
                     </mat-card>
                 </mat-card-content>

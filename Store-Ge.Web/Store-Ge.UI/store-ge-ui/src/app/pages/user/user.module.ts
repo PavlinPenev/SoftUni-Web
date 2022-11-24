@@ -12,6 +12,8 @@ import { SuppliersPageComponent } from './suppliers-page/suppliers-page.componen
 import { AddSupplierComponent } from './suppliers-page/add-supplier/add-supplier.component';
 import { AllOrdersComponent } from './all-orders/all-orders.component';
 import { AccountSettingsPageComponent } from './account-settings-page/account-settings-page.component';
+import { SalesPageComponent } from './sales-page/sales-page.component';
+import { AddCashierComponent } from './sales-page/add-cashier/add-cashier.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import { AccountSettingsPageComponent } from './account-settings-page/account-se
     AddSupplierComponent,
     AllOrdersComponent,
     AccountSettingsPageComponent,
+    SalesPageComponent,
+    AddCashierComponent,
   ],
   imports: [
     CommonModule,
@@ -41,6 +45,7 @@ import { AccountSettingsPageComponent } from './account-settings-page/account-se
             path: 'store/:storeId/suppliers',
             component: SuppliersPageComponent,
           },
+          { path: 'store/:storeId/sales', component: SalesPageComponent },
         ],
       },
     ]),

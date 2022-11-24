@@ -1,5 +1,5 @@
 <div class="form-wrapper">
-    <h1>{{constants.REGISTER}}</h1>
+    <h1>{{constants.REGISTER_CASHIER}}</h1>
     <mat-divider></mat-divider>
     <form [formGroup]="form">
         <div class="field">
@@ -67,15 +67,9 @@
                 </mat-form-field>
             </div>
         </div>
-        <div class="field checkbox">
-            <mat-checkbox color="primary" formControlName="acceptanceCheckbox">{{constants.ACCEPT_OUR}}<a href="" target="_blank" (click)="openTAC()">{{constants.TERMS_OF_AGREEMENT}}</a>{{constants.PROCEED_REGISTRATION}}</mat-checkbox>
-            <mat-error *ngIf="!form.controls['acceptanceCheckbox'].valid && form.controls['acceptanceCheckbox'].touched">
-                {{constants.ACCEPT_CHECKBOX}}
-            </mat-error>
-        </div>
         <mat-divider style="margin-top: 10px;"></mat-divider>
         <div class="button-wrapper">
-            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="register()">{{constants.REGISTER}}</button>
+            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="registerCashier()">{{constants.REGISTER_CASHIER}}</button>
         </div>
     </form>    
 </div>
