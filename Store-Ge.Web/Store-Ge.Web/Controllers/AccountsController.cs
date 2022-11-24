@@ -192,6 +192,27 @@ namespace Store_Ge.Web.Controllers
             return Ok(result.Succeeded);
         }
 
+        [HttpPost]
+        [Route(Routes.ADD_CASHIER_ENDPOINT)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> AddCashier(AddCashierRequestDto request)
+        {
+            var result = await accountsService.RegisterCashier(request);
+            if (!result.Succeeded)
+            {
+                return BadRequest();
+            }
+
+            var user = await accountsService.GetUserByEmail(request.Email);
+
+            var emailConfirmationToken = await accountsService.GenerateConfirmationEmailToken(user);
+
+            await emailService.SendConfirmationMail(emailConfirmationToken, user);
+
+            return Ok();
+        }
+
         [HttpGet]
         [Route(Routes.GET_USER_ENDPOINT)]
         [ProducesResponseType(StatusCodes.Status200OK)]

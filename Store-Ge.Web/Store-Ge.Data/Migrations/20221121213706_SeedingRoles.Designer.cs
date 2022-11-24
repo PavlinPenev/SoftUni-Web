@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store_Ge.Data;
 
@@ -11,9 +12,10 @@ using Store_Ge.Data;
 namespace Store_Ge.Data.Migrations
 {
     [DbContext(typeof(StoreGeDbContext))]
-    partial class StoreGeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221121213706_SeedingRoles")]
+    partial class SeedingRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -203,16 +205,14 @@ namespace Store_Ge.Data.Migrations
                         new
                         {
                             Id = 1,
-                            ConcurrencyStamp = "04252a49-f395-44b8-a2d6-d2729a551776",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
+                            ConcurrencyStamp = "5a6b5599-8cd5-4014-9a7c-2675813d676a",
+                            Name = "Admin"
                         },
                         new
                         {
                             Id = 2,
-                            ConcurrencyStamp = "a8b3df41-a2bf-4c93-a025-fea1dd4b4a99",
-                            Name = "Cashier",
-                            NormalizedName = "CASHIER"
+                            ConcurrencyStamp = "48191d10-49a5-4cd4-8713-70491e1efb70",
+                            Name = "Cashier"
                         });
                 });
 

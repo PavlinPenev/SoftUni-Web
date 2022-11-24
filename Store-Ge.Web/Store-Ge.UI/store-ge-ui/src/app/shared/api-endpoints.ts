@@ -30,6 +30,8 @@ export const FORGOT_PASSWORD_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('forgot-password');
 export const RESET_PASSWORD_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('password-reset');
+export const ADD_CASHIER_ENDPOINT =
+  prependBaseUrlAndAccountsControllerRoute('add-cashier');
 export const GET_USER_ENDPOINT =
   prependBaseUrlAndAccountsControllerRoute('get-user');
 export const UPDATE_USER_ENDPOINT =
@@ -60,6 +62,8 @@ export const GET_STORE_PRODUCTS_ENDPOINT =
   prependBaseUrlAndProductsControllerRoute('get-store-products');
 export const GET_STORE_ADD_PRODUCTS_ENDPOINT =
   prependBaseUrlAndProductsControllerRoute('get-store-add-products');
+export const SELL_PRODUCTS_ENDPOINT =
+  prependBaseUrlAndProductsControllerRoute('sell-products');
 
 // Orders Controller
 const prependOrdersControllerRoute = joinWithSlash('api/orders');

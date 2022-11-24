@@ -14,6 +14,7 @@ import { RefreshAccessTokenResponse } from '../models/refresh-access-token-respo
 import { RegisterRequest } from '../models/register-request.model';
 import { ForgotPasswordRequest } from '../models/forgot-password.model';
 import {
+  ADD_CASHIER_ENDPOINT,
   CONFIRM_EMAIL_ENDPOINT,
   FORGOT_PASSWORD_ENDPOINT,
   GET_USER_ENDPOINT,
@@ -27,7 +28,9 @@ import {
 import { ResetPasswordRequest } from '../models/reset-password.model';
 import { User } from '../models/user.model';
 import { environment } from 'src/environments/environment';
-import { UPDATE_USER } from 'src/assets/text.constants';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { RegisterCashierRequest } from '../models/register-cashier-request.model';
+import { domain } from 'process';
 
 @Injectable({
   providedIn: 'root',
@@ -37,8 +40,14 @@ export class AccountsService {
   loggedUser!: User;
   env = environment;
 
+  jwtHelper: JwtHelperService = new JwtHelperService();
+
   get isLoggedIn(): Observable<boolean> {
     return of(this.getAccessToken() ? true : false);
+  }
+
+  get isUserAdmin(): Observable<boolean> {
+    return of(this.isUserAdminCheck());
   }
 
   constructor(
@@ -49,6 +58,14 @@ export class AccountsService {
 
   getAccessToken() {
     return this.cookieService.get('access_token');
+  }
+
+  isUserAdminCheck(): boolean {
+    const token = this.getAccessToken();
+
+    const decodedToken = this.jwtHelper.decodeToken(token);
+
+    return decodedToken.role.includes('Admin');
   }
 
   register(request: RegisterRequest) {
@@ -69,9 +86,18 @@ export class AccountsService {
     return this.http
       .post<LoginResponse>(LOGIN_ENDPOINT, request)
       .subscribe((response: LoginResponse) => {
-        this.cookieService.set('access_token', response.accessToken);
-        this.cookieService.set('refresh_token', response.refreshToken);
-        this.cookieService.set('uid', response.id);
+        this.cookieService.set('access_token', response.accessToken, {
+          path: '/',
+          domain: this.env.cookieBaseDomain,
+        });
+        this.cookieService.set('refresh_token', response.refreshToken, {
+          path: '/',
+          domain: this.env.cookieBaseDomain,
+        });
+        this.cookieService.set('uid', response.id, {
+          path: '/',
+          domain: this.env.cookieBaseDomain,
+        });
 
         this.router.navigate(['/user', response.id]);
       });
@@ -93,7 +119,7 @@ export class AccountsService {
   }
 
   logout() {
-    this.cookieService.deleteAll();
+    this.cookieService.deleteAll('/', this.env.cookieBaseDomain);
     if (!this.getAccessToken()) {
       this.router.navigate(['/login']);
     }
@@ -124,6 +150,10 @@ export class AccountsService {
           this.router.navigate(['/login']);
         }
       });
+  }
+
+  registerCashier(request: RegisterCashierRequest): Observable<boolean> {
+    return this.http.post<boolean>(ADD_CASHIER_ENDPOINT, request);
   }
 
   getUser(userId: string): Observable<User> {

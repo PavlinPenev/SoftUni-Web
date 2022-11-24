@@ -14,6 +14,7 @@
                 public const string RESEND_EMAIL_ENDPOINT = "resend-confirmation-email";
                 public const string FORGOT_PASSWORD_ENDPOINT = "forgot-password";
                 public const string PASSWORD_RESET_ENDPOINT = "password-reset";
+                public const string ADD_CASHIER_ENDPOINT = "add-cashier";
                 public const string GET_USER_ENDPOINT = "get-user";
                 public const string UPDATE_USER_INFO_ENDPOINT = "update-user";
             }
@@ -44,6 +45,7 @@
                 public const string PRODUCTS_CONTROLLER = "api/products";
                 public const string GET_STORE_PRODUCTS_ENDPOINT = "get-store-products";
                 public const string GET_STORE_ADD_PRODUCTS_ENDPOINT = "get-store-add-products";
+                public const string SELL_PRODUCTS_ENDPOINT = "sell-products";
             }
         }
 

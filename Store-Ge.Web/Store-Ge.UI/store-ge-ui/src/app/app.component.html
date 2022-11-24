@@ -1,6 +1,12 @@
 <mat-toolbar class="navbar">
-    <div class="store-ge-logo">
-        <mat-icon>shopping_cart</mat-icon>     {{constants.APP_NAME}}
+    <div style="display: flex;">
+        <div class="store-ge-logo">
+            <mat-icon>shopping_cart</mat-icon>     {{constants.APP_NAME}}
+        </div>
+        <mat-divider [vertical]="true" style="margin: 0 10px;"></mat-divider>
+        <button *ngIf="(isUserLoggedIn | async) && (accountsService.isUserAdmin | async)" mat-raised-button (click)="navigateToAllOrders()" color="primary">
+            <mat-icon>inventory</mat-icon> {{constants.ALL_ORDERS}}
+        </button>
     </div>
     <div class="navbar-buttons-wrapper">
         <button mat-raised-button color="primary" routerLink="/home">

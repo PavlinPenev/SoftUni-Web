@@ -71,6 +71,21 @@ namespace Store_Ge.Data
 
             builder.Entity<StoreSupplier>()
                 .HasKey(ss => new { ss.StoreId, ss.SupplierId });
+
+            builder.Entity<ApplicationRole>()
+                .HasData(
+                new ApplicationRole
+                {
+                    Id = 1,
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new ApplicationRole
+                {
+                    Id = 2,
+                    Name = "Cashier",
+                    NormalizedName = "CASHIER"
+                });
         }
 
         private void ApplyAuditInfoRules()

@@ -17,6 +17,13 @@ import { Supplier } from 'src/app/models/supplier.model';
 import { ProductsService } from 'src/app/services/products.service';
 import { StoresService } from 'src/app/services/stores.service';
 import * as constants from 'src/assets/text.constants';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { OrdersService } from 'src/app/services/orders.service';
+import { OrdersRequest } from 'src/app/models/orders-request.model';
+import { OrdersResponse } from 'src/app/models/orders-response.model';
+import { SuppliersService } from 'src/app/services/suppliers.service';
+import { SuppliersRequest } from 'src/app/models/suppliers-request.model';
+import { SuppliersResponse } from 'src/app/models/suppliers-response.model';
 
 @Component({
   selector: 'app-store-page',
@@ -25,6 +32,10 @@ import * as constants from 'src/assets/text.constants';
 })
 export class StorePageComponent implements OnInit {
   @ViewChild('paginator', { static: true }) paginator!: MatPaginator;
+
+  jwtHelper: JwtHelperService = new JwtHelperService();
+  decodedToken: any = '';
+
   dataSource = new MatTableDataSource();
 
   searchField = new UntypedFormControl('');
@@ -35,8 +46,15 @@ export class StorePageComponent implements OnInit {
     items: [],
     totalItemsCount: 0,
   };
-  orders: Order[] = [];
-  suppliers: Supplier[] = [];
+  orders: OrdersResponse = {
+    items: [],
+    totalItemsCount: 0,
+  };
+  suppliers: SuppliersResponse = {
+    items: [],
+    totalItemsCount: 0,
+  };
+
   store!: Store;
   storeId!: string;
   userId!: string;
@@ -58,11 +76,35 @@ export class StorePageComponent implements OnInit {
     take: 5,
   };
 
+  ordersRequest: OrdersRequest = {
+    storeId: '',
+    searchTerm: '',
+    orderBy: 'orderNumber',
+    isDescending: false,
+    dateAddedFrom: null,
+    dateAddedTo: null,
+    skip: 0,
+    take: 5,
+  };
+
+  suppliersRequest: SuppliersRequest = {
+    userId: '',
+    searchTerm: '',
+    orderBy: 'name',
+    isDescending: false,
+    dateAddedFrom: null,
+    dateAddedTo: null,
+    skip: 0,
+    take: 5,
+  };
+
   subject: Subject<string> = new Subject();
 
   constructor(
     private productsService: ProductsService,
+    private ordersService: OrdersService,
     private storesService: StoresService,
+    private suppliersService: SuppliersService,
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
@@ -70,12 +112,30 @@ export class StorePageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.subject.pipe(debounceTime(800)).subscribe((searchTextValue) => {
-      this.searchByProductName(searchTextValue);
-    });
+    this.decodedToken = this.jwtHelper.decodeToken(
+      this.cookieService.get('access_token')
+    );
 
     this.userId = this.cookieService.get('uid');
     this.storeId = this.route.snapshot.params['storeId'];
+
+    if (!this.decodedToken.role.includes('Admin')) {
+      this.router.navigate([
+        '/user',
+        this.userId,
+        'store',
+        this.storeId,
+        'sales',
+      ]);
+      return;
+    }
+
+    this.ordersRequest.storeId = this.storeId;
+    this.suppliersRequest.userId = this.userId;
+
+    this.subject.pipe(debounceTime(800)).subscribe((searchTextValue) => {
+      this.searchByProductName(searchTextValue);
+    });
 
     this.storesService
       .getStore(this.storeId)
@@ -84,6 +144,24 @@ export class StorePageComponent implements OnInit {
         first()
       )
       .subscribe((response) => (this.store = response));
+
+    this.ordersService
+      .getStoreOrders(this.ordersRequest)
+      .pipe(
+        filter((x) => !!x),
+        first()
+      )
+      .subscribe((response) => (this.orders = response));
+
+    this.suppliersService
+      .getUserSuppliersPaged(this.suppliersRequest)
+      .pipe(
+        filter((x) => !!x),
+        first()
+      )
+      .subscribe((response) => {
+        this.suppliers = response;
+      });
 
     this.initialProductsRequest.storeId = this.storeId;
     this.productsRequest = {
@@ -162,8 +240,18 @@ export class StorePageComponent implements OnInit {
     ]);
   }
 
+  navigateToSalesPage(): void {
+    this.router.navigate([
+      '/user',
+      this.userId,
+      'store',
+      this.storeId,
+      'sales',
+    ]);
+  }
+
   onKeyUp(): void {
-    const searchTerm = this.searchField.value;
+    this.subject.next(this.searchField.value);
   }
 
   private getProducts(request: StoreProductsRequest) {

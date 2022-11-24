@@ -72,6 +72,13 @@ namespace Store_Ge.Services.Services.AccountsService
         Task<IdentityResult> PasswordReset(PasswordResetDto passwordResetDto);
 
         /// <summary>
+        ///  Registers a cashier for the given store
+        /// </summary>
+        /// <param name="request"> Request with needed parameters for the registration </param>
+        /// <returns> Metadata info about the registration process. It determines if the registration was successful </returns>
+        Task<IdentityResult> RegisterCashier(AddCashierRequestDto request);
+
+        /// <summary>
         ///  Updates the user's info
         /// </summary>
         /// <param name="userId"> The user's Id </param>

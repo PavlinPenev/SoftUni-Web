@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import {
   AbstractControl,
   UntypedFormControl,
@@ -7,17 +7,22 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { RegisterRequest } from 'src/app/models/register-request.model';
+import {
+  MatBottomSheetRef,
+  MAT_BOTTOM_SHEET_DATA,
+} from '@angular/material/bottom-sheet';
+import { filter, first } from 'rxjs';
+import { RegisterCashierRequest } from 'src/app/models/register-cashier-request.model';
 import { AccountsService } from 'src/app/services/accounts.service';
-import * as textConstants from 'src/assets/text.constants';
+import * as constants from 'src/assets/text.constants';
 
 @Component({
-  selector: 'app-register-page',
-  templateUrl: './register-page.component.html',
-  styleUrls: ['./register-page.component.scss'],
+  selector: 'app-add-cashier',
+  templateUrl: './add-cashier.component.html',
+  styleUrls: ['./add-cashier.component.scss'],
 })
-export class RegisterPageComponent implements OnInit {
-  constants = textConstants;
+export class AddCashierComponent implements OnInit {
+  constants = constants;
 
   showPassword = false;
   showConfirmPassword = false;
@@ -45,10 +50,6 @@ export class RegisterPageComponent implements OnInit {
         Validators.pattern(this.constants.PASSWORD_VALIDATION_PATTERN),
       ]),
       confirmPassword: new UntypedFormControl('', Validators.required),
-      acceptanceCheckbox: new UntypedFormControl(
-        false,
-        Validators.requiredTrue
-      ),
     },
     { validators: this.passwordMatchValidator }
   );
@@ -60,7 +61,12 @@ export class RegisterPageComponent implements OnInit {
     return this.form.get('confirmPassword');
   }
 
-  constructor(private accountsService: AccountsService) {}
+  constructor(
+    private accountsService: AccountsService,
+    private bottomSheetRef: MatBottomSheetRef<AddCashierComponent>,
+    @Inject(MAT_BOTTOM_SHEET_DATA)
+    public data: { storeId: string }
+  ) {}
 
   ngOnInit(): void {}
 
@@ -80,22 +86,23 @@ export class RegisterPageComponent implements OnInit {
     }
   }
 
-  register(): void {
-    const request: RegisterRequest = {
+  registerCashier(): void {
+    const request: RegisterCashierRequest = {
+      storeId: this.data.storeId,
       userName: this.form.value.username!,
       email: this.form.value.email!,
       password: this.form.value.password!,
       confirmPassword: this.form.value.confirmPassword!,
     };
 
-    this.accountsService.register(request);
-  }
+    this.accountsService
+      .registerCashier(request)
+      .pipe(
+        filter((x) => !!x),
+        first()
+      )
+      .subscribe();
 
-  openTAC(): void {
-    window.open(
-      '../../../assets/terms-and-conditions-page.html',
-      '_blank',
-      'status=0,scrollbars=1,resizable=1,location=1'
-    );
+    this.bottomSheetRef.dismiss();
   }
 }

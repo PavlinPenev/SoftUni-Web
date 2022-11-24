@@ -101,6 +101,7 @@ export const STORES = 'Stores';
 export const ADD_SUPPLIER = 'Add Supplier';
 export const SUPPLIERS = 'Suppliers';
 export const ADD_ORDER = 'Add Order';
+export const ALL_ORDERS = 'All Orders';
 export const ORDERS = 'Orders';
 export const SALES = 'Sales';
 export const NO_STORES_ADDED =
@@ -154,6 +155,16 @@ export const NO_SUPPLIERS_FOUND = 'No Suppliers found';
 // All Suppliers page constants
 export const STORE_NAME = 'Store Name';
 // end of All Suppliers page constants
+
+// Sales page constants
+export const NOT_ENOUGH_PRODUCTS_IN_STORE =
+  "There's not enough amount of this product in store.";
+export const BILL = 'Bill';
+export const ADD_CASHIER = 'Add cashier to your store';
+export const SELL = 'Sell';
+export const ADD_PRODUCT = 'Add Product';
+export const REGISTER_CASHIER = 'Register cashier';
+// end of Sales page constants
 
 // Account Settings page constants
 export const UPDATE_USER = 'Save';

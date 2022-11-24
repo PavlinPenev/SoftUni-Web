@@ -20,6 +20,13 @@ namespace Store_Ge.Services.Services.ProductsService
         Task<List<ProductDto>> GetStoreAddProducts(string storeId);
 
         /// <summary>
+        ///  Sells the customer's products
+        /// </summary>
+        /// <param name="request"> The request for selling the products </param>
+        /// <returns> If the sale was successful </returns>
+        Task<bool> SellProducts(SaleRequestDto request);
+
+        /// <summary>
         ///  Upsert products for a given order 
         /// </summary>
         /// <param name="products"> The products to upsert </param>
