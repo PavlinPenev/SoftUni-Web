@@ -8,8 +8,6 @@ namespace Store_Ge.Tests.Services
 {
     public class AccountsServiceTests : TestsSetUp
     {
-        private const string MOCK_USER_ID = "mockUserId";
-
         private AccountsService accountsService;
 
         [SetUp]
@@ -77,7 +75,7 @@ namespace Store_Ge.Tests.Services
         [Test]
         public async Task GetUserByEmailReturnsUser()
         {
-            var email = "asfg@asg.bas";
+            var email = MOCK_EMAIL_ADDRESS;
 
             var user = await accountsService.GetUserByEmail(email);
 
@@ -87,7 +85,7 @@ namespace Store_Ge.Tests.Services
         [Test]
         public async Task RefreshAccessTokenReturnsTokens()
         {
-            var token = "mockRefreshToken";
+            var token = MOCK_REFRESH_TOKEN;
             var userId = MOCK_USER_ID;
 
             var tokens = await accountsService.RefreshAccessTokenAsync(token, userId);
@@ -111,7 +109,7 @@ namespace Store_Ge.Tests.Services
         {
             var appCashierRegisterDto = new AddCashierRequestDto
             {
-                StoreId = "mockStoreId",
+                StoreId = MOCK_STORE_ID,
                 UserName = "CashierPaf",
                 Email = "dsfg@asg.bas",
                 Password = "Aa!123456",
@@ -130,14 +128,14 @@ namespace Store_Ge.Tests.Services
         public async Task UpdateUserUpdatesUser()
         {
             var userId = MOCK_USER_ID;
-            var email = "mockEmail@asd.bg";
-            var username = "mockPaf";
+            var email = MOCK_EMAIL_ADDRESS_FOR_UPDATE;
+            var username = MOCK_USERNAME;
 
             var result = await accountsService.UpdateUser(userId, email, username);
 
             Assert.IsTrue(result);
             Assert.AreEqual("mockPaf", users[0].UserName);
-            Assert.AreEqual("mockEmail@asd.bg", users[0].Email);
+            Assert.AreEqual("mockEmailUpdated@asd.bg", users[0].Email);
         }
     }
 }
