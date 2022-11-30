@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Store_Ge.Configurations.Services;
@@ -20,17 +19,28 @@ namespace Store_Ge.Tests
 {
     public class TestsSetUp
     {
+        protected const string MOCK_USER_ID = "mockUserId";
+        protected const string MOCK_REFRESH_TOKEN = "mockRefreshToken";
+        protected const string MOCK_STORE_ID = "mockStoreId";
+        protected const string MOCK_EMAIL_ADDRESS = "asfg@asg.bas";
+        protected const string MOCK_EMAIL_ADDRESS_FOR_UPDATE = "mockEmailUpdated@asd.bg";
+        protected const string MOCK_USERNAME = "mockPaf";
+
         protected List<ApplicationUser> users;
         protected List<ApplicationRole> roles;
+        protected IQueryable<AuditEvent> auditEvents;
+        protected StoreGeDbContext context;
 
-        public static StoreGeDbContext GetDbContext()
+        public void InitializeDbContext()
         {
+            if (context != null)
+            {
+                context.Database.EnsureDeleted();
+            }
             var options = new DbContextOptionsBuilder<StoreGeDbContext>()
                 .UseInMemoryDatabase("StoreGeInMemoryDB").Options;
 
-            var db = new StoreGeDbContext(options);
-
-            return db;
+            context = new StoreGeDbContext(options);
         }
 
         public IRepository<ApplicationUser> GetUserRepository()
@@ -106,6 +116,36 @@ namespace Store_Ge.Tests
             return mockRepo.Object;
         }
 
+        public IRepository<AuditEvent> GetAuditTrailRepository()
+        {
+            var dbSet = context.Set<AuditEvent>();
+            dbSet.AddRange(new List<AuditEvent>
+            {
+                new AuditEvent
+                {
+                    Id = 1,
+                    Action = "MockAction",
+                    Description = "A mock action for test purposes",
+                    CreatedOn = DateTime.UtcNow,
+                    StoreId = 6
+                },
+                new AuditEvent
+                {
+                    Id = 2,
+                    Action = "MockActionSecond",
+                    Description = "A second mock action for test purposes",
+                    CreatedOn = DateTime.UtcNow,
+                    StoreId = 2
+                }
+            });
+            context.SaveChangesAsync();
+
+            var mockRepo = new Mock<Repository<AuditEvent>>(context);
+            mockRepo.Setup(x => x.AddAsync(It.IsAny<AuditEvent>())).Callback<AuditEvent>(x => context.AddAsync(x));
+
+            return mockRepo.Object;
+        }
+
         public UserManager<ApplicationUser> GetUserManager()
         {
             var store = new Mock<IUserStore<ApplicationUser>>();
@@ -120,8 +160,8 @@ namespace Store_Ge.Tests
                 .ReturnsAsync(true);
             mgr.Setup(x => x.IsEmailConfirmedAsync(It.IsAny<ApplicationUser>()))
                 .ReturnsAsync(true);
-            mgr.Setup(x => x.FindByEmailAsync(users[0].Email))
-                .ReturnsAsync(users[0]);
+            mgr.Setup(x => x.FindByEmailAsync(MOCK_EMAIL_ADDRESS))
+                .ReturnsAsync(users.FirstOrDefault(y => y.Email == MOCK_EMAIL_ADDRESS));
             mgr.Setup(x => x.GetRolesAsync(It.IsAny<ApplicationUser>()))
                 .ReturnsAsync(roles.Select(x => x.Name).ToList());
             mgr.Setup(x => x.AddToRolesAsync(It.IsAny<ApplicationUser>(), It.IsAny<List<string>>()))
@@ -135,6 +175,9 @@ namespace Store_Ge.Tests
             mgr.Setup(x => x.SetEmailAsync(users[0], "mockEmail@asd.bg"))
                 .ReturnsAsync(IdentityResult.Success)
                 .Callback<ApplicationUser, string>((x, y) => x.Email = y);
+            mgr.Setup(x => x.SetEmailAsync(users[0], MOCK_EMAIL_ADDRESS_FOR_UPDATE))
+                .ReturnsAsync(IdentityResult.Success)
+                .Callback<ApplicationUser, string>((x, y) => x.Email = MOCK_EMAIL_ADDRESS_FOR_UPDATE);
             mgr.Setup(x => x.SetUserNameAsync(users[0], "mockPaf"))
                 .ReturnsAsync(IdentityResult.Success)
                 .Callback<ApplicationUser, string>((x, y) => x.UserName = y);
