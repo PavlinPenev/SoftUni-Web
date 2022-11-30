@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store-Ge.Services", "Store-
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store-Ge.Data", "Store-Ge.Data\Store-Ge.Data.csproj", "{719DB063-F02F-48A8-A9FE-30876FF203C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store-Ge.Common", "Store-Ge.Common\Store-Ge.Common.csproj", "{C83F4784-A849-49E9-9564-01E62127C445}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Store-Ge.Common", "Store-Ge.Common\Store-Ge.Common.csproj", "{C83F4784-A849-49E9-9564-01E62127C445}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store-Ge.Tests", "Store-Ge.Tests\Store-Ge.Tests.csproj", "{CDA08882-55AC-4F8A-BC04-ECDAFFB5D804}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C83F4784-A849-49E9-9564-01E62127C445}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C83F4784-A849-49E9-9564-01E62127C445}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C83F4784-A849-49E9-9564-01E62127C445}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDA08882-55AC-4F8A-BC04-ECDAFFB5D804}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDA08882-55AC-4F8A-BC04-ECDAFFB5D804}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDA08882-55AC-4F8A-BC04-ECDAFFB5D804}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDA08882-55AC-4F8A-BC04-ECDAFFB5D804}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

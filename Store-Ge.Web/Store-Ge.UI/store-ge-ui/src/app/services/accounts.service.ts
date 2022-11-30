@@ -30,7 +30,6 @@ import { User } from '../models/user.model';
 import { environment } from 'src/environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { RegisterCashierRequest } from '../models/register-cashier-request.model';
-import { domain } from 'process';
 
 @Injectable({
   providedIn: 'root',
