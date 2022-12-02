@@ -32,11 +32,22 @@ namespace Store_Ge.Tests
 
         protected List<ApplicationUser> users;
         protected List<ApplicationRole> roles;
-        protected IQueryable<AuditEvent> auditEvents;
+        protected List<AuditEvent> auditEvents;
+
         protected StoreGeDbContext context;
 
         public async Task InitializeDbContext()
         {
+            var options = new DbContextOptionsBuilder<StoreGeDbContext>()
+                .UseInMemoryDatabase("StoreGeInMemoryDB").Options;
+
+            context = new StoreGeDbContext(options);
+
+            if (context != null)
+            {
+                context.Database.EnsureDeleted();
+            }
+
             var passwordHasher = new PasswordHasher<ApplicationUser>();
 
             users = new List<ApplicationUser>
@@ -100,33 +111,7 @@ namespace Store_Ge.Tests
                 user.PasswordHash = passwordHasher.HashPassword(user, "Aa!123456");
             }
 
-            if (context != null)
-            {
-                context.Database.EnsureDeleted();
-            }
-            var options = new DbContextOptionsBuilder<StoreGeDbContext>()
-                .UseInMemoryDatabase("StoreGeInMemoryDB").Options;
-
-            context = new StoreGeDbContext(options);
-
-            await context.AddRangeAsync(users);
-            await context.AddRangeAsync(roles);
-            await context.SaveChangesAsync();
-        }
-
-        public IRepository<ApplicationUser> GetUserRepository()
-        {
-            var mockRepo = new Mock<IRepository<ApplicationUser>>();
-
-            mockRepo.Setup(x => x.GetAll()).Returns(users.AsQueryable());
-                
-            return mockRepo.Object;
-        }
-
-        public IRepository<AuditEvent> GetAuditTrailRepository()
-        {
-            var dbSet = context.Set<AuditEvent>();
-            dbSet.AddRange(new List<AuditEvent>
+            auditEvents = new List<AuditEvent>
             {
                 new AuditEvent
                 {
@@ -144,9 +129,25 @@ namespace Store_Ge.Tests
                     CreatedOn = DateTime.UtcNow,
                     StoreId = 2
                 }
-            });
-            context.SaveChangesAsync();
+            };
 
+            await context.AddRangeAsync(users);
+            await context.AddRangeAsync(roles);
+            await context.AddRangeAsync(auditEvents);
+            await context.SaveChangesAsync();
+        }
+
+        public IRepository<ApplicationUser> GetUserRepository()
+        {
+            var mockRepo = new Mock<IRepository<ApplicationUser>>();
+
+            mockRepo.Setup(x => x.GetAll()).Returns(users.AsQueryable());
+                
+            return mockRepo.Object;
+        }
+
+        public IRepository<AuditEvent> GetAuditTrailRepository()
+        {
             var mockRepo = new Mock<Repository<AuditEvent>>(context);
             mockRepo.Setup(x => x.AddAsync(It.IsAny<AuditEvent>())).Callback<AuditEvent>(x => context.AddAsync(x));
 

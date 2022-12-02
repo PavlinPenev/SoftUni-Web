@@ -1,5 +1,4 @@
 ﻿using NUnit.Framework;
-using Store_Ge.Data;
 using Store_Ge.Services.Models;
 using Store_Ge.Services.Services.AccountsService;
 using System.Threading.Tasks;
@@ -11,9 +10,9 @@ namespace Store_Ge.Tests.Services
         private AccountsService accountsService;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
-            InitializeDbContext();
+            await InitializeDbContext();
 
             var usersRepository = GetUserRepository();
             var userManager = GetUserManager();

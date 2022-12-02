@@ -16,6 +16,7 @@ namespace Store_Ge.Tests.Services
         public async Task Setup()
         {
             await InitializeDbContext();
+
             var userManager = GetUserManager();
             var emailSender = GetEmailSender();
             var storeGeAppSettings = GetStoreGeAppSettings();
