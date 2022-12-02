@@ -13,6 +13,8 @@ namespace Store_Ge.Tests.Services
         [SetUp]
         public void Setup()
         {
+            InitializeDbContext();
+
             var usersRepository = GetUserRepository();
             var userManager = GetUserManager();
             var roleManager = GetRoleManager();

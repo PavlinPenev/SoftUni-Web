@@ -10,10 +10,12 @@ using Store_Ge.Data;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Configurations;
+using Store_Ge.Services.Services.EmailService.EmailSender;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Store_Ge.Tests
 {
@@ -25,29 +27,19 @@ namespace Store_Ge.Tests
         protected const string MOCK_EMAIL_ADDRESS = "asfg@asg.bas";
         protected const string MOCK_EMAIL_ADDRESS_FOR_UPDATE = "mockEmailUpdated@asd.bg";
         protected const string MOCK_USERNAME = "mockPaf";
+        protected const string MOCK_EMAIL_CONFIRMATION_TOKEN = "mockEmailConfirmationToken";
+        protected const string MOCK_RESET_PASSWORD_TOKEN = "mockResetPasswordToken";
 
         protected List<ApplicationUser> users;
         protected List<ApplicationRole> roles;
         protected IQueryable<AuditEvent> auditEvents;
         protected StoreGeDbContext context;
 
-        public void InitializeDbContext()
-        {
-            if (context != null)
-            {
-                context.Database.EnsureDeleted();
-            }
-            var options = new DbContextOptionsBuilder<StoreGeDbContext>()
-                .UseInMemoryDatabase("StoreGeInMemoryDB").Options;
-
-            context = new StoreGeDbContext(options);
-        }
-
-        public IRepository<ApplicationUser> GetUserRepository()
+        public async Task InitializeDbContext()
         {
             var passwordHasher = new PasswordHasher<ApplicationUser>();
 
-            users = new List<ApplicationUser> 
+            users = new List<ApplicationUser>
             {
                 new ApplicationUser
                 {
@@ -59,7 +51,7 @@ namespace Store_Ge.Tests
                     NormalizedEmail = "ASFG@ASG.BAS",
                     NormalizedUserName = "PAF",
                     RefreshToken = "mockRefreshToken",
-                    RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1)  
+                    RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1)
                 },
                 new ApplicationUser
                 {
@@ -108,11 +100,26 @@ namespace Store_Ge.Tests
                 user.PasswordHash = passwordHasher.HashPassword(user, "Aa!123456");
             }
 
+            if (context != null)
+            {
+                context.Database.EnsureDeleted();
+            }
+            var options = new DbContextOptionsBuilder<StoreGeDbContext>()
+                .UseInMemoryDatabase("StoreGeInMemoryDB").Options;
+
+            context = new StoreGeDbContext(options);
+
+            await context.AddRangeAsync(users);
+            await context.AddRangeAsync(roles);
+            await context.SaveChangesAsync();
+        }
+
+        public IRepository<ApplicationUser> GetUserRepository()
+        {
             var mockRepo = new Mock<IRepository<ApplicationUser>>();
 
             mockRepo.Setup(x => x.GetAll()).Returns(users.AsQueryable());
                 
-
             return mockRepo.Object;
         }
 
@@ -197,6 +204,17 @@ namespace Store_Ge.Tests
             return mgr.Object;
         }
 
+        public SendGridEmailSender GetEmailSender()
+        {
+            var sendGridOptions = GetSendGridSettingsOptions();
+
+            var emailSender = new Mock<SendGridEmailSender>(sendGridOptions);
+
+            emailSender.SetupAllProperties();
+
+            return emailSender.Object;
+        }
+
         public static IDataProtectionProvider GetProtectionProvider()
         {
             Mock<IDataProtector> mockDataProtector = new Mock<IDataProtector>();
@@ -254,6 +272,22 @@ namespace Store_Ge.Tests
             var mapper = new Mapper(configuration);
 
             return mapper;
+        }
+
+        private static IOptions<SendGridSettings> GetSendGridSettingsOptions()
+        {
+            var config = GetIConfiguration();
+
+            var sendGridSettingsSection = config.GetSection("SendGridSettings");
+
+            var sendGridSettings = new SendGridSettings
+            {
+                SendGridApiKey = sendGridSettingsSection.GetValue<string>("SendGridApiKey")
+            };
+
+            var sendGridSettingsOptions = Options.Create(sendGridSettings);
+
+            return sendGridSettingsOptions;
         }
 
         private static IConfigurationRoot GetIConfiguration()
