@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Store_Ge.Tests</RootNamespace>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>

@@ -15,9 +15,10 @@ namespace Store_Ge.Tests.Services
         private AuditTrailService auditTrailService;
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
-            InitializeDbContext();
+            await InitializeDbContext();
+
             var auditTrailRepository = GetAuditTrailRepository();
             var mapper = GetAutoMapper();
 

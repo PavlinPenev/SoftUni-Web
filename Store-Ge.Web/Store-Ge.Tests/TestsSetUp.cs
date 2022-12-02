@@ -10,10 +10,12 @@ using Store_Ge.Data;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Configurations;
+using Store_Ge.Services.Services.EmailService.EmailSender;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Store_Ge.Tests
 {
@@ -25,29 +27,30 @@ namespace Store_Ge.Tests
         protected const string MOCK_EMAIL_ADDRESS = "asfg@asg.bas";
         protected const string MOCK_EMAIL_ADDRESS_FOR_UPDATE = "mockEmailUpdated@asd.bg";
         protected const string MOCK_USERNAME = "mockPaf";
+        protected const string MOCK_EMAIL_CONFIRMATION_TOKEN = "mockEmailConfirmationToken";
+        protected const string MOCK_RESET_PASSWORD_TOKEN = "mockResetPasswordToken";
 
         protected List<ApplicationUser> users;
         protected List<ApplicationRole> roles;
-        protected IQueryable<AuditEvent> auditEvents;
+        protected List<AuditEvent> auditEvents;
+
         protected StoreGeDbContext context;
 
-        public void InitializeDbContext()
+        public async Task InitializeDbContext()
         {
-            if (context != null)
-            {
-                context.Database.EnsureDeleted();
-            }
             var options = new DbContextOptionsBuilder<StoreGeDbContext>()
                 .UseInMemoryDatabase("StoreGeInMemoryDB").Options;
 
             context = new StoreGeDbContext(options);
-        }
 
-        public IRepository<ApplicationUser> GetUserRepository()
-        {
+            if (context != null)
+            {
+                context.Database.EnsureDeleted();
+            }
+
             var passwordHasher = new PasswordHasher<ApplicationUser>();
 
-            users = new List<ApplicationUser> 
+            users = new List<ApplicationUser>
             {
                 new ApplicationUser
                 {
@@ -59,7 +62,7 @@ namespace Store_Ge.Tests
                     NormalizedEmail = "ASFG@ASG.BAS",
                     NormalizedUserName = "PAF",
                     RefreshToken = "mockRefreshToken",
-                    RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1)  
+                    RefreshTokenExpirationDate = DateTime.UtcNow.AddHours(1)
                 },
                 new ApplicationUser
                 {
@@ -108,18 +111,7 @@ namespace Store_Ge.Tests
                 user.PasswordHash = passwordHasher.HashPassword(user, "Aa!123456");
             }
 
-            var mockRepo = new Mock<IRepository<ApplicationUser>>();
-
-            mockRepo.Setup(x => x.GetAll()).Returns(users.AsQueryable());
-                
-
-            return mockRepo.Object;
-        }
-
-        public IRepository<AuditEvent> GetAuditTrailRepository()
-        {
-            var dbSet = context.Set<AuditEvent>();
-            dbSet.AddRange(new List<AuditEvent>
+            auditEvents = new List<AuditEvent>
             {
                 new AuditEvent
                 {
@@ -137,9 +129,25 @@ namespace Store_Ge.Tests
                     CreatedOn = DateTime.UtcNow,
                     StoreId = 2
                 }
-            });
-            context.SaveChangesAsync();
+            };
 
+            await context.AddRangeAsync(users);
+            await context.AddRangeAsync(roles);
+            await context.AddRangeAsync(auditEvents);
+            await context.SaveChangesAsync();
+        }
+
+        public IRepository<ApplicationUser> GetUserRepository()
+        {
+            var mockRepo = new Mock<IRepository<ApplicationUser>>();
+
+            mockRepo.Setup(x => x.GetAll()).Returns(users.AsQueryable());
+                
+            return mockRepo.Object;
+        }
+
+        public IRepository<AuditEvent> GetAuditTrailRepository()
+        {
             var mockRepo = new Mock<Repository<AuditEvent>>(context);
             mockRepo.Setup(x => x.AddAsync(It.IsAny<AuditEvent>())).Callback<AuditEvent>(x => context.AddAsync(x));
 
@@ -195,6 +203,17 @@ namespace Store_Ge.Tests
             mgr.Setup(x => x.FindByIdAsync("2")).ReturnsAsync(roles.Where(r => r.Id.ToString() == "2").FirstOrDefault());
 
             return mgr.Object;
+        }
+
+        public SendGridEmailSender GetEmailSender()
+        {
+            var sendGridOptions = GetSendGridSettingsOptions();
+
+            var emailSender = new Mock<SendGridEmailSender>(sendGridOptions);
+
+            emailSender.SetupAllProperties();
+
+            return emailSender.Object;
         }
 
         public static IDataProtectionProvider GetProtectionProvider()
@@ -254,6 +273,22 @@ namespace Store_Ge.Tests
             var mapper = new Mapper(configuration);
 
             return mapper;
+        }
+
+        private static IOptions<SendGridSettings> GetSendGridSettingsOptions()
+        {
+            var config = GetIConfiguration();
+
+            var sendGridSettingsSection = config.GetSection("SendGridSettings");
+
+            var sendGridSettings = new SendGridSettings
+            {
+                SendGridApiKey = sendGridSettingsSection.GetValue<string>("SendGridApiKey")
+            };
+
+            var sendGridSettingsOptions = Options.Create(sendGridSettings);
+
+            return sendGridSettingsOptions;
         }
 
         private static IConfigurationRoot GetIConfiguration()
