@@ -19,11 +19,11 @@ namespace Store_Ge.Data.Repositories
 
         public void Delete(TEntity entity) => this.DbSet.Remove(entity);
 
-        public IQueryable<TEntity> GetAll() => this.DbSet;
+        public virtual IQueryable<TEntity> GetAll() => this.DbSet;
 
         public Task<int> SaveChangesAsync() => this.Context.SaveChangesAsync();
 
-        public Task BulkMerge(ICollection<TEntity> items) => this.Context.BulkMergeAsync(items);
+        public virtual async Task BulkMerge(ICollection<TEntity> items) => await this.Context.BulkMergeAsync(items);
 
         public void Update(TEntity entity)
         {

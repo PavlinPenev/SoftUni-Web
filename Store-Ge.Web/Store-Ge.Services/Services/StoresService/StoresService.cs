@@ -17,7 +17,6 @@ namespace Store_Ge.Services.Services.StoresService
         private readonly IRepository<Store> storeRepository;
         private readonly IAuditTrailService auditTrailService;
         private readonly IRepository<UserStore> userStoreRepository;
-        private readonly IRepository<ApplicationUser> userRepository;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IMapper mapper;
         private readonly IDataProtector dataProtector;
@@ -27,7 +26,6 @@ namespace Store_Ge.Services.Services.StoresService
             IRepository<Store> storeRepository,
             IAuditTrailService auditTrailService,
             IRepository<UserStore> userStoreRepository,
-            IRepository<ApplicationUser> userRepository,
             UserManager<ApplicationUser> userManager,
             IDataProtectionProvider dataProtectionProvider,
             IOptions<StoreGeAppSettings> appSettings,
@@ -36,7 +34,6 @@ namespace Store_Ge.Services.Services.StoresService
             this.storeRepository = storeRepository;
             this.auditTrailService = auditTrailService;
             this.userStoreRepository = userStoreRepository;
-            this.userRepository = userRepository;
             this.userManager = userManager;
             this.mapper = mapper;
             this.appSettings = appSettings.Value;
