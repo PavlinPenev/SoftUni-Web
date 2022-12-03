@@ -20,7 +20,6 @@ namespace Store_Ge.Services.Services.OrdersService
         private readonly StoreGeAppSettings appSettings;
         private readonly IDataProtector dataProtector;
         private readonly IProductsService productsService;
-        private readonly IRepository<Store> storeRepository;
         private readonly IRepository<UserStore> userStoreRepository;
         private readonly IAuditTrailService auditTrailService;
         private readonly IRepository<Order> orderRepository;
@@ -30,7 +29,6 @@ namespace Store_Ge.Services.Services.OrdersService
             IOptions<StoreGeAppSettings> appSettings,
             IDataProtectionProvider dataProtectionProvider,
             IProductsService productsService,
-            IRepository<Store> storeRepository,
             IRepository<UserStore> userStoreRepository,
             IAuditTrailService auditTrailService,
             IRepository<Order> orderRepository,
@@ -39,7 +37,6 @@ namespace Store_Ge.Services.Services.OrdersService
             this.appSettings = appSettings.Value;
             this.dataProtector = dataProtectionProvider.CreateProtector(this.appSettings.DataProtectionKey);
             this.productsService = productsService;
-            this.storeRepository = storeRepository;
             this.userStoreRepository = userStoreRepository;
             this.auditTrailService = auditTrailService;
             this.orderRepository = orderRepository;

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Store_Ge.Configurations.Services;
 using Store_Ge.Data;
+using Store_Ge.Data.Enums;
 using Store_Ge.Data.Models;
 using Store_Ge.Data.Repositories;
 using Store_Ge.Services.Configurations;
@@ -29,10 +30,15 @@ namespace Store_Ge.Tests
         protected const string MOCK_USERNAME = "mockPaf";
         protected const string MOCK_EMAIL_CONFIRMATION_TOKEN = "mockEmailConfirmationToken";
         protected const string MOCK_RESET_PASSWORD_TOKEN = "mockResetPasswordToken";
+        protected const string MOCK_SUPPLIER_ID = "mockSupplierId";
 
         protected List<ApplicationUser> users;
         protected List<ApplicationRole> roles;
         protected List<AuditEvent> auditEvents;
+        protected List<UserStore> usersStores;
+        protected List<Store> stores;
+        protected List<Order> orders;
+        protected List<Supplier> suppliers;
 
         protected StoreGeDbContext context;
 
@@ -54,7 +60,7 @@ namespace Store_Ge.Tests
             {
                 new ApplicationUser
                 {
-                    Id = 1,
+                    Id = 6,
                     UserName = "Paf",
                     Email = "asfg@asg.bas",
                     EmailConfirmed = true,
@@ -131,9 +137,80 @@ namespace Store_Ge.Tests
                 }
             };
 
+            stores = new List<Store>
+            {
+                new Store
+                {
+                    Id = 2,
+                    Name = "Paf Supermarket",
+                    Type = StoreTypeEnum.Supermarket,
+                    CreatedOn = DateTime.UtcNow
+                },
+                new Store
+                {
+                    Id = 6,
+                    Name = "Paf Supermarket 2",
+                    Type = StoreTypeEnum.Supermarket,
+                    CreatedOn = DateTime.UtcNow
+                }
+            };
+
+            usersStores = new List<UserStore>
+            {
+                new UserStore
+                {
+                    UserId = 6,
+                    StoreId = 2
+                },
+                new UserStore
+                {
+                    UserId = 6,
+                    StoreId = 6
+                }
+            };
+
+            orders = new List<Order>
+            {
+                new Order
+                {
+                    Id = 1,
+                    OrderNumber = 123456,
+                    StoreId = 2,
+                    SupplierId = 6
+                },
+                new Order
+                {
+                    Id = 2,
+                    OrderNumber = 654321,
+                    StoreId = 6,
+                    SupplierId = 6
+                },
+                new Order
+                {
+                    Id = 3,
+                    OrderNumber = 123654,
+                    StoreId = 6,
+                    SupplierId = 6
+                },
+            };
+
+            suppliers = new List<Supplier>
+            {
+                new Supplier
+                {
+                    Id = 6,
+                    Name = "Paf Test Supplier"
+                }
+            };
+
             await context.AddRangeAsync(users);
             await context.AddRangeAsync(roles);
             await context.AddRangeAsync(auditEvents);
+            await context.AddRangeAsync(stores);
+            await context.AddRangeAsync(usersStores);
+            await context.AddRangeAsync(suppliers);
+            await context.SaveChangesAsync();
+            await context.AddRangeAsync(orders);
             await context.SaveChangesAsync();
         }
 
@@ -150,6 +227,43 @@ namespace Store_Ge.Tests
         {
             var mockRepo = new Mock<Repository<AuditEvent>>(context);
             mockRepo.Setup(x => x.AddAsync(It.IsAny<AuditEvent>())).Callback<AuditEvent>(x => context.AddAsync(x));
+            mockRepo.Setup(x => x.GetAll()).Returns(context.Set<AuditEvent>().AsQueryable());
+
+            return mockRepo.Object;
+        }
+
+        public IRepository<UserStore> GetUserStoreRepository()
+        {
+            var mockRepo = new Mock<Repository<UserStore>>(context);
+            mockRepo.Setup(x => x.GetAll()).Returns(context.Set<UserStore>().AsQueryable());
+
+            return mockRepo.Object;
+        }
+
+        public IRepository<Order> GetOrderRepository()
+        {
+            var mockRepo = new Mock<Repository<Order>>(context);
+            mockRepo.Setup(x => x.GetAll()).Returns(context.Set<Order>().AsQueryable());
+            mockRepo.Setup(x => x.AddAsync(It.IsAny<Order>())).Callback<Order>(x => context.AddAsync(x));
+
+            return mockRepo.Object;
+        }
+
+        public IRepository<Product> GetProductRepository()
+        {
+            var mockRepo = new Mock<Repository<Product>>(context);
+            mockRepo.Setup(x => x.GetAll()).Returns(context.Set<Product>().AsQueryable());
+            mockRepo.Setup(x => x.AddAsync(It.IsAny<Product>())).Callback<Product>(x => context.AddAsync(x));
+            mockRepo.Setup(x => x.BulkMerge(It.IsAny<ICollection<Product>>())).Callback<ICollection<Product>>(async x => await context.BulkMergeAsync(x));
+
+            return mockRepo.Object;
+        }
+
+        public IRepository<Store> GetStoreRepository()
+        {
+            var mockRepo = new Mock<Repository<Store>>(context);
+            mockRepo.Setup(x => x.GetAll()).Returns(context.Set<Store>().AsQueryable());
+            mockRepo.Setup(x => x.AddAsync(It.IsAny<Store>())).Callback<Store>(x => context.AddAsync(x));
 
             return mockRepo.Object;
         }
@@ -221,7 +335,7 @@ namespace Store_Ge.Tests
             Mock<IDataProtector> mockDataProtector = new Mock<IDataProtector>();
             mockDataProtector.Setup(sut => sut.Protect(It.IsAny<byte[]>())).Returns(Encoding.UTF8.GetBytes("protectedText"));
             mockDataProtector.Setup(sut => sut.Unprotect(It.IsAny<byte[]>())).Returns(Encoding.UTF8.GetBytes("6"));
-
+            
             Mock<IDataProtectionProvider> mockDataProtectionProvider = new Mock<IDataProtectionProvider>();
 
             mockDataProtectionProvider.Setup(s => s.CreateProtector(It.IsAny<string>())).Returns(mockDataProtector.Object);
