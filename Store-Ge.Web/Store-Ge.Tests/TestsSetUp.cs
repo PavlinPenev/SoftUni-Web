@@ -31,6 +31,7 @@ namespace Store_Ge.Tests
         protected const string MOCK_EMAIL_CONFIRMATION_TOKEN = "mockEmailConfirmationToken";
         protected const string MOCK_RESET_PASSWORD_TOKEN = "mockResetPasswordToken";
         protected const string MOCK_SUPPLIER_ID = "mockSupplierId";
+        protected const string MOCK_PRODUCT_ID = "mockProdId";
 
         protected List<ApplicationUser> users;
         protected List<ApplicationRole> roles;
@@ -39,6 +40,8 @@ namespace Store_Ge.Tests
         protected List<Store> stores;
         protected List<Order> orders;
         protected List<Supplier> suppliers;
+        protected List<Product> products;
+        protected List<Product> productsCopy;
 
         protected StoreGeDbContext context;
 
@@ -203,6 +206,50 @@ namespace Store_Ge.Tests
                 }
             };
 
+            products = new List<Product>
+            {
+                new Product
+                {
+                    Id = 6,
+                    StoreId = 6,
+                    MeasurementUnit = MeasurementUnitEnum.Kilogram,
+                    Name = "Cheese",
+                    Quantity = 5,
+                    Price = 13
+                },
+                new Product
+                {
+                    Id = 2,
+                    StoreId = 6,
+                    MeasurementUnit = MeasurementUnitEnum.SingularPiece,
+                    Name = "Beer",
+                    Quantity = 5,
+                    Price = 1.5M
+                }
+            };
+
+            productsCopy = new List<Product> 
+            {
+                new Product
+                {
+                    Id = 6,
+                    StoreId = 6,
+                    MeasurementUnit = MeasurementUnitEnum.Kilogram,
+                    Name = "Cheese",
+                    Quantity = 5,
+                    Price = 13
+                },
+                new Product
+                {
+                    Id = 2,
+                    StoreId = 6,
+                    MeasurementUnit = MeasurementUnitEnum.SingularPiece,
+                    Name = "Beer",
+                    Quantity = 5,
+                    Price = 1.5M
+                }
+            };
+
             await context.AddRangeAsync(users);
             await context.AddRangeAsync(roles);
             await context.AddRangeAsync(auditEvents);
@@ -211,6 +258,7 @@ namespace Store_Ge.Tests
             await context.AddRangeAsync(suppliers);
             await context.SaveChangesAsync();
             await context.AddRangeAsync(orders);
+            await context.AddRangeAsync(products);
             await context.SaveChangesAsync();
         }
 
@@ -254,7 +302,23 @@ namespace Store_Ge.Tests
             var mockRepo = new Mock<Repository<Product>>(context);
             mockRepo.Setup(x => x.GetAll()).Returns(context.Set<Product>().AsQueryable());
             mockRepo.Setup(x => x.AddAsync(It.IsAny<Product>())).Callback<Product>(x => context.AddAsync(x));
-            mockRepo.Setup(x => x.BulkMerge(It.IsAny<ICollection<Product>>())).Callback<ICollection<Product>>(async x => await context.BulkMergeAsync(x));
+            mockRepo.Setup(x => x.BulkMerge(It.IsAny<ICollection<Product>>())).Callback<ICollection<Product>>(x =>
+            {
+                Array.Copy(products.ToArray(), productsCopy.ToArray(), products.Count);
+                var product = productsCopy.FirstOrDefault(x => x.Id == 6);
+                var productIndex = productsCopy.FindIndex(x => x.Id == 6);
+
+                if (product != null)
+                {
+                    
+                    productsCopy[productIndex] = x.FirstOrDefault(y => y.Id == 6);
+                }
+                else
+                {
+                    productsCopy = x.ToList();
+                }
+                
+            });
 
             return mockRepo.Object;
         }
