@@ -1,0 +1,75 @@
+<div class="orders-page-wrapper">
+    <a mat-button (click)="goBack()" class="back-button">
+        <mat-icon>chevron_left</mat-icon>{{constants.GO_BACK}}
+    </a>
+    <div class="header-wrapper">
+        <h1 class="title" *ngIf="store">{{store.name}}{{constants.ORDERS}}</h1>
+        <a mat-button (click)="onAddOrder()">
+            <mat-icon>add</mat-icon>   {{constants.ADD_ORDER}}
+        </a>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="table-wrapper">
+        <mat-table
+            class="table"
+            matSort
+            (matSortChange)="onSortChange($event)"
+            [matSortActive]="'orderNumber'"
+            [matSortDirection]="'asc'"
+            [matSortDisableClear]="true"
+            [dataSource]="dataSource"
+        >
+            <!-- Order Number Column -->
+            <ng-container [matColumnDef]="'orderNumber'">
+                <mat-header-cell *matHeaderCellDef>
+                    <div class="orderNumber-header-cell">
+                        <mat-form-field>
+                            <input matInput [formControl]="searchFormControl" (keyup)="onKeyUp()" [placeholder]="constants.SEARCH">
+                        </mat-form-field>
+                        <div [arrowPosition]="'before'" mat-sort-header>{{constants.ORDER_NUMBER}}</div>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let order">{{order.orderNumber}}</mat-cell>
+            </ng-container>
+            <!-- Supplier Name Column -->
+            <ng-container [matColumnDef]="'supplierName'">
+                <mat-header-cell *matHeaderCellDef>
+                    <div>
+                        <div [arrowPosition]="'before'" mat-sort-header>{{constants.SUPPLIER_NAME}}</div>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let order">{{order.supplierName}}</mat-cell>
+            </ng-container>
+            <!-- Date Added Column -->
+            <ng-container [matColumnDef]="'createdOn'">
+                <mat-header-cell *matHeaderCellDef class="date-header">
+                    <div>
+                        <div [arrowPosition]="'before'" mat-sort-header>{{constants.DATE_ADDED}}</div>
+                    </div>
+                    <form [formGroup]="dateRangeFormControl" >
+                        <mat-form-field appearance="fill" style="width: 170px;">
+                            <mat-label>{{constants.PICK_DATE_RANGE}}</mat-label>
+                            <mat-date-range-input [rangePicker]="dateRangePicker">
+                              <input matStartDate formControlName="start" placeholder="Date Added From">
+                              <input matEndDate formControlName="end" placeholder="Date Added To">
+                            </mat-date-range-input>
+                            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="dateRangePicker" ></mat-datepicker-toggle>
+                            <mat-date-range-picker #dateRangePicker></mat-date-range-picker>
+                        </mat-form-field>
+                        <button mat-mini-fab class="button-filter-date">
+                            <mat-icon (click)="filterByDate()" class="search-icon" color="primary">search</mat-icon>
+                        </button>
+                    </form>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let order">{{order.createdOn | date}}</mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+        <div *ngIf="!orders || orders.totalItemsCount === 0" class="empty-state">
+            {{constants.NO_ORDERS_FOUND}}
+        </div>
+        <mat-paginator #paginator (page)="pageChanged()" [length]="orders ? orders.totalItemsCount : 0" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

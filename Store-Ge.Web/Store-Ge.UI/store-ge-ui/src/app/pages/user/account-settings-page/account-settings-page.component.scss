@@ -1,0 +1,33 @@
+.form-wrapper {
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 3px 3px 1px 3px #888888;
+
+    margin: auto;
+    width: fit-content;
+    margin-top: 160px;
+
+    .button-wrapper {
+        margin-top: 10px;
+        margin-left: 10px;
+
+        a {
+            display: block;
+        }
+    }
+}
+
+.field {
+    padding-left: 11px;
+}
+
+.fields-icon {
+    margin-left: 24px;
+}
+
+.back-button {
+    margin-top: 50px;
+    border-radius: 30px;
+    margin-left: 30%;
+}

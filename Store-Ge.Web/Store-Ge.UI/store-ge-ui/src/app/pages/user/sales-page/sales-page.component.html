@@ -1,0 +1,44 @@
+<div class="sales-page-wrapper">
+    <a mat-button (click)="goBack()" class="back-button">
+        <mat-icon>chevron_left</mat-icon>{{constants.GO_BACK}}
+    </a>
+    <div class="header-wrapper">
+        <h1 class="title">{{constants.SALES}}</h1>
+        <a mat-button (click)="addCashier()">
+            <mat-icon>badge</mat-icon>       {{constants.ADD_CASHIER}}
+        </a>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="products-wrapper">
+        <mat-list role="list" class="products-list">
+            <mat-list-item role="listitem" *ngFor="let product of saleProducts">
+                <p>{{product.name}}: {{product.plusQuantity ? product.plusQuantity : 0}} {{getUnitTypeString(product.measurementUnit)}}</p>
+            </mat-list-item>
+        </mat-list>
+        <mat-divider style="margin-bottom: 10px;"></mat-divider>
+        <div>
+            <form [formGroup]="saleForm">
+                <div class="field">
+                    <mat-form-field appearance="outline">
+                        <mat-select formControlName="existingProduct" class="product-field">
+                            <mat-option *ngFor="let product of products" [value]="product">{{product.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="field">
+                    <mat-form-field appearance="outline">
+                        <mat-label>{{constants.ADD_QUANTITY}}</mat-label>
+                        <input matInput type="number" formControlName="sellQuantity">
+                        <mat-error *ngIf="saleForm.controls['existingProduct'].value.quantity < saleForm.controls['sellQuantity'].value">{{constants.NOT_ENOUGH_PRODUCTS_IN_STORE}}</mat-error>
+                    </mat-form-field>
+                </div>
+            </form>
+        </div>
+        <mat-divider></mat-divider>
+        <h4 style="text-align: end;"><b>{{constants.BILL}}: {{getBillValue()}}$</b></h4>
+        <a color="primary" [disabled]="saleForm.controls['existingProduct'].value.quantity < saleForm.controls['sellQuantity'].value" mat-button (click)="addProductToList()">
+            <mat-icon>add</mat-icon>    {{constants.ADD_PRODUCT}}
+        </a>
+    </div>
+    <button mat-button color="primary" [disabled]="saleProducts.length === 0" (click)="makeASale()">{{constants.SELL}}</button>
+</div>

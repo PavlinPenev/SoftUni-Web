@@ -1,0 +1,138 @@
+<h1>{{constants.ADD_ORDER}}</h1>
+<mat-divider style="margin-bottom: 10px;"></mat-divider>
+<div class="add-order-wrapper">
+    <div>
+        <mat-vertical-stepper orientation="vertical" [linear]="true" #stepper>
+            <mat-step [stepControl]="supplierForm">
+                <ng-template matStepLabel>{{constants.CHOOSE_SUPPLIER}}</ng-template>
+                <div *ngIf="suppliers.length === 0">
+                    <div class="info-wrapper">
+                        <mat-icon>info</mat-icon>
+                        <div>{{constants.IF_NO_SUPPLIER}}</div>
+                    </div>
+                    <button mat-button color="primary" (click)="navigateToStoreSuppliers()">
+                        <mat-icon>local_shipping</mat-icon>     {{constants.SUPPLIERS}}
+                    </button>
+                </div>
+                <div *ngIf="suppliers.length > 0">
+                    <mat-form-field>
+                        <mat-label>{{constants.SUPPLIER}}</mat-label>
+                        <mat-select [formControl]="supplierForm">
+                            <mat-option *ngFor="let supplier of suppliers" [value]="supplier">{{supplier.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <mat-divider style="margin-bottom: 10px;margin-top: 30px;"></mat-divider>
+                <div style="display: flex; justify-content: end;">
+                    <button color="primary" [disabled]="supplierForm.invalid" mat-button matStepperNext>{{constants.NEXT}}</button>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="orderForm">
+                <ng-template matStepLabel>{{constants.ADD_ORDER}}</ng-template>
+                <form [formGroup]="orderForm">
+                    <div class="field">
+                        <mat-form-field appearance="outline">
+                            <mat-label>{{constants.ORDER_NUMBER}}</mat-label>
+                            <input matInput formControlName="orderNumber">
+                            <mat-error *ngIf="orderForm.controls['orderNumber'].hasError('required')">
+                                {{constants.FIELD_REQUIRED}}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-icon class="fields-icon" color="primary">123</mat-icon>
+                    </div>
+                    <mat-divider></mat-divider>
+                    <div class="products-wrapper">
+                        <mat-list role="list" class="products-list">
+                            <mat-list-item role="listitem" *ngFor="let product of orderProducts">
+                                <p>{{product.name}}  ({{product.quantity}} + {{product.plusQuantity ? product.plusQuantity : 0}}) {{getUnitTypeString(product.measurementUnit)}}</p>
+                            </mat-list-item>
+                        </mat-list>
+                        <div class="existing-product" *ngIf="products.length > 0">
+                            <h1>{{constants.ADD_EXISTING_PRODUCT}}</h1>
+                            <mat-divider style="margin-bottom: 10px;"></mat-divider>
+                            <div class="fields">
+                                <div class="field">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>{{constants.ADD_EXISTING_PRODUCT}}</mat-label>
+                                        <mat-select formControlName="existingProduct">
+                                            <mat-option *ngFor="let product of products" [value]="product">{{product.name}}</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <mat-icon color="primary">category</mat-icon>
+                                <div class="field">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>{{constants.ADD_QUANTITY}}</mat-label>
+                                        <input matInput type="number" formControlName="addQuantity">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <button color="primary" mat-button (click)="addProductToList()">
+                                <mat-icon>add</mat-icon>    {{constants.ADD}}
+                            </button>
+                        </div>
+                        <mat-hint *ngIf="products.length > 0">{{constants.OR_ADD_NEW_ONE}}</mat-hint>
+                        <div class="new-product">
+                            <h1>{{constants.ADD_NEW_PRODUCT}}</h1>
+                            <mat-divider style="margin-bottom: 10px;"></mat-divider>
+                            <div class="fields">
+                                <div class="field">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>{{constants.PRODUCT_NAME}}</mat-label>
+                                        <input matInput formControlName="newProductName">
+                                        <mat-error *ngIf="orderForm.controls['newProductName'].hasError('maxLength')">
+                                            {{constants.PRODUCT_NAME_LENGTH}}
+                                        </mat-error> 
+                                    </mat-form-field>
+                                </div>
+                                <div class="field">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>{{constants.QUANTITY}}</mat-label>
+                                        <input matInput formControlName="newProductQuantity" type="number">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div style="display:flex;justify-content:center;"> 
+                                <mat-icon color="primary">category</mat-icon>
+                            </div>
+                            <div class="fields">
+                                <div class="field">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>{{constants.PRICE}}</mat-label>
+                                        <input matInput formControlName="newProductPrice" type="number">
+                                    </mat-form-field>
+                                </div>
+                                <div class="field">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>{{constants.MEASUREMENT_UNIT}}</mat-label>
+                                        <mat-select formControlName="newProductMeasurementUnit">
+                                            <mat-option *ngFor="let unit of productMeasurementUnitConfiguration" [value]="unit">
+                                                {{unit.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <button color="primary" [disabled]="!isNewProductFormValid()" mat-button (click)="addNewProductToList()">
+                                <mat-icon>add</mat-icon>    {{constants.ADD_NEW_PRODUCT}}
+                            </button>
+                        </div>
+                    </div>
+                </form> 
+                <mat-divider style="margin-top: 15px; margin-bottom: 20px;"></mat-divider>
+                <div style="justify-content: end; display: flex;">
+                    <button color="primary" mat-button matStepperPrevious>{{constants.BACK}}</button>
+                    <button color="primary" mat-button matStepperNext>{{constants.NEXT}}</button>
+                </div>   
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>{{constants.DONE}}</ng-template>
+                <p>{{constants.CLICK_BELOW_TO_ADD_ORDER}}</p>
+                <div style="display: flex;justify-content: space-between;">
+                    <button mat-button color="primary" (click)="addOrder($event)">{{constants.ADD_ORDER}}</button>
+                    <button mat-button matStepperPrevious color="primary">{{constants.BACK}}</button>
+                </div>
+            </mat-step>
+        </mat-vertical-stepper>
+    </div>
+</div>

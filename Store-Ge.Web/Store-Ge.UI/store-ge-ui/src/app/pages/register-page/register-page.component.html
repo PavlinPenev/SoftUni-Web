@@ -1,0 +1,81 @@
+<div class="form-wrapper">
+    <h1>{{constants.REGISTER}}</h1>
+    <mat-divider></mat-divider>
+    <form [formGroup]="form">
+        <div class="field">
+            <mat-form-field appearance="outline">
+                <mat-label>{{constants.USERNAME}}</mat-label>
+                <input matInput formControlName="username">
+                <mat-error *ngIf="form.controls['username'].hasError('required')">
+                    {{constants.FIELD_REQUIRED}}
+                </mat-error>
+            </mat-form-field>
+            <mat-icon class="fields-icon" color="primary">person</mat-icon>
+        </div>
+        <div class="field">
+            <mat-form-field appearance="outline">
+                <mat-label>{{constants.EMAIL}}</mat-label>
+                <input matInput formControlName="email">
+                <mat-error
+                    *ngIf="
+                        form.controls['email'].hasError('email') &&
+                        !form.controls['email'].hasError('required')
+                    "
+                >
+                {{ constants.INVALID_EMAIL }}
+                </mat-error>
+                <mat-error *ngIf="form.controls['email'].hasError('required')">
+                    {{constants.FIELD_REQUIRED}}
+                </mat-error>
+            </mat-form-field>
+            <mat-icon class="fields-icon" color="primary">mail</mat-icon>
+        </div>
+        <div class="passwords-wrapper">
+            <div >
+                <mat-form-field class="password-field" appearance="outline">
+                    <mat-label>{{constants.PASSWORD}}</mat-label>
+                    <input matInput [type]="showPassword ? 'text' : 'password'" formControlName="password">
+                    <mat-error
+                        *ngIf="form.controls['password'].hasError('required')"
+                    >
+                        {{ constants.FIELD_REQUIRED }}
+                    </mat-error>
+                    <mat-error
+                        *ngIf="
+                        !form.controls['password'].hasError('required') &&
+                        form.controls['password'].hasError('pattern')
+                        "
+                    >
+                    {{ constants.INVALID_PASSWORD }}
+                    </mat-error>
+                    <div matSuffix class="suffix-wrapper">
+                        <mat-icon class="btn" (click)="togglePasswordVisibility()" color="primary">{{showPassword?'visibility_off':'visibility'}}</mat-icon>
+                    </div>
+                </mat-form-field>
+            </div>
+            <mat-icon style="margin-top: 12px" color="primary">password</mat-icon>
+            <div >
+                <mat-form-field class="password-field" style="margin-left: 24px;" appearance="outline">
+                    <mat-label>{{constants.CONFIRM_PASSWORD}}</mat-label>
+                    <input matInput [type]="showConfirmPassword ? 'text' : 'password'" formControlName="confirmPassword" (input)="onPasswordInput()">
+                    <mat-error *ngIf="confirmPassword?.invalid">
+                        {{ constants.PASSWORDS_DONT_MATCH }}
+                    </mat-error>
+                    <div matSuffix class="suffix-wrapper">
+                        <mat-icon class="btn" (click)="toggleConfirmPasswordVisibility()" color="primary">{{showConfirmPassword?'visibility_off':'visibility'}}</mat-icon>
+                    </div>
+                </mat-form-field>
+            </div>
+        </div>
+        <div class="field checkbox">
+            <mat-checkbox color="primary" formControlName="acceptanceCheckbox">{{constants.ACCEPT_OUR}}<a href="" target="_blank" (click)="openTAC()">{{constants.TERMS_OF_AGREEMENT}}</a>{{constants.PROCEED_REGISTRATION}}</mat-checkbox>
+            <mat-error *ngIf="!form.controls['acceptanceCheckbox'].valid && form.controls['acceptanceCheckbox'].touched">
+                {{constants.ACCEPT_CHECKBOX}}
+            </mat-error>
+        </div>
+        <mat-divider style="margin-top: 10px;"></mat-divider>
+        <div class="button-wrapper">
+            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="register()">{{constants.REGISTER}}</button>
+        </div>
+    </form>    
+</div>

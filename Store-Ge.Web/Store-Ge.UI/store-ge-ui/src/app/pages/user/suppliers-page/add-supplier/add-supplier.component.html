@@ -1,0 +1,21 @@
+<div class="form-wrapper">
+    <h1>{{constants.ADD_SUPPLIER}}</h1>
+    <mat-divider style="margin-bottom: 10px;"></mat-divider>
+        <div class="field">
+            <mat-form-field appearance="outline">
+                <mat-label>{{constants.NAME}}</mat-label>
+                <input matInput [formControl]="form">
+                <mat-error *ngIf="form.hasError('required')">
+                    {{constants.FIELD_REQUIRED}}
+                </mat-error>
+                <mat-error *ngIf="form.hasError('maxLength')">
+                    {{constants.SUPPLIER_NAME_MAX_LENGTH_ERROR}}
+                </mat-error>
+            </mat-form-field>
+            <mat-icon class="fields-icon" color="primary">badge</mat-icon>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="button-wrapper">
+            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="onAddSupplier($event)">{{constants.ADD_SUPPLIER}}</button>
+        </div>
+</div>

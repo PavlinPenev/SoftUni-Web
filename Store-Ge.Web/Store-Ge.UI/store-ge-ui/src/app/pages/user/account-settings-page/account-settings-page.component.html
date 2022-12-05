@@ -1,0 +1,45 @@
+<div class="go-back-button-wrapper">
+    <a mat-button (click)="goBack()" class="back-button">
+        <mat-icon>chevron_left</mat-icon>{{constants.GO_BACK}}
+    </a>
+</div>
+<div class="form-wrapper">
+    <h1>{{constants.ACCOUNT_SETTINGS}}</h1>
+    <mat-divider style="margin-bottom: 10px;"></mat-divider>
+    <form [formGroup]="form">
+        <div class="field">
+            <mat-form-field appearance="outline">
+                <mat-label>{{constants.EMAIL}}</mat-label>
+                <input matInput formControlName="email">
+                <mat-error
+                    *ngIf="
+                        form.controls['email'].hasError('email') &&
+                        !form.controls['email'].hasError('required')
+                    "
+                >
+                {{ constants.INVALID_EMAIL }}
+                </mat-error>
+                <mat-error *ngIf="form.controls['email'].hasError('required')">
+                    {{constants.FIELD_REQUIRED}}
+                </mat-error>
+            </mat-form-field>
+            <mat-icon class="fields-icon" color="primary">mail</mat-icon>
+        </div>
+        <div class="field">
+            <mat-form-field style="width: 200px;" appearance="outline">
+                <mat-label>{{constants.USERNAME}}</mat-label>
+                <input matInput formControlName="userName">
+                <mat-error
+                    *ngIf="form.controls['userName'].hasError('required')"
+                >
+                    {{ constants.FIELD_REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+            <mat-icon class="fields-icon" color="primary">badge</mat-icon>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="button-wrapper">
+            <button mat-raised-button color="primary" [disabled]="!form.valid" (click)="updateUser()">{{constants.UPDATE_USER}}</button>
+        </div>
+    </form>    
+</div>

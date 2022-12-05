@@ -1,0 +1,29 @@
+<div *ngIf="isEmptyStateVisible()" class="empty-state-container">
+    <h1>{{constants.NO_STORES_ADDED}}</h1>
+    <mat-divider></mat-divider>
+    <div class="mat-icon-wrapper">
+        <mat-icon color="primary">store</mat-icon>
+    </div>
+    <mat-divider></mat-divider>
+    <button mat-button (click)="addStore()">
+        <mat-icon>add_business</mat-icon>    {{constants.ADD_STORE}}
+    </button>
+</div>
+<div *ngIf="isStoreCardContainerVisible()" class="stores-cards-container">
+    <div class="add-store-button-container">
+        <button mat-button (click)="addStore()">
+            <mat-icon>add_business</mat-icon>    {{constants.ADD_STORE}}
+        </button>
+    </div>
+    <mat-divider style="margin-bottom: 20px;"></mat-divider>
+    <div class="store-cards-wrapper">
+        <button class="card" mat-button *ngFor="let store of userStores" (click)="goToStorePage(store)">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>{{store.name}}</mat-card-title>
+                    <mat-card-subtitle>{{getStoreTypeString(store.type)}}</mat-card-subtitle>
+                </mat-card-header>
+            </mat-card>
+        </button>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+.form-wrapper {
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 3px 3px 1px 3px #888888;
+
+    margin: auto;
+    width: fit-content;
+    margin-top: 160px;
+
+    mat-divider{
+        margin-bottom: 10px;
+    }
+
+    .field {
+        margin-left: 10px;
+    }
+
+    .fields-icon {
+        margin-left: 24px;
+    }
+
+    .button-wrapper {
+        margin-left: 10px;
+    }
+}

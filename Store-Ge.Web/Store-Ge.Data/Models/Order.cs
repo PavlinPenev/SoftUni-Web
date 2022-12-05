@@ -6,7 +6,7 @@ namespace Store_Ge.Data.Models
     {
         public Order()
         {
-            OrdersProducts = new HashSet<OrderProduct>();
+            Products = new HashSet<Product>();
         }
 
         [Key]
@@ -31,6 +31,6 @@ namespace Store_Ge.Data.Models
 
         public virtual Store Store { get; set; }
 
-        public virtual ICollection<OrderProduct> OrdersProducts { get; set; } 
+        public virtual ICollection<Product> Products { get; set; } 
     }
 }

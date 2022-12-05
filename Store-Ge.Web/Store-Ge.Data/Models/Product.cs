@@ -1,18 +1,13 @@
 ﻿using Store_Ge.Data.Enums;
+
 using System.ComponentModel.DataAnnotations;
-using static Store_Ge.Data.Constants.ValidationConstants;
+
+using static Store_Ge.Common.Constants.ValidationConstants;
 
 namespace Store_Ge.Data.Models
 {
     public class Product
     {
-        public Product()
-        {
-            StoresProducts = new HashSet<StoreProduct>();
-            OrdersProducts = new HashSet<OrderProduct>();
-            SuppliersProducts = new HashSet<SupplierProduct>();
-        }
-
         [Key]
         public int Id { get; set; }
 
@@ -37,10 +32,12 @@ namespace Store_Ge.Data.Models
 
         public DateTime? DeletedOn { get; set; }
 
-        public virtual ICollection<StoreProduct> StoresProducts { get; set; }
+        public int StoreId { get; set; }
 
-        public virtual ICollection<OrderProduct> OrdersProducts { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
 
-        public virtual ICollection<SupplierProduct> SuppliersProducts { get; set; }
+        public virtual ICollection<Supplier> Suppliers { get; set; }
+
+        public virtual Store Store { get; set; }
     }
 }

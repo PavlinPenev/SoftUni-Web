@@ -1,0 +1,94 @@
+.store-page-wrapper {
+    margin: auto;
+    width: 50%;
+    margin-top: 20px;
+
+    .back-button {
+        margin-top: 20px;
+        margin-bottom: 80px;
+        border-radius: 30px;
+    }
+}
+
+.header-wrapper {
+    margin-bottom: 20px;
+}
+
+mat-divider {
+    margin-bottom: 20px;
+}
+
+.main-card-content {
+    display: flex;
+    justify-content: space-around;
+}
+
+.card-wrapper {
+    display: flex;
+    justify-content: space-between;
+
+    .card{
+        width: 51%;
+        margin-left: 10px;
+
+        .content-card {
+            width: 30%;
+            margin-right: 10px;
+            
+            mat-card-content {
+                display: flex;
+                justify-content: space-between;
+
+                .divider-wrapper {
+                    display: flex;
+
+                    mat-icon {
+                        margin-right: 10px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: end;
+    height: fit-content;
+    margin-top: 20%;
+
+    a {
+        margin-right: 10px;
+    }
+}
+
+.empty-state {
+    height: 60px;
+    background-color: rgba(0, 0, 0, 0.05);
+    text-align: center;
+    line-height: 60px;
+}
+
+.name-header-cell {
+    display: flex;
+
+    div {
+        text-align: center;
+        line-height: 60px;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
+
+    mat-form-field {
+        margin-right: 10px;
+        width: 150px;
+    }
+}
+
+.table-wrapper {
+    overflow: auto;
+}
+
+mat-paginator {
+    margin-bottom: 100px;
+}

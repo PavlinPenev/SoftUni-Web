@@ -1,0 +1,21 @@
+.resend-email-wrapper {
+    margin: auto;
+    margin-top: 160px;
+
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 3px 3px 1px 3px #888888;
+
+    width: fit-content;
+
+    .content-wrapper {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+
+    .button-wrapper {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+}
