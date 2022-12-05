@@ -1,0 +1,54 @@
+.empty-state-container {
+    margin: auto;
+    margin-top: 100px;
+    overflow-wrap: break-word;
+    width: 30%;
+
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 3px 3px 1px 3px #888888;
+
+    mat-divider {
+        margin-bottom: 10px;
+    }
+
+    .mat-icon-wrapper {
+        margin-left: 36%;
+        mat-icon {
+            font-size: 150px;
+
+        }
+    }
+}
+
+.add-store-button-container {
+    display: flex;
+    justify-content: end;
+}
+
+.stores-cards-container {
+    margin: auto;
+    width: 60%;
+    margin-top: 100px;
+    
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    padding-bottom: 100px;
+    box-shadow: 3px 3px 1px 3px #888888;
+
+    .store-cards-wrapper {
+        display: inline-block;
+        
+        .card { 
+            width: 192px;
+            margin-bottom: 30px;
+
+            mat-card {
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+}

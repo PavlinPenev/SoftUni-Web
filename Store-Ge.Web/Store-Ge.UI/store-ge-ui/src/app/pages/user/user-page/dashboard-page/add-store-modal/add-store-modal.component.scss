@@ -1,0 +1,17 @@
+.form-wrapper {
+    margin: auto;
+    width: fit-content;
+
+    .field {
+        margin-left: 10px;
+
+        .fields-icon {
+            margin-left: 24px;
+        }
+    }
+
+    .button-wrapper {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+}

@@ -1,6 +1,6 @@
 ﻿namespace Store_Ge.Data.Enums
 {
-    public enum MeasurementUnitEnum
+    public enum MeasurementUnitEnum : byte
     {
         SingularPiece = 0,
         Kilogram = 1,

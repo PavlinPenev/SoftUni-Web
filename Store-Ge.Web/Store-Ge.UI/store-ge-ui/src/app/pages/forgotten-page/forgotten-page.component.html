@@ -1,0 +1,29 @@
+<div class="form-wrapper">
+    <h1>{{constants.FORGOT_PASSWORD}}</h1>
+    <mat-divider></mat-divider>
+    <form [formGroup]="form">
+        <div class="field">
+            <mat-form-field appearance="outline">
+                <mat-label>{{constants.EMAIL}}</mat-label>
+                <input matInput formControlName="email">
+                <mat-hint>{{constants.FILL_EMAIL_TO_SEND_RESET_PASSWORD_MAIL}}</mat-hint>
+                <mat-error
+                    *ngIf="
+                        form.controls['email'].hasError('email') &&
+                        !form.controls['email'].hasError('required')
+                    "
+                >
+                {{ constants.INVALID_EMAIL }}
+                </mat-error>
+                <mat-error *ngIf="form.controls['email'].hasError('required')">
+                    {{constants.FIELD_REQUIRED}}
+                </mat-error>
+            </mat-form-field>
+            <mat-icon class="fields-icon" color="primary">mail</mat-icon>
+        </div>
+    </form>
+    <mat-divider style="margin-top: 20px"></mat-divider>
+    <div class="button-wrapper">
+        <button mat-raised-button color="primary" (click)="forgotPassword()" [disabled]="!form.valid">{{constants.SUBMIT}}</button>
+    </div>
+</div>

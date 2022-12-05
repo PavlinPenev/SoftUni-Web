@@ -1,0 +1,46 @@
+.form-wrapper {
+    border: solid 2px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 3px 3px 1px 3px #888888;
+
+    margin: auto;
+    width: fit-content;
+    margin-top: 160px;
+
+    .passwords-wrapper{
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        height: 120px;
+
+        border: solid 2px rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        box-shadow: 3px 3px 1px 3px #888888;
+
+        .password-field {
+            width: 89%;
+        }
+    }
+
+    .checkbox {
+        margin-top: 10px;
+    }
+
+    .button-wrapper {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+}
+
+.field {
+    padding-left: 11px;
+}
+
+.fields-icon {
+    margin-left: 24px;
+}
+
+mat-divider {
+    margin-bottom: 10px;
+}

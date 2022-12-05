@@ -1,0 +1,46 @@
+<mat-toolbar class="navbar">
+    <div style="display: flex;">
+        <div class="store-ge-logo">
+            <mat-icon>shopping_cart</mat-icon>     {{constants.APP_NAME}}
+        </div>
+        <mat-divider [vertical]="true" style="margin: 0 10px;"></mat-divider>
+        <button *ngIf="(isUserLoggedIn | async) && (accountsService.isUserAdmin | async)" mat-raised-button (click)="navigateToAllOrders()" color="primary">
+            <mat-icon>inventory</mat-icon> {{constants.ALL_ORDERS}}
+        </button>
+    </div>
+    <div class="navbar-buttons-wrapper">
+        <button mat-raised-button color="primary" routerLink="/home">
+            <mat-icon>home</mat-icon>     {{constants.HOME }}
+        </button>
+        <div *ngIf="!(isUserLoggedIn | async)">
+            <button *ngIf="route != '/login'" mat-raised-button color="primary" routerLink="/login">
+                <mat-icon>login</mat-icon>     {{constants.LOGIN}}
+            </button>
+            <button *ngIf="route != '/register'" mat-raised-button color="primary" routerLink="/register">
+                <mat-icon>password</mat-icon>     {{constants.REGISTER}}
+            </button>
+        </div>
+        <div  *ngIf="(isUserLoggedIn | async) && !!accountsService.loggedUser" >
+            <button mat-mini-fab color="primary" [matMenuTriggerFor]="menu">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <p class="menu-title menu-p">{{accountsService.loggedUser.userName}}</p>
+                <mat-hint class="menu-title">{{accountsService.loggedUser.email}}</mat-hint>
+                <mat-divider class="menu-divider"></mat-divider>
+                <a mat-button (click)="navigateToAccountSettings()">
+                    <mat-icon color="primary">person</mat-icon>      {{constants.ACCOUNT_SETTINGS}}
+                </a>
+                <mat-divider class="menu-divider"></mat-divider>
+                <button mat-raised-button color="primary" (click)="logout()" class="logout-button">
+                    <mat-icon>logout</mat-icon>      {{constants.LOGOUT}}
+                </button>
+            </mat-menu>
+        </div>
+    </div>
+</mat-toolbar>
+<router-outlet></router-outlet>
+<div class="footer-wrapper">
+    <mat-divider class="separator"></mat-divider>
+    <footer class="footer">{{constants.FOOTER_TEXT}} {{currentYear}}</footer>
+</div>

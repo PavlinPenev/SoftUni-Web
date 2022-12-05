@@ -19,9 +19,11 @@ namespace Store_Ge.Data.Repositories
 
         public void Delete(TEntity entity) => this.DbSet.Remove(entity);
 
-        public IQueryable<TEntity> GetAll() => this.DbSet;
+        public virtual IQueryable<TEntity> GetAll() => this.DbSet;
 
         public Task<int> SaveChangesAsync() => this.Context.SaveChangesAsync();
+
+        public virtual async Task BulkMerge(ICollection<TEntity> items) => await this.Context.BulkMergeAsync(items);
 
         public void Update(TEntity entity)
         {
@@ -42,10 +44,10 @@ namespace Store_Ge.Data.Repositories
 
         protected virtual void Dispose(bool disposing)
         {
-                if (disposing)
-                {
-                    this.Context?.Dispose();
-                }
+            if (disposing)
+            {
+                this.Context?.Dispose();
+            }
         }
     }
 }

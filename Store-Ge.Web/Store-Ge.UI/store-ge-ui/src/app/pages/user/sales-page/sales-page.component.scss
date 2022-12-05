@@ -1,0 +1,27 @@
+.sales-page-wrapper {
+    margin: auto;
+    width: 50%;
+    margin-top: 20px;
+
+    .back-button {
+        margin-top: 50px;
+        margin-bottom: 80px;
+        border-radius: 30px;
+    }
+}
+
+.header-wrapper {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+
+    .title {
+        margin: 0;
+    }
+}
+
+.products-list {
+    min-height: 50px;
+    max-height: 200px;
+    overflow-y: scroll;
+}

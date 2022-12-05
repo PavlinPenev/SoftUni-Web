@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using static Store_Ge.Data.Constants.ValidationConstants;
+
+using static Store_Ge.Common.Constants.ValidationConstants;
 
 namespace Store_Ge.Data.Models
 {
@@ -9,6 +10,7 @@ namespace Store_Ge.Data.Models
         {
             Orders = new HashSet<Order>();
             StoresSuppliers = new HashSet<StoreSupplier>();
+            Products = new HashSet<Product>();
         }
 
         [Key]
@@ -25,6 +27,8 @@ namespace Store_Ge.Data.Models
         public DateTime? ModifiedOn { get; set; }
 
         public DateTime? DeletedOn { get; set; }
+
+        public virtual ICollection<Product> Products { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
 

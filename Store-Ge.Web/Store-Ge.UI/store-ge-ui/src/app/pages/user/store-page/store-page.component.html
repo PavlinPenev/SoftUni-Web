@@ -1,0 +1,126 @@
+<div class="store-page-wrapper">
+    <a mat-button (click)="goBack()" class="back-button">
+        <mat-icon>chevron_left</mat-icon>{{constants.GO_BACK}}
+    </a>
+    <div class="header-wrapper">
+        <h1 class="title">{{constants.STORE_DATA}}</h1>
+        <mat-divider></mat-divider>
+        <div class="card-wrapper">
+            <mat-card class="card">
+                <mat-card-header *ngIf="store">
+                    <mat-card-title>{{store.name}}</mat-card-title>
+                    <mat-card-subtitle>{{getStoreTypeString(store.type)}}</mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content class="main-card-content">
+                    <mat-card class="content-card">
+                        <mat-card-content>
+                            <div class="divider-wrapper">
+                                <mat-icon color="primary">inventory</mat-icon>
+                                <mat-divider [vertical]="true"></mat-divider>
+                            </div>
+                            <div class="content-card-title-wrapper">
+                                <mat-card-title>{{constants.ORDERS}}</mat-card-title>
+                                <mat-card-subtitle *ngIf="orders">{{constants.COUNT}}{{orders.totalItemsCount}}</mat-card-subtitle>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <a mat-button (click)="navigateToOrdersPage()">{{constants.ORDERS}}</a>
+                        </mat-card-actions>
+                    </mat-card>
+                    <mat-card class="content-card">
+                        <mat-card-content>
+                            <div class="divider-wrapper">
+                                <mat-icon color="primary">local_shipping</mat-icon>
+                                <mat-divider [vertical]="true"></mat-divider>
+                            </div>
+                            <div class="content-card-title-wrapper">
+                                <mat-card-title>{{constants.SUPPLIERS}}</mat-card-title>
+                                <mat-card-subtitle *ngIf="suppliers">{{constants.COUNT}}{{suppliers.totalItemsCount}}</mat-card-subtitle>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <a mat-button (click)="navigateToSuppliersPage()">{{constants.SUPPLIERS}}</a>
+                        </mat-card-actions>
+                    </mat-card>
+                    <mat-card class="content-card">
+                        <mat-card-content style="height: 54%;">
+                            <div class="divider-wrapper">
+                                <mat-icon color="primary">sell</mat-icon>
+                                <mat-divider [vertical]="true"></mat-divider>
+                            </div>
+                            <div class="content-card-title-wrapper">
+                                <mat-card-title>{{constants.SALES}}</mat-card-title>
+                            </div>
+                        </mat-card-content>
+                        <mat-card-actions>
+                            <a mat-button (click)="navigateToSalesPage()">{{constants.SALES}}</a>
+                        </mat-card-actions>
+                    </mat-card>
+                </mat-card-content>
+            </mat-card>
+            <div class="button-wrapper">
+                <a mat-button (click)="exportExcel()">
+                    <mat-icon>table</mat-icon> {{constants.EXPORT_EXCEL}}
+                </a>
+            </div>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div class="table-wrapper">
+        <mat-table
+            class="table"
+            matSort
+            (matSortChange)="onSortChange($event)"
+            [matSortActive]="'name'"
+            [matSortDirection]="'asc'"
+            [matSortDisableClear]="true"
+            [dataSource]="dataSource"
+        >
+            <!-- Product Name Column -->
+            <ng-container [matColumnDef]="'name'">
+                <mat-header-cell *matHeaderCellDef>
+                    <div class="name-header-cell">
+                        <div [arrowPosition]="'before'" mat-sort-header>{{constants.NAME}}</div>
+                        <mat-form-field>
+                            <input matInput [formControl]="searchField" (keyup)="onKeyUp()" [placeholder]="constants.SEARCH_BY_NAME">
+                        </mat-form-field>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let product">{{product.name}}</mat-cell>
+            </ng-container>
+            <!-- Price Column -->
+            <ng-container [matColumnDef]="'price'">
+                <mat-header-cell *matHeaderCellDef>
+                    <div>
+                        <div>{{constants.PRICE}}</div>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let product">{{product.price}}</mat-cell>
+            </ng-container>
+            <!-- Quantity Column -->
+            <ng-container [matColumnDef]="'quantity'">
+                <mat-header-cell *matHeaderCellDef>
+                    <div>
+                        <div>{{constants.QUANTITY}}</div>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let product">{{product.quantity}}</mat-cell>
+            </ng-container>
+            <!-- Measurement Unit Column -->
+            <ng-container [matColumnDef]="'measurementUnit'">
+                <mat-header-cell *matHeaderCellDef>
+                    <div>
+                        <div>{{constants.MEASUREMENT_UNIT}}</div>
+                    </div>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let product">{{getUnitTypeString(product.measurementUnit)}}</mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+        <div *ngIf="products.totalItemsCount === 0" class="empty-state">
+            {{constants.NO_PRODUCTS_FOUND}}
+        </div>
+        <mat-paginator #paginator (page)="pageChanged()" [length]="products ? products.totalItemsCount : 0" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>
