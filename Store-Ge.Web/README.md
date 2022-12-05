@@ -1,4 +1,4 @@
-StoreGe Documentation (Product/Technical)
+Store-Ge Documentation (Product/Technical)
 ==========================================
 <pre>
   The StoreGe App is an application which helps the user manage their stores and make sales easier.
