@@ -22,7 +22,6 @@ namespace Store_Ge.Services.Services.SuppliersService
         private readonly IRepository<StoreSupplier> storeSupplierRepository;
         private readonly IRepository<UserStore> userStoreRepository;
         private readonly IRepository<Supplier> supplierRepository;
-        private readonly IRepository<Store> storeRepository;
         private readonly IMapper mapper;
         private readonly IDataProtector dataProtector;
         private readonly StoreGeAppSettings appSettings;
@@ -36,7 +35,6 @@ namespace Store_Ge.Services.Services.SuppliersService
             IRepository<StoreSupplier> storeSupplierRepository,
             IRepository<UserStore> userStoreRepository,
             IRepository<Supplier> supplierRepository,
-            IRepository<Store> storeRepository,
             IMapper mapper)
         {
             this.accountsService = accountsService;
@@ -44,7 +42,6 @@ namespace Store_Ge.Services.Services.SuppliersService
             this.storeSupplierRepository = storeSupplierRepository;
             this.userStoreRepository = userStoreRepository;
             this.supplierRepository = supplierRepository;
-            this.storeRepository = storeRepository;
             this.mapper = mapper;
             this.appSettings = appSettingsOptions.Value;
             this.dataProtector = dataProtectionProvider.CreateProtector(appSettings.DataProtectionKey);

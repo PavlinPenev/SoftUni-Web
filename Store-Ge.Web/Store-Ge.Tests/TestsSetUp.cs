@@ -40,6 +40,7 @@ namespace Store_Ge.Tests
         protected List<Store> stores;
         protected List<Order> orders;
         protected List<Supplier> suppliers;
+        protected List<StoreSupplier> storesSuppliers;
         protected List<Product> products;
         protected List<Product> productsCopy;
 
@@ -206,6 +207,20 @@ namespace Store_Ge.Tests
                 }
             };
 
+            storesSuppliers = new List<StoreSupplier>
+            {
+                new StoreSupplier
+                {
+                    StoreId = 6,
+                    SupplierId = 6,
+                },
+                new StoreSupplier
+                {
+                    StoreId = 2,
+                    SupplierId = 6
+                }
+            };
+
             products = new List<Product>
             {
                 new Product
@@ -256,6 +271,7 @@ namespace Store_Ge.Tests
             await context.AddRangeAsync(stores);
             await context.AddRangeAsync(usersStores);
             await context.AddRangeAsync(suppliers);
+            await context.AddRangeAsync(storesSuppliers);
             await context.SaveChangesAsync();
             await context.AddRangeAsync(orders);
             await context.AddRangeAsync(products);
@@ -328,6 +344,23 @@ namespace Store_Ge.Tests
             var mockRepo = new Mock<Repository<Store>>(context);
             mockRepo.Setup(x => x.GetAll()).Returns(context.Set<Store>().AsQueryable());
             mockRepo.Setup(x => x.AddAsync(It.IsAny<Store>())).Callback<Store>(x => context.AddAsync(x));
+
+            return mockRepo.Object;
+        }
+
+        public IRepository<StoreSupplier> GetStoreSupplierRepository()
+        {
+            var mockRepo = new Mock<Repository<StoreSupplier>>(context);
+            mockRepo.Setup(x => x.GetAll()).Returns(context.Set<StoreSupplier>().AsQueryable());
+
+            return mockRepo.Object;
+        }
+
+        public IRepository<Supplier> GetSupplierRepository()
+        {
+            var mockRepo = new Mock<Repository<Supplier>>(context);
+            mockRepo.Setup(x => x.GetAll()).Returns(context.Set<Supplier>().AsQueryable());
+            mockRepo.Setup(x => x.AddAsync(It.IsAny<Supplier>())).Callback<Supplier>(async x => await context.AddAsync(x));
 
             return mockRepo.Object;
         }
