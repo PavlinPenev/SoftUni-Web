@@ -158,7 +158,6 @@ Technical Documentation
       -"DbUser"
       -"DbPassword"
       -"DbConfiguration:ConnectionString"
-      -"ConnectionString"
       -"StoreGeAppSettings:DataProtectionKey"
     Step 3. Register in https://sendgrid.com/ with free account and get the API key that's been given to you(don't give it to anyone else). Add the key to the "SendGridSettings:SendGridApiKey" secret
     Step 4. The other secrets are up to you to give them random suitable value(strong highly unguessable values are recommended)
