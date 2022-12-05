@@ -147,6 +147,7 @@ Technical Documentation
     The application uses JWT Bearer scheme and custom refresh tokens for the authentication/authorization.
     The application uses Repository pattern for getting data from the database.
     The application uses Swagger in Development Environment for the API documentation.
+    The application uses Email confirmation registration.
 
 ### Application setup on local machine
     Step 1. Clone the repo and open the Store-Ge.Web.sln project file in the Store-Ge.Web folder
