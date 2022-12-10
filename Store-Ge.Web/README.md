@@ -1,9 +1,9 @@
 Store-Ge Documentation (Product/Technical)
 ==========================================
 <pre>
-  The StoreGe App is an application which helps the user manage their stores and make sales easier.
-  He has the options to add a store to his account, to add orders, to add products and suppliers.
-  He can even registers another users to his stores assigning them as the stores' cashiers.
+  The StoreGe App is an application which helps the users manage their stores and make sales easier.
+  You as user have the options to add a store to your account, to add orders, to add products and suppliers.
+  You can even register another users to your stores assigning them as the stores' cashiers.
   
   The idea of this project was inspired by my first job ever. I was working at a supermarket.
   And since I have some clarity over the sector I decided that to be my final project for my SoftUni web course.
@@ -11,19 +11,21 @@ Store-Ge Documentation (Product/Technical)
   Now let's see the app documentation. 
 </pre>
 
+Link to the web app: https://store-ge.web.app/
+
 Product Documentation
 ==========================================
 ### Application Flow
-    When the user starts the app he's redirected to the home page.
-    The user scrolls and he'll see cards which describe the app main functionality.
+    When you start the app you are being redirected to the home page.
+    There you'll see cards which describe the app main functionality.
   <p>
     <img height="300em" src="https://i.ibb.co/4d2kLzc/home-page-screen.jpg"></img>
     <img height="300em" src="https://i.ibb.co/stsBYr7/home-page-screen-scrolled.jpg"></img>
   </p>
     <pre>
     The three buttons on the right side of the navbar are:
-    1. The home button leads the user to the home page if not logged.
-       If he's logged depending on his role(Admin or Cashier) he gets redirected respectively to the dashboard or sales page.
+    1. The home button leads you to the home page if not logged.
+       If you're logged, depending on your role(Admin or Cashier), you're getting redirected respectively to the dashboard or sales page.
     2. The login button leads to the login page.
     3. The register button leads to the register page.(duh!)
     </pre>
@@ -31,9 +33,9 @@ Product Documentation
       <img src="https://i.ibb.co/7NBSMQJ/home-page-action-buttons.jpg"></img>
     </p>
     <pre>
-      The login form asks for the user's email address and password. 
-      If by any chance the user forgot his password he can click the forgot password link and 
-    resets his password with a reset password mail.
+      The login form asks for your email address and password. 
+      If by any chance you forgot your password you can click the forgot password link and 
+    reset it with a reset password mail.
     </pre>
     <p>
       <img height="300em" src="https://i.ibb.co/BtQKysX/login-page-form.jpg"></img>
@@ -50,7 +52,7 @@ Product Documentation
     </pre>
     <img height="350em" src="https://i.ibb.co/z5CDLNC/register-page-form.jpg"></img>
     <pre>
-      When the user logs as admin he's redirected to the store dashboard page.
+      When you log as admin you're being redirected to the store dashboard page.
       At first glance he sees:
         1. All orders button leading to a page containing a table with all the orders for all stores.
         2. Home button which leads to this page when the user is on the other pages.
@@ -88,7 +90,7 @@ Product Documentation
         - Sort by all fields(individually)
         - Filter the results by the date added(date range option)
         - Paginator for the table
-      The Go back button leads to the previous page the user was on.
+      The Go back button leads to the previous page you were on.
     </pre>
     <img src="https://i.ibb.co/0hBZr5b/store-orders-page.jpg"></img>
     <pre>
@@ -112,7 +114,7 @@ Product Documentation
     </pre>
     <img src="https://i.ibb.co/CMgH6H5/store-suppliers-page.jpg"></img>
     <pre>
-    The sales page is the place where the user is managing his sales. The Go Back button is included here as well.
+    The sales page is the place where you are managing your sales. The Go Back button is included here as well.
     The functionality on this page is:
     1. Add(register) cashier to your store button is the place
        where the admin account may register a new user attached as a cashier to the current store.
@@ -130,11 +132,11 @@ Product Documentation
     - The admin registers the cashier
     - The cashier logs with his email and password
     - When the cashier's authenticated instead of the store's dashboard page 
-      he instantly gets redirected to the sales page
+      he/she instantly gets redirected to the sales page
     </pre>
     <pre>
       Finally, 
-    the All Orders page shows all the orders for the user's stores, the name of the store it got added to
+    the All Orders page shows all the orders for your stores, the name of the store it got added to
     and the date it got added.
     </pre>
     <img src="https://i.ibb.co/vzK1Tjq/all-orders-page.jpg"></img>
